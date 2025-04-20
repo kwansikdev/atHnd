@@ -1,11 +1,18 @@
-import { createClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { BucketName } from "./type";
+import {
+  createBrowserClient,
+  createServerClient,
+  parseCookieHeader,
+  serializeCookieHeader,
+} from "@supabase/ssr";
 
-class SupabaseService {
-  private readonly supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-  );
+export class SupabaseService {
+  private readonly supabase: SupabaseClient;
+
+  constructor(url: string, key: string) {
+    this.supabase = createBrowserClient(url, key);
+  }
 
   get client() {
     return this.supabase;
@@ -32,4 +39,31 @@ class SupabaseService {
     }
   }
 }
-export const supabaseService = new SupabaseService();
+
+export async function getSupabaseServerClient(request: Request) {
+  const response = new Response();
+  const supabase = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return parseCookieHeader(request.headers.get("Cookie") ?? "") as {
+            name: string;
+            value: string;
+          }[];
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.headers.append(
+              "Set-Cookie",
+              serializeCookieHeader(name, value, options)
+            );
+          });
+        },
+      },
+    }
+  );
+
+  return { supabase, headers: response.headers };
+}
