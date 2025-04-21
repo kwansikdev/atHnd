@@ -15,4 +15,4 @@ export type FileBody =
  * @example
  * export type BucketName = "images" | "videos" | "audios";
  */
-export type BucketName = "profile" | "figure";
+export type BucketName = "profiles" | "figures";
