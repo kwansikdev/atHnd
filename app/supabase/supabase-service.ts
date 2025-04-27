@@ -9,9 +9,11 @@ import {
 
 export class SupabaseService {
   private readonly supabase: SupabaseClient;
+  private readonly SUPABASE_URL: string;
 
   constructor(url: string, key: string) {
     this.supabase = createBrowserClient(url, key);
+    this.SUPABASE_URL = url;
   }
 
   get client() {
@@ -26,7 +28,7 @@ export class SupabaseService {
    * @returns 업로드된 파일의 URL을 반환합니다.
    */
   async uploadFile(bucket: BucketName, filePath: string, file: File) {
-    const origin = `${process.env.SUPABASE_URL}/storage/v1/object/public/${bucket}/`;
+    const origin = `${this.SUPABASE_URL}/storage/v1/object/public/${bucket}/`;
     const { data } = await this.supabase.storage
       .from(bucket)
       .upload(filePath, file, {
@@ -65,5 +67,19 @@ export async function getSupabaseServerClient(request: Request) {
     }
   );
 
-  return { supabase, headers: response.headers };
+  async function uploadFile(bucket: BucketName, filePath: string, file: File) {
+    const origin = `${process.env.SUPABASE_URL}/storage/v1/object/public/${bucket}/`;
+    const { data } = await supabase.storage
+      .from(bucket)
+      .upload(filePath, file, {
+        upsert: true,
+      });
+    if (data) {
+      return origin + data.path;
+    } else {
+      return null;
+    }
+  }
+
+  return { supabase, headers: response.headers, uploadFile };
 }
