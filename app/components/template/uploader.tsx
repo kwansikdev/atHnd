@@ -54,6 +54,7 @@ export function Uploader({
     <div className={cn("inline-block cursor-pointer", className)} {...props}>
       {clone}
       <input
+        id={props.id}
         ref={fileInputRef}
         type="file"
         hidden
