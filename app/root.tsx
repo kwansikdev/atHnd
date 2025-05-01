@@ -10,7 +10,7 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 import "./tailwind.css";
 
-import { getSupabaseServerClient, SupabaseService } from "./supabase";
+import { getSupabaseServerClient, SupabaseService } from "../supabase";
 import { Toaster } from "./components/ui/sonner";
 import Header from "./components/header";
 import { useState } from "react";
@@ -44,7 +44,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       .select("*")
       .eq("id", user.id)
       .single();
-    console.log("🚀 ~ loader ~ data:", data);
 
     profile = data;
   }
@@ -100,7 +99,10 @@ export default function App() {
   return (
     <>
       <Header />
-      <Outlet context={{ supabase, isLoggedIn, user, profile }} />
+      <div className="pb-16 md:pb-0 pt-15">
+        <Outlet context={{ supabase, isLoggedIn, user, profile }} />
+      </div>
+      <Toaster richColors position="top-center" />
     </>
   );
 }

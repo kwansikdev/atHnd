@@ -14,7 +14,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { TOutletContext } from "~/root";
-import { getSupabaseServerClient } from "~/supabase";
+import { getSupabaseServerClient } from "supabase";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { supabase, headers } = await getSupabaseServerClient(request);

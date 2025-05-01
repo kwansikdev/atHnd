@@ -1,6 +1,6 @@
 // routes/logout.tsx
 import { ActionFunction, redirect } from "@remix-run/node";
-import { getSupabaseServerClient } from "~/supabase";
+import { getSupabaseServerClient } from "supabase";
 
 export const action: ActionFunction = async ({ request }) => {
   const { supabase, headers } = await getSupabaseServerClient(request);
