@@ -12,9 +12,10 @@ import "./tailwind.css";
 
 import { getSupabaseServerClient, SupabaseService } from "../supabase";
 import { Toaster } from "./components/ui/sonner";
-import Header from "./components/header";
+import Navbar from "./domains/common/nav-bar";
 import { useState } from "react";
 import { User } from "@supabase/supabase-js";
+import { MobileNav } from "./domains/common/mobile-nav";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -98,10 +99,11 @@ export default function App() {
 
   return (
     <>
-      <Header />
+      <Navbar />
       <div className="pb-16 md:pb-0 pt-15">
         <Outlet context={{ supabase, isLoggedIn, user, profile }} />
       </div>
+      <MobileNav />
       <Toaster richColors position="top-center" />
     </>
   );
