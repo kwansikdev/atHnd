@@ -3,7 +3,7 @@
 import { useOutletContext } from "@remix-run/react";
 import { cloneElement, useRef } from "react";
 import { TOutletContext } from "~/root";
-import { BucketName } from "~/supabase";
+import { BucketName } from "supabase";
 import { cn, fileToBase64, shortId } from "~/utils";
 
 interface UploaderProps extends React.HTMLAttributes<HTMLDivElement> {
