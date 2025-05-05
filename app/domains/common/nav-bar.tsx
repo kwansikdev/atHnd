@@ -72,7 +72,7 @@ export default function Navbar() {
     //   icon: <BarChart3 className="h-4 w-4" />,
     // },
     {
-      to: "/database",
+      to: "/archive",
       label: "아카이브",
       icon: <Archive className="h-4 w-4" />,
     },

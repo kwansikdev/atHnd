@@ -71,7 +71,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
-        <Toaster richColors position="top-center" />
+        <Toaster richColors position="bottom-center" />
         <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
         <ScrollRestoration />
         <Scripts />
@@ -104,7 +104,6 @@ export default function App() {
         <Outlet context={{ supabase, isLoggedIn, user, profile }} />
       </div>
       <MobileNav />
-      <Toaster richColors position="top-center" />
     </>
   );
 }

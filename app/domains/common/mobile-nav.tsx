@@ -56,7 +56,7 @@ export function MobileNav() {
       icon: isLoggedIn ? (
         <Avatar className="h-7 w-7">
           <AvatarImage
-            src={profile?.avatar_url || "/public/profile-placeholder.png"}
+            src={profile?.avatar_url || "/profile-placeholder.png"}
             alt={profile?.nickname || "사용자"}
           />
           <AvatarFallback>{profile?.nickname?.charAt(0) || "U"}</AvatarFallback>
