@@ -17,12 +17,14 @@ export type Database = {
           name_jp: string | null;
           paint_work: string[] | null;
           price: number | null;
+          price_jp: number | null;
           release_date: string | null;
           scale: string | null;
           sculptors: string[] | null;
           series: string | null;
           size: string | null;
           specifications: string | null;
+          status: Database["public"]["Enums"]["archive_figure_status"] | null;
           updated_at: string | null;
         };
         Insert: {
@@ -40,12 +42,14 @@ export type Database = {
           name_jp?: string | null;
           paint_work?: string[] | null;
           price?: number | null;
+          price_jp?: number | null;
           release_date?: string | null;
           scale?: string | null;
           sculptors?: string[] | null;
           series?: string | null;
           size?: string | null;
           specifications?: string | null;
+          status?: Database["public"]["Enums"]["archive_figure_status"] | null;
           updated_at?: string | null;
         };
         Update: {
@@ -63,12 +67,14 @@ export type Database = {
           name_jp?: string | null;
           paint_work?: string[] | null;
           price?: number | null;
+          price_jp?: number | null;
           release_date?: string | null;
           scale?: string | null;
           sculptors?: string[] | null;
           series?: string | null;
           size?: string | null;
           specifications?: string | null;
+          status?: Database["public"]["Enums"]["archive_figure_status"] | null;
           updated_at?: string | null;
         };
         Relationships: [];
@@ -255,6 +261,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      archive_figure_status: "upcoming" | "released" | "delayed" | "canceled";
       figure_status: "RESERVED" | "ORDERED" | "DELIVERED" | "IN_COLLECTION";
       payment_status: "PENDING" | "COMPLETED" | "CANCELLED";
     };
@@ -372,6 +379,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      archive_figure_status: ["upcoming", "released", "delayed", "canceled"],
       figure_status: ["RESERVED", "ORDERED", "DELIVERED", "IN_COLLECTION"],
       payment_status: ["PENDING", "COMPLETED", "CANCELLED"],
     },

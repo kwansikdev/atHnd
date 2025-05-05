@@ -41,8 +41,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 
     if (!profile) {
-      await supabase.from("profile").insert({ id: userId });
-      return redirect("/setup-profile", { headers });
+      await supabase
+        .from("profile")
+        .insert({ id: userId, nickname: session.user.user_metadata.name });
+      return redirect("/profile/init", { headers });
     }
 
     // 프로필이 있으면 홈으로
