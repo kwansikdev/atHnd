@@ -39,6 +39,8 @@ export async function action({ request }: ActionFunctionArgs) {
   const size = body.get("size") as string;
   const specifications = body.get("specifications") as string;
 
+  const [year, month, day] = release_date.split("-");
+
   const { supabase } = await getSupabaseServerClient(request);
 
   const response = await supabase
@@ -58,7 +60,9 @@ export async function action({ request }: ActionFunctionArgs) {
         paint_work: null,
         price: parseInt(price),
         price_jp: parseInt(price_jp),
-        release_date,
+        release_year: parseInt(year),
+        release_month: parseInt(month),
+        release_text: `${year}년 ${month}월` + (day ? ` ${day}일` : ""),
         scale: scale || null,
         sculptors: null,
         series,
@@ -81,7 +85,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }));
 
     const updateImages = await supabase
-      .from("figure_images")
+      .from("figure_image")
       .insert(imagesDbData)
       .select();
 
@@ -97,7 +101,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function DatabaseAdd() {
   const { manufacturer } = useLoaderData<typeof loader>();
-  const { fetcher } = useFetcherActionState({
+  const { fetcher, isSuccess } = useFetcherActionState({
     successMessage: "새 피규어가 성공적으로 등록됐어요! 🎉",
     errorMessage: "앗, 등록 중 문제가 생겼어요 😢 잠시 후 다시 시도해 주세요.",
   });
@@ -123,7 +127,7 @@ export default function DatabaseAdd() {
         </div>
 
         <fetcher.Form method="post">
-          <ArchiveFigureAdd manufacturer={manufacturer} />
+          <ArchiveFigureAdd manufacturer={manufacturer} isSuccess={isSuccess} />
         </fetcher.Form>
       </div>
     </main>

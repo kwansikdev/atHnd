@@ -90,7 +90,7 @@ export function AreaReleaseDate() {
                       } else {
                         // 년월만 선택 - 해당 월의 1일로 설정하고 yyyy-MM 형식으로 저장
                         const yearMonth = format(selectedDate, "yyyy-MM");
-                        field.onChange(`${yearMonth}-01`); // DB에는 yyyy-MM-dd 형식으로 저장
+                        field.onChange(yearMonth); // DB에는 yyyy-MM-dd 형식으로 저장
                       }
                     }
                   }}
@@ -112,7 +112,7 @@ export function AreaReleaseDate() {
               type="text"
               className="hidden"
               name="release_date"
-              value={formatDate(date).trim()}
+              value={field.value}
             />
           </FormItem>
         );

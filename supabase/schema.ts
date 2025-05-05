@@ -18,7 +18,9 @@ export type Database = {
           paint_work: string[] | null;
           price: number | null;
           price_jp: number | null;
-          release_date: string | null;
+          release_month: number | null;
+          release_text: string | null;
+          release_year: number | null;
           scale: string | null;
           sculptors: string[] | null;
           series: string | null;
@@ -43,7 +45,9 @@ export type Database = {
           paint_work?: string[] | null;
           price?: number | null;
           price_jp?: number | null;
-          release_date?: string | null;
+          release_month?: number | null;
+          release_text?: string | null;
+          release_year?: number | null;
           scale?: string | null;
           sculptors?: string[] | null;
           series?: string | null;
@@ -68,7 +72,9 @@ export type Database = {
           paint_work?: string[] | null;
           price?: number | null;
           price_jp?: number | null;
-          release_date?: string | null;
+          release_month?: number | null;
+          release_text?: string | null;
+          release_year?: number | null;
           scale?: string | null;
           sculptors?: string[] | null;
           series?: string | null;

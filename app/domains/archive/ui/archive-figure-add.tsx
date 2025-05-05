@@ -1,5 +1,4 @@
 import { useForm } from "react-hook-form";
-// import { Database } from "supabase/schema";
 import { Checkbox } from "~/components/ui/checkbox";
 import {
   Form,
@@ -26,14 +25,15 @@ import { AreaReleaseDate } from "./area-release-date";
 import { AreaPrice } from "./area-price";
 import { AreaScaleSize } from "./area-scale-size";
 import { AreaNames } from "./area-names";
+import { useEffect } from "react";
 
 export function ArchiveFigureAdd({
   manufacturer,
+  isSuccess,
 }: {
   manufacturer: FigureManufacturerDto;
+  isSuccess: boolean;
 }) {
-  // const { supabase } = useOutletContext<TOutletContext>();
-
   const form = useForm({
     // resolver: zodResolver(figureFormSchema),
     defaultValues: {
@@ -58,6 +58,12 @@ export function ArchiveFigureAdd({
       specifications: "",
     },
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset();
+    }
+  }, [isSuccess, form]);
 
   return (
     <Form {...form}>
