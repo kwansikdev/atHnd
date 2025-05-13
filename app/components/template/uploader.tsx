@@ -1,10 +1,11 @@
 "use client";
 
 import { useOutletContext } from "@remix-run/react";
-import { cloneElement, useCallback, useRef } from "react";
+import { cloneElement, useCallback } from "react";
 import { TOutletContext } from "~/root";
 import { BucketName } from "supabase";
 import { cn, fileToBase64, shortId } from "~/utils";
+import { Accept, useDropzone } from "react-dropzone";
 
 interface UploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   bucket: BucketName;
@@ -15,6 +16,7 @@ interface UploaderProps extends React.HTMLAttributes<HTMLDivElement> {
   name?: string;
   options?: {
     base64?: boolean;
+    enableDropzone?: boolean;
     onUploadingChange?: (isUploading: boolean) => void;
     onUploadSuccess?: (files: { name: string; url: string }[]) => void;
     onUploadFail?: (files: File[]) => void;
@@ -48,25 +50,15 @@ export function Uploader({
   options,
   isMultiple = false,
   className,
-  // name,
+  name,
   ...props
 }: UploaderProps) {
   const { supabase } = useOutletContext<TOutletContext>();
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const clone = cloneElement(children, {
-    onClick: () => {
-      fileInputRef.current?.click();
-    },
-  });
+  const handleFiles = useCallback(
+    async (fileArray: File[]) => {
+      if (!fileArray.length) return;
 
-  const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.files) return;
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
-
-      const fileArray = Array.from(files);
       options?.onUploadingChange?.(true);
 
       const uploaded: { name: string; url: string }[] = [];
@@ -86,7 +78,6 @@ export function Uploader({
                   });
                 }
               );
-
               uploaded.push(result);
             } else {
               const filePath = `${Date.now()}_${shortId()}.${
@@ -94,10 +85,7 @@ export function Uploader({
               }`;
               const fileUrl = await supabase.uploadFile(bucket, filePath, file);
               if (fileUrl) {
-                uploaded.push({
-                  name: file.name,
-                  url: fileUrl,
-                });
+                uploaded.push({ name: file.name, url: fileUrl });
               } else {
                 failed.push(file);
               }
@@ -122,21 +110,75 @@ export function Uploader({
     [bucket, onFileChange, options, supabase]
   );
 
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files) {
+        handleFiles(Array.from(e.target.files));
+      }
+    },
+    [handleFiles]
+  );
+
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      handleFiles(acceptedFiles);
+    },
+    [handleFiles]
+  );
+
+  const dropzoneAccept: Accept | undefined = accept
+    ? { [accept]: [] }
+    : undefined;
+
+  const { getRootProps, getInputProps, isDragActive, inputRef } = useDropzone({
+    onDrop,
+    accept: dropzoneAccept,
+    multiple: isMultiple,
+    disabled: !options?.enableDropzone,
+  });
+
+  const clone = cloneElement(children, {
+    onClick: () => {
+      if (!options?.enableDropzone) {
+        inputRef.current?.click();
+      }
+    },
+  });
+
   return (
-    <div className={cn("inline-block cursor-pointer", className)} {...props}>
-      {clone}
-      <input
-        id={props.id}
-        ref={fileInputRef}
-        type="file"
-        hidden
-        accept={accept || "*"}
-        multiple={isMultiple}
-        onClick={(e) => {
-          e.currentTarget.value = "";
-        }}
-        onChange={handleFileChange}
-      />
+    <div
+      {...getRootProps()}
+      className={cn(
+        "inline-block cursor-pointer w-full",
+        options?.enableDropzone ? "" : "",
+        isDragActive ? "" : "",
+        className
+      )}
+      {...props}
+    >
+      <div
+        // ref={dropZoneRef}
+        className={`border-2 border-dashed rounded-lg p-8 transition-all ${
+          isDragActive
+            ? "border-primary bg-primary/5"
+            : "border-muted-foreground/25 hover:border-primary/50"
+        }`}
+      >
+        {clone}
+        <input
+          {...getInputProps({
+            id: props.id,
+            accept: accept || "*",
+            multiple: isMultiple,
+            hidden: true,
+          })}
+          name={name}
+          onClick={(e) => {
+            e.currentTarget.value = "";
+          }}
+          onChange={handleFileChange}
+        />
+      </div>
     </div>
   );
 }
