@@ -4,26 +4,27 @@ export type Database = {
       figure: {
         Row: {
           adult: boolean | null;
-          category: string | null;
-          character: string | null;
+          category_id: string | null;
+          character_id: string | null;
           created_at: string | null;
           description: string | null;
           id: string;
           limited: boolean | null;
-          manufacturer: string | null;
+          manufacturer_id: string | null;
           material: string | null;
           name: string;
           name_en: string | null;
           name_jp: string | null;
           paint_work: string[] | null;
-          price: number | null;
+          price_cn: number | null;
           price_jp: number | null;
+          price_kr: number | null;
           release_month: number | null;
           release_text: string | null;
           release_year: number | null;
-          scale: string | null;
+          scale_id: string | null;
           sculptors: string[] | null;
-          series: string | null;
+          series_id: string | null;
           size: string | null;
           specifications: string | null;
           status: Database["public"]["Enums"]["archive_figure_status"] | null;
@@ -31,26 +32,27 @@ export type Database = {
         };
         Insert: {
           adult?: boolean | null;
-          category?: string | null;
-          character?: string | null;
+          category_id?: string | null;
+          character_id?: string | null;
           created_at?: string | null;
           description?: string | null;
           id?: string;
           limited?: boolean | null;
-          manufacturer?: string | null;
+          manufacturer_id?: string | null;
           material?: string | null;
           name: string;
           name_en?: string | null;
           name_jp?: string | null;
           paint_work?: string[] | null;
-          price?: number | null;
+          price_cn?: number | null;
           price_jp?: number | null;
+          price_kr?: number | null;
           release_month?: number | null;
           release_text?: string | null;
           release_year?: number | null;
-          scale?: string | null;
+          scale_id?: string | null;
           sculptors?: string[] | null;
-          series?: string | null;
+          series_id?: string | null;
           size?: string | null;
           specifications?: string | null;
           status?: Database["public"]["Enums"]["archive_figure_status"] | null;
@@ -58,32 +60,128 @@ export type Database = {
         };
         Update: {
           adult?: boolean | null;
-          category?: string | null;
-          character?: string | null;
+          category_id?: string | null;
+          character_id?: string | null;
           created_at?: string | null;
           description?: string | null;
           id?: string;
           limited?: boolean | null;
-          manufacturer?: string | null;
+          manufacturer_id?: string | null;
           material?: string | null;
           name?: string;
           name_en?: string | null;
           name_jp?: string | null;
           paint_work?: string[] | null;
-          price?: number | null;
+          price_cn?: number | null;
           price_jp?: number | null;
+          price_kr?: number | null;
           release_month?: number | null;
           release_text?: string | null;
           release_year?: number | null;
-          scale?: string | null;
+          scale_id?: string | null;
           sculptors?: string[] | null;
-          series?: string | null;
+          series_id?: string | null;
           size?: string | null;
           specifications?: string | null;
           status?: Database["public"]["Enums"]["archive_figure_status"] | null;
           updated_at?: string | null;
         };
+        Relationships: [
+          {
+            foreignKeyName: "figure_category_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_category";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "figure_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_category";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "figure_manufacturer_fkey";
+            columns: ["manufacturer_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_manufacturer";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "figure_manufacturer_id_fkey";
+            columns: ["manufacturer_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_manufacturer";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "figure_scale_id_fkey";
+            columns: ["scale_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_scale";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      figure_category: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          name_en: string;
+          name_ko: string;
+          sort_order: number | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          name_en: string;
+          name_ko: string;
+          sort_order?: number | null;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          name_en?: string;
+          name_ko?: string;
+          sort_order?: number | null;
+        };
         Relationships: [];
+      };
+      figure_character: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          name_en: string | null;
+          name_ja: string | null;
+          name_ko: string;
+          series_id: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          name_en?: string | null;
+          name_ja?: string | null;
+          name_ko: string;
+          series_id?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          name_en?: string | null;
+          name_ja?: string | null;
+          name_ko?: string;
+          series_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "figure_character_series_id_fkey";
+            columns: ["series_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_series";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       figure_image: {
         Row: {
@@ -135,6 +233,54 @@ export type Database = {
           id?: string;
           name_en?: string;
           name_ko?: string | null;
+        };
+        Relationships: [];
+      };
+      figure_scale: {
+        Row: {
+          created_at: string | null;
+          description: string | null;
+          id: string;
+          name: string;
+          ratio: number;
+        };
+        Insert: {
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          name: string;
+          ratio: number;
+        };
+        Update: {
+          created_at?: string | null;
+          description?: string | null;
+          id?: string;
+          name?: string;
+          ratio?: number;
+        };
+        Relationships: [];
+      };
+      figure_series: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          name_en: string;
+          name_ja: string | null;
+          name_ko: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          name_en: string;
+          name_ja?: string | null;
+          name_ko: string;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          name_en?: string;
+          name_ja?: string | null;
+          name_ko?: string;
         };
         Relationships: [];
       };
