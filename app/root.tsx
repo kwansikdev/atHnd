@@ -12,10 +12,10 @@ import "./tailwind.css";
 
 import { getSupabaseServerClient, SupabaseService } from "../supabase";
 import { Toaster } from "./components/ui/sonner";
-import Navbar from "./domains/common/nav-bar";
+import Navbar from "./shared/ui/nav-bar";
 import { useState } from "react";
 import { User } from "@supabase/supabase-js";
-import { MobileNav } from "./domains/common/mobile-nav";
+import { MobileNav } from "./shared/ui/mobile-nav";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
