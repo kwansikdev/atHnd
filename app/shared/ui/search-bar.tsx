@@ -2,8 +2,8 @@
 
 import type React from "react";
 import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 import { Search, X } from "lucide-react";
 
 export function SearchBar() {

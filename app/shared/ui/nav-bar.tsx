@@ -37,7 +37,7 @@ export function loader() {
   };
 }
 
-export default function Navbar() {
+export function Navbar() {
   const { isLoggedIn, user, profile } = useRootLoaderData();
   const { envs } = useLoaderData<typeof loader>();
 
