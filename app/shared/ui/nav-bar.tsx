@@ -46,7 +46,7 @@ export function Navbar() {
     envs.SUPABASE_ANON_KEY
   );
 
-  const isMobile = useMobile();
+  const isMobile = useMobile(768);
   const navigate = useNavigate();
 
   const signOut = async () => {

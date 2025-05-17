@@ -26,6 +26,8 @@ interface SearchableSelectProps {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
+  disabled?: boolean;
+  emptyMessage?: string;
 }
 
 export function SearchableSelect({
@@ -33,6 +35,8 @@ export function SearchableSelect({
   value,
   onChange,
   placeholder,
+  disabled = false,
+  emptyMessage = "일치하는 옵션이 없습니다.",
 }: SearchableSelectProps) {
   const { triggerRef, width } = useTriggerWidth<HTMLButtonElement>();
   const [open, setOpen] = useState(false);
@@ -46,6 +50,7 @@ export function SearchableSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className={cn(
             "w-full justify-between",
             !selectedOption && "text-muted-foreground"
@@ -62,7 +67,7 @@ export function SearchableSelect({
       >
         <Command>
           <CommandInput placeholder="Search..." />
-          <CommandEmpty>No option found.</CommandEmpty>
+          <CommandEmpty>{emptyMessage}</CommandEmpty>
           <CommandGroup>
             {options.map((option) => (
               <CommandItem
