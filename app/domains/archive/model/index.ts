@@ -1,1 +1,1 @@
-export * from "./manufactirer-dto";
+export * from "./form-add-dto";
