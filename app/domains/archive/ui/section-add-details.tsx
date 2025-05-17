@@ -137,14 +137,6 @@ export default function SectionAddDetails({
                 <FormItem>
                   <FormLabel>스케일</FormLabel>
                   <FormControl>
-                    {/* <div className="relative">
-                      <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        placeholder="1/7"
-                        {...field}
-                        className="pl-10 transition-all focus:ring-2 focus:ring-primary/20"
-                      />
-                    </div> */}
                     <SearchableSelect
                       options={scale.map((s) => ({
                         label: s.name,
