@@ -12,7 +12,7 @@ import "./tailwind.css";
 
 import { getSupabaseServerClient, SupabaseService } from "../supabase";
 import { Toaster } from "./components/ui/sonner";
-import Navbar from "./shared/ui/nav-bar";
+import { Navbar } from "./shared/ui";
 import { useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { MobileNav } from "./shared/ui/mobile-nav";

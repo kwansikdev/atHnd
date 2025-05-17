@@ -50,7 +50,6 @@ export function FetcherActionProvider<T = unknown>({
   const navigate = useNavigate();
 
   const result = fetcher.data;
-  console.log("🚀 ~ result:", result);
   const isIdle = fetcher.state === "idle";
   const isLoading = fetcher.state !== "idle";
   const isSuccess = result?.success === true;
