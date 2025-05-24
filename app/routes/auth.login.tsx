@@ -32,6 +32,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Login() {
   const { supabase } = useOutletContext<TOutletContext>();
 
+  const urlParams = new URLSearchParams(location.search);
+  const redirectTo = urlParams.get("redirectTo") || "/";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const handleEmailLogin = async (e: React.FormEvent) => {
@@ -43,7 +46,7 @@ export default function Login() {
     const { error } = await supabase.client.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/`,
+        redirectTo: `${window.location.origin}/auth/callback?next=${redirectTo}`,
       },
     });
     if (error) {
@@ -59,7 +62,7 @@ export default function Login() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${redirectTo}`,
       },
     });
     if (error) {
