@@ -499,53 +499,47 @@ export type Database = {
       };
       user_figure: {
         Row: {
-          balance: number | null;
+          balance_paid_at: string | null;
+          balance_price: number | null;
           created_at: string | null;
-          deposit: number | null;
+          deposit_paid_at: string | null;
+          deposit_price: number | null;
           figure_id: string;
           id: string;
           memo: string | null;
-          payment_status: Database["public"]["Enums"]["payment_status"] | null;
-          price: number | null;
-          purchase_date: string | null;
-          purchase_link: string | null;
-          purchase_site: string | null;
-          status: Database["public"]["Enums"]["figure_status"] | null;
-          tax: number | null;
+          paid_at: string | null;
+          status: Database["public"]["Enums"]["user_figure_status"];
+          total_price: number | null;
           updated_at: string | null;
           user_id: string;
         };
         Insert: {
-          balance?: number | null;
+          balance_paid_at?: string | null;
+          balance_price?: number | null;
           created_at?: string | null;
-          deposit?: number | null;
+          deposit_paid_at?: string | null;
+          deposit_price?: number | null;
           figure_id: string;
           id?: string;
           memo?: string | null;
-          payment_status?: Database["public"]["Enums"]["payment_status"] | null;
-          price?: number | null;
-          purchase_date?: string | null;
-          purchase_link?: string | null;
-          purchase_site?: string | null;
-          status?: Database["public"]["Enums"]["figure_status"] | null;
-          tax?: number | null;
+          paid_at?: string | null;
+          status: Database["public"]["Enums"]["user_figure_status"];
+          total_price?: number | null;
           updated_at?: string | null;
           user_id: string;
         };
         Update: {
-          balance?: number | null;
+          balance_paid_at?: string | null;
+          balance_price?: number | null;
           created_at?: string | null;
-          deposit?: number | null;
+          deposit_paid_at?: string | null;
+          deposit_price?: number | null;
           figure_id?: string;
           id?: string;
           memo?: string | null;
-          payment_status?: Database["public"]["Enums"]["payment_status"] | null;
-          price?: number | null;
-          purchase_date?: string | null;
-          purchase_link?: string | null;
-          purchase_site?: string | null;
-          status?: Database["public"]["Enums"]["figure_status"] | null;
-          tax?: number | null;
+          paid_at?: string | null;
+          status?: Database["public"]["Enums"]["user_figure_status"];
+          total_price?: number | null;
           updated_at?: string | null;
           user_id?: string;
         };
@@ -554,55 +548,118 @@ export type Database = {
             foreignKeyName: "user_figure_figure_id_fkey";
             columns: ["figure_id"];
             isOneToOne: false;
-            referencedRelation: "figure_backup";
+            referencedRelation: "figure";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_figure_history: {
+        Row: {
+          changed_at: string | null;
+          id: string;
+          new_status: Database["public"]["Enums"]["user_figure_status"];
+          previous_status:
+            | Database["public"]["Enums"]["user_figure_status"]
+            | null;
+          user_figure_id: string;
+        };
+        Insert: {
+          changed_at?: string | null;
+          id?: string;
+          new_status: Database["public"]["Enums"]["user_figure_status"];
+          previous_status?:
+            | Database["public"]["Enums"]["user_figure_status"]
+            | null;
+          user_figure_id: string;
+        };
+        Update: {
+          changed_at?: string | null;
+          id?: string;
+          new_status?: Database["public"]["Enums"]["user_figure_status"];
+          previous_status?:
+            | Database["public"]["Enums"]["user_figure_status"]
+            | null;
+          user_figure_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_figure_history_user_figure_id_fkey";
+            columns: ["user_figure_id"];
+            isOneToOne: false;
+            referencedRelation: "user_figure";
             referencedColumns: ["id"];
           }
         ];
       };
       user_figure_review: {
         Row: {
-          content: string;
+          content: string | null;
           created_at: string | null;
-          figure_id: string;
           id: string;
-          rating: number;
+          is_public: boolean | null;
+          rating: number | null;
+          title: string | null;
           updated_at: string | null;
           user_figure_id: string;
-          user_id: string;
         };
         Insert: {
-          content: string;
+          content?: string | null;
           created_at?: string | null;
-          figure_id: string;
           id?: string;
-          rating: number;
+          is_public?: boolean | null;
+          rating?: number | null;
+          title?: string | null;
           updated_at?: string | null;
           user_figure_id: string;
-          user_id: string;
         };
         Update: {
-          content?: string;
+          content?: string | null;
           created_at?: string | null;
-          figure_id?: string;
           id?: string;
-          rating?: number;
+          is_public?: boolean | null;
+          rating?: number | null;
+          title?: string | null;
           updated_at?: string | null;
           user_figure_id?: string;
-          user_id?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "user_figure_review_figure_id_fkey";
-            columns: ["figure_id"];
-            isOneToOne: false;
-            referencedRelation: "figure_backup";
-            referencedColumns: ["id"];
-          },
-          {
             foreignKeyName: "user_figure_review_user_figure_id_fkey";
             columns: ["user_figure_id"];
-            isOneToOne: false;
+            isOneToOne: true;
             referencedRelation: "user_figure";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      user_figure_review_image: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          image_url: string;
+          review_id: string;
+          sort_order: number | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          image_url: string;
+          review_id: string;
+          sort_order?: number | null;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          image_url?: string;
+          review_id?: string;
+          sort_order?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_figure_review_image_review_id_fkey";
+            columns: ["review_id"];
+            isOneToOne: false;
+            referencedRelation: "user_figure_review";
             referencedColumns: ["id"];
           }
         ];
@@ -660,6 +717,7 @@ export type Database = {
       archive_figure_status: "upcoming" | "released" | "delayed" | "canceled";
       figure_status: "RESERVED" | "ORDERED" | "DELIVERED" | "IN_COLLECTION";
       payment_status: "PENDING" | "COMPLETED" | "CANCELLED";
+      user_figure_status: "reserved" | "ordered" | "owned";
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -778,6 +836,7 @@ export const Constants = {
       archive_figure_status: ["upcoming", "released", "delayed", "canceled"],
       figure_status: ["RESERVED", "ORDERED", "DELIVERED", "IN_COLLECTION"],
       payment_status: ["PENDING", "COMPLETED", "CANCELLED"],
+      user_figure_status: ["reserved", "ordered", "owned"],
     },
   },
 } as const;
