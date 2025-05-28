@@ -33,6 +33,7 @@ export default function SectionAddDetails({
   goToNextStep: () => void;
 }) {
   const { scale } = useOutletContext<TArchiveAddContext>();
+  console.log("🚀 ~ scale:", scale);
   const form = useFormContext();
 
   return (
@@ -132,7 +133,7 @@ export default function SectionAddDetails({
 
             <FormField
               control={form.control}
-              name="scale"
+              name="scale_id"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>스케일</FormLabel>
@@ -140,7 +141,7 @@ export default function SectionAddDetails({
                     <SearchableSelect
                       options={scale.map((s) => ({
                         label: s.name,
-                        value: s.name,
+                        value: s.id,
                       }))}
                       value={field.value}
                       onChange={field.onChange}

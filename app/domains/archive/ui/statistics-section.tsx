@@ -110,7 +110,7 @@ export function StatisticsSection() {
       {stats.map((stat) => (
         <motion.div key={stat.title} variants={itemVariants}>
           <Card className="h-full overflow-hidden">
-            <CardHeader className="pb-2">
+            <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="text-base">{stat.title}</CardTitle>
                 <div

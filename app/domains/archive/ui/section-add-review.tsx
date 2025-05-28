@@ -48,6 +48,7 @@ export default function SectionAddReview({
   const form = useFormContext<FigureAddFormValues>();
 
   const [formData, setFormData] = useState({} as FigureAddFormValues);
+
   useEffect(() => {
     setFormData(form.getValues());
   }, [form]);
@@ -60,6 +61,14 @@ export default function SectionAddReview({
   useEffect(() => {
     if (isSuccess) goToStartStep();
   }, [isSuccess, goToStartStep]);
+
+  const isFormValid =
+    !form.getValues("name") ||
+    !form.getValues("manufacturer_id") ||
+    !form.getValues("series_id") ||
+    !form.getValues("character_id") ||
+    !form.getValues("category_id") ||
+    !form.getValues("release_text");
 
   return (
     <motion.div
@@ -437,9 +446,9 @@ export default function SectionAddReview({
             </Button>
             <Button
               disabled={
-                !form.formState.isValid ||
-                images.filter((img) => img.url).length === 0 ||
-                isLoading
+                isFormValid ||
+                isLoading ||
+                images.filter((img) => img.url).length === 0
               }
               className="relative overflow-hidden group bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all"
               onClick={() => {

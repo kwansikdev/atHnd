@@ -22,10 +22,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
   // 기본 정보
   const name = body.get("name") as string;
-  const character = body.get("character") as string;
-  const series = body.get("series") as string;
-  const manufacturer = body.get("manufacturer") as string;
-  const category = body.get("category") as string;
+  const character_id = body.get("character_id") as string;
+  const series_id = body.get("series_id") as string;
+  const manufacturer_id = body.get("manufacturer_id") as string;
+  const category_id = body.get("category_id") as string;
   const price_kr = body.get("price_kr") as string;
   const price_jp = body.get("price_jp") as string;
   const price_cn = body.get("price_cn") as string;
@@ -54,10 +54,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const figureFormData = [
     {
       name,
-      character_id: character,
-      series_id: series,
-      manufacturer_id: manufacturer,
-      category_id: category,
+      character_id,
+      series_id,
+      manufacturer_id,
+      category_id,
       price_kr: parseInt(price_kr),
       price_jp: price_jp ? parseInt(price_jp) : null,
       price_cn: price_cn ? parseInt(price_cn) : null,
@@ -86,7 +86,7 @@ export async function action({ request }: ActionFunctionArgs) {
     .select();
 
   if (response.error) {
-    return data({ error: true });
+    return data({ isError: true });
   }
 
   if (response.data.length !== 0) {
@@ -110,7 +110,7 @@ export async function action({ request }: ActionFunctionArgs) {
         .select();
 
       if (updateImages.error) {
-        return data({ error: true });
+        return data({ isError: true });
       }
 
       return data({
