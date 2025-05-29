@@ -7,7 +7,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   await supabase.auth.signOut(); // 세션 삭제
 
-  return redirect("/login", {
+  return redirect("/auth/login", {
     headers,
   });
 };

@@ -32,7 +32,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    return redirect("/login", { headers });
+    return redirect("/auth/login", { headers });
   }
 
   const profile = await supabase

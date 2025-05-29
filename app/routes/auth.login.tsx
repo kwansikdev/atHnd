@@ -1,5 +1,10 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Link, redirect, useOutletContext } from "@remix-run/react";
+import {
+  Link,
+  redirect,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,8 +37,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Login() {
   const { supabase } = useOutletContext<TOutletContext>();
 
-  const urlParams = new URLSearchParams(location.search);
-  const redirectTo = urlParams.get("redirectTo") || "/";
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirectTo") || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
