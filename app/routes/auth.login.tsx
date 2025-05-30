@@ -38,7 +38,7 @@ export default function Login() {
   const { supabase } = useOutletContext<TOutletContext>();
 
   const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/";
+  const redirectTo = searchParams.get("redirect_to") || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

@@ -18,7 +18,6 @@ export default function Index() {
     <main className="container mx-auto px-4 py-8">
       <Suspense fallback={<Skeleton className="h-[500px] w-full rounded-xl" />}>
         <HomeHero />
-        {/* <HomeHero figures={[]} /> */}
       </Suspense>
 
       <div className="mt-24 mb-12">
