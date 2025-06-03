@@ -15,6 +15,8 @@ export async function getThisMonthBySupabase(
     .from("user_figure")
     .select(
       `
+      deposit_price,
+      balance_price,
       total_price,
       paid_at
     `,
@@ -28,10 +30,13 @@ export async function getThisMonthBySupabase(
 
   if (error) throw error;
 
-  const totalPaid = data?.reduce(
-    (acc, cur) => (acc + (cur.total_price || 0)) as number,
-    0
-  );
+  const totalPaid = data?.reduce((acc, cur) => {
+    if (cur.paid_at) {
+      return acc + (cur.total_price || 0);
+    }
+
+    return acc + (cur.deposit_price || 0);
+  }, 0);
 
   return { data, count, totalPaid };
 }

@@ -166,9 +166,7 @@ export default function Orders() {
           <Tabs
             value={activeTab}
             onValueChange={(value) =>
-              navigate(
-                `/reservations${value === "/overview" ? "" : `/${value}`}`
-              )
+              navigate(`/orders${value === "/overview" ? "" : `/${value}`}`)
             }
           >
             <div className="flex justify-between items-center">
