@@ -1,2 +1,5 @@
 export * from "./get-status-label";
+export * from "./get-total-order-by-supabase";
+export * from "./get-total-preorder-by-supabase";
+export * from "./get-total-balance-by-supabase";
 export * from "./get-user-from-request";
