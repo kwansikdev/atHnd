@@ -76,9 +76,9 @@ export default function Orders() {
           <div className="relative z-10">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
               <div className="space-y-2">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
                   내 예약/구매
-                </h1>
+                </h2>
                 <p className="text-blue-100 text-sm">
                   예약 현황과 구매 진행상황을 확인하세요
                 </p>

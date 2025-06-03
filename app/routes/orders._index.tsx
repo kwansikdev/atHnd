@@ -8,17 +8,33 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { FigureCard } from "~/domains/orders/ui";
+import { getTotalBalanceBySupabase, getUserFromRequest } from "~/shared/action";
+import { LoaderFunctionArgs } from "@remix-run/node";
+// import { getRecentOrderBySupabase } from "~/domains/orders/action";
 
-export function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const { supabase } = await getUserFromRequest(request);
+
+  // const recentOrders = await getRecentOrderBySupabase(supabase);
+  const totalBalance = await getTotalBalanceBySupabase(supabase);
+
+  const totalBalancePriceAmount = totalBalance.data?.reduce(
+    (acc, { balance_price }) => acc + (balance_price || 0),
+    0
+  );
+
   return data({
     totalPaid: 453000,
-    totalRemaining: 120000,
+    totalBalance: {
+      count: totalBalance.count,
+      amount: totalBalancePriceAmount,
+    },
     totalBudget: 573000,
   });
 }
 
 export default function OrdersIndex() {
-  const { totalPaid, totalRemaining, totalBudget } =
+  const { totalPaid, totalBalance, totalBudget } =
     useLoaderData<typeof loader>();
 
   return (
@@ -42,7 +58,7 @@ export default function OrdersIndex() {
               <div className="text-center p-4 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-lg">
                 <div className="text-sm text-muted-foreground">남은 잔금</div>
                 <div className="text-xl font-bold text-red-600">
-                  ₩{totalRemaining.toLocaleString()}
+                  ₩{Number(totalBalance.amount).toLocaleString()}
                 </div>
               </div>
             </div>
@@ -70,7 +86,7 @@ export default function OrdersIndex() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {totalRemaining > 0 && (
+            {/* {totalRemaining > 0 && (
               <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-lg border border-amber-200/50">
                 <CreditCard className="h-5 w-5 text-amber-500" />
                 <div>
@@ -82,7 +98,7 @@ export default function OrdersIndex() {
                   </div>
                 </div>
               </div>
-            )}
+            )} */}
 
             <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 rounded-lg border border-emerald-200/50">
               <CheckCircle className="h-5 w-5 text-emerald-500" />
