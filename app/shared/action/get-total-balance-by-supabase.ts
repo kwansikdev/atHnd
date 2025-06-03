@@ -4,7 +4,7 @@ import { Database } from "supabase/schema";
 export async function getTotalBalanceBySupabase(
   supabase: SupabaseClient<Database>
 ) {
-  const { error, ...totalBalance } = await supabase
+  const { error, data, count } = await supabase
     .from("user_figure")
     .select("balance_price", {
       count: "exact",
@@ -13,9 +13,12 @@ export async function getTotalBalanceBySupabase(
     .is("balance_paid_at", null)
     .gt("balance_price", 0);
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
-  return totalBalance;
+  const totalBalance = data?.reduce(
+    (acc, { balance_price }) => acc + (balance_price || 0),
+    0
+  );
+
+  return { data, count, totalBalance };
 }

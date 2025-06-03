@@ -4,7 +4,7 @@ import { Database } from "supabase/schema";
 export async function getTotalOrderBySupabase(
   supabase: SupabaseClient<Database>
 ) {
-  const { error, ...totalOrder } = await supabase
+  const { error, data, count } = await supabase
     .from("user_figure")
     .select("*", {
       count: "exact",
@@ -15,5 +15,5 @@ export async function getTotalOrderBySupabase(
     throw error;
   }
 
-  return totalOrder;
+  return { data, count };
 }

@@ -1,7 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "supabase/schema";
 
-export async function getTotalPreorderBySupabase(
+export async function getTotalPaidBySupabase(
   supabase: SupabaseClient<Database>
 ) {
   const { error, data, count } = await supabase
@@ -9,7 +9,8 @@ export async function getTotalPreorderBySupabase(
     .select("*", {
       count: "exact",
     })
-    .eq("status", "reserved");
+    .neq("status", "owned")
+    .not("paid_at", "is", null);
 
   if (error) {
     throw error;
