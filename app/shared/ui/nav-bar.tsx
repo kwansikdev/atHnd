@@ -57,7 +57,7 @@ export function Navbar() {
   const mainNavItems = [
     // { to: "/", label: "홈", icon: <Home className="h-4 w-4" /> },
     {
-      to: "/reservations",
+      to: "/orders",
       label: "내 예약/구매",
       icon: <ShoppingCart className="h-4 w-4" />,
     },
@@ -346,7 +346,7 @@ export function Navbar() {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  to="/reservations"
+                  to="/orders"
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <ShoppingCart className="mr-2 h-4 w-4" />

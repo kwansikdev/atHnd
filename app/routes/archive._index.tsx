@@ -56,7 +56,7 @@ export default function Archive() {
                 asChild
                 className="group bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
               >
-                <Link to="/add" className="flex items-center">
+                <Link to="/archive/add" className="flex items-center">
                   <Plus className="mr-2 h-4 w-4 transition-transform group-hover:rotate-90" />
                   <span>새 피규어 등록</span>
                   <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-shimmer"></span>

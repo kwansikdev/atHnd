@@ -37,7 +37,7 @@ export function MobileNav() {
   const navItems = [
     { to: "/", icon: <Home className="h-5 w-5" />, label: "홈" },
     {
-      to: "/reservations",
+      to: "/orders",
       icon: <ShoppingCart className="h-5 w-5" />,
       label: "예약/구매",
     },
