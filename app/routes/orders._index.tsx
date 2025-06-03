@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
-import { FigureCard } from "~/domains/reservations/ui";
+import { FigureCard } from "~/domains/orders/ui";
 
 export function loader() {
   return data({
@@ -17,7 +17,7 @@ export function loader() {
   });
 }
 
-export default function Reservations() {
+export default function OrdersIndex() {
   const { totalPaid, totalRemaining, totalBudget } =
     useLoaderData<typeof loader>();
 
@@ -105,7 +105,7 @@ export default function Reservations() {
           최근 예약/주문
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {initialOrders.slice(0, 6).map((order) => (
             <FigureCard key={order.id} {...order} />
           ))}

@@ -1,5 +1,7 @@
+import { LoaderFunctionArgs } from "@remix-run/node";
 import {
   Outlet,
+  useLoaderData,
   useLocation,
   useNavigate,
   useOutletContext,
@@ -16,19 +18,49 @@ import {
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { AddToReservationButton } from "~/domains/reservations/ui";
+import { AddToReservationButton } from "~/domains/orders/ui";
 import { TOutletContext } from "~/root";
+import {
+  getTotalBalanceBySupabase,
+  getTotalOrderBySupabase,
+  getTotalPreorderBySupabase,
+} from "~/shared/action";
+import { getUserFromRequest } from "~/shared/action/get-user-from-request";
 
-export default function ReservationsIndex() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const { supabase, headers } = await getUserFromRequest(request);
+
+  const totalOrder = await getTotalOrderBySupabase(supabase);
+  const totalPreorder = await getTotalPreorderBySupabase(supabase);
+  const totalBalance = await getTotalBalanceBySupabase(supabase);
+
+  const totalBalancePriceAmount = totalBalance.data?.reduce(
+    (acc, { balance_price }) => acc + (balance_price || 0),
+    0
+  );
+
+  return Response.json(
+    {
+      totalOrderCount: totalOrder.count,
+      totalPreorderCount: totalPreorder.count,
+      totalBalancePriceAmount,
+    },
+    { headers }
+  );
+}
+
+export default function Orders() {
   const rootOutletContext = useOutletContext<TOutletContext>();
+  const { totalOrderCount, totalPreorderCount, totalBalancePriceAmount } =
+    useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const location = useLocation();
 
   // 현재 경로에서 탭 값 추측
   // 현재 URL에서 탭 상태 추출
   const activeTab = (() => {
-    if (location.pathname === "/reservations") return "";
-    if (location.pathname.includes("/orders")) return "orders";
+    if (location.pathname === "/orders") return "";
+    if (location.pathname.includes("/list")) return "list";
     if (location.pathname.includes("/calendar")) return "calendar";
     if (location.pathname.includes("/budget")) return "budget";
     if (location.pathname.includes("/overview")) return "overview";
@@ -64,7 +96,7 @@ export default function ReservationsIndex() {
                 <div>
                   <p className="text-sm text-muted-foreground">총 예약/주문</p>
                   <p className="text-2xl font-bold bg-gradient-to-r dark:from-blue-500 dark:to-purple-500 from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                    4개
+                    {totalOrderCount}개
                   </p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
@@ -80,7 +112,7 @@ export default function ReservationsIndex() {
                 <div>
                   <p className="text-sm text-muted-foreground">예약 중</p>
                   <p className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-                    2개
+                    {totalPreorderCount}개
                   </p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full">
@@ -112,7 +144,7 @@ export default function ReservationsIndex() {
                 <div>
                   <p className="text-sm text-muted-foreground">남은 잔금</p>
                   <p className="text-2xl font-bold bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
-                    ₩{Number(100000).toLocaleString()}
+                    ₩{Number(totalBalancePriceAmount).toLocaleString()}
                   </p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-full">
@@ -147,7 +179,7 @@ export default function ReservationsIndex() {
                   개요
                 </TabsTrigger>
                 <TabsTrigger
-                  value="orders"
+                  value="list"
                   className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600"
                 >
                   <Package className="h-4 w-4" />
@@ -178,8 +210,6 @@ export default function ReservationsIndex() {
                   <Filter className="h-4 w-4 mr-2" />
                   필터
                 </Button>
-
-                <AddToReservationButton />
               </div>
             </div>
 

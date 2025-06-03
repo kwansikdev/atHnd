@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { FigureSearchCommand } from "~/domains/common/ui/figure-search-command";
 
 export function AddToReservationButton() {
   return (
@@ -30,6 +31,8 @@ export function AddToReservationButton() {
             피규어 데이터베이스에서 선택하여 예약/구매 정보를 추가하세요.
           </DialogDescription>
         </DialogHeader>
+
+        <FigureSearchCommand onSelect={(figure) => console.log(figure)} />
       </DialogContent>
     </Dialog>
   );
