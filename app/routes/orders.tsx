@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import {
+  data,
   Outlet,
   useLoaderData,
   useLocation,
@@ -14,6 +15,7 @@ import {
   Package,
   ShoppingCart,
   TrendingUp,
+  Truck,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
@@ -23,35 +25,33 @@ import { TOutletContext } from "~/root";
 import {
   getTotalBalanceBySupabase,
   getTotalOrderBySupabase,
+  getTotalPaidBySupabase,
   getTotalPreorderBySupabase,
 } from "~/shared/action";
+import { getThisMonthBySupabase } from "~/shared/action/get-this-month-by-supabase";
 import { getUserFromRequest } from "~/shared/action/get-user-from-request";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase, headers } = await getUserFromRequest(request);
+  const { supabase } = await getUserFromRequest(request);
 
   const totalOrder = await getTotalOrderBySupabase(supabase);
   const totalPreorder = await getTotalPreorderBySupabase(supabase);
   const totalBalance = await getTotalBalanceBySupabase(supabase);
+  const totalPaid = await getTotalPaidBySupabase(supabase);
+  const thisMonth = await getThisMonthBySupabase(supabase);
 
-  const totalBalancePriceAmount = totalBalance.data?.reduce(
-    (acc, { balance_price }) => acc + (balance_price || 0),
-    0
-  );
-
-  return Response.json(
-    {
-      totalOrderCount: totalOrder.count,
-      totalPreorderCount: totalPreorder.count,
-      totalBalancePriceAmount,
-    },
-    { headers }
-  );
+  return data({
+    totalOrder,
+    totalPreorder,
+    totalBalance,
+    totalPaid,
+    thisMonth,
+  });
 }
 
 export default function Orders() {
   const rootOutletContext = useOutletContext<TOutletContext>();
-  const { totalOrderCount, totalPreorderCount, totalBalancePriceAmount } =
+  const { totalOrder, totalBalance, totalPaid, thisMonth } =
     useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -95,8 +95,8 @@ export default function Orders() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">총 예약/주문</p>
-                  <p className="text-2xl font-bold bg-gradient-to-r dark:from-blue-500 dark:to-purple-500 from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                    {totalOrderCount}개
+                  <p className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
+                    {totalOrder.count}개
                   </p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full">
@@ -110,9 +110,9 @@ export default function Orders() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">예약 중</p>
+                  <p className="text-sm text-muted-foreground">잔금 대기</p>
                   <p className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
-                    {totalPreorderCount}개
+                    {totalBalance.count}개
                   </p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full">
@@ -122,33 +122,35 @@ export default function Orders() {
             </CardContent>
           </Card>
 
-          {/* <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-xl bg-white/80 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">배송 중</p>
-                  <p className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-800 bg-clip-text text-transparent">
-                    0개
-                  </p>
-                </div>
-                <div className="p-3 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full">
-                  <Truck className="h-6 w-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card> */}
-
-          <Card className="col-span-2 bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">남은 잔금</p>
+                  <p className="text-sm text-muted-foreground">결제 완료</p>
                   <p className="text-2xl font-bold bg-gradient-to-r from-red-500 to-pink-500 bg-clip-text text-transparent">
-                    ₩{Number(totalBalancePriceAmount).toLocaleString()}
+                    {totalPaid.count}개
                   </p>
                 </div>
                 <div className="p-3 bg-gradient-to-r from-red-500 to-pink-500 rounded-full">
                   <CreditCard className="h-6 w-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card border-gray-200 dark:border-gray-800 shadow-xl  backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-muted-foreground">
+                    이번 달 결제 금액
+                  </p>
+                  <p className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text text-transparent">
+                    ₩{Number(thisMonth.totalPaid).toLocaleString()}
+                  </p>
+                </div>
+                <div className="p-3 bg-gradient-to-r from-emerald-500 to-green-500 rounded-full">
+                  <Truck className="h-6 w-6 text-white" />
                 </div>
               </div>
             </CardContent>
