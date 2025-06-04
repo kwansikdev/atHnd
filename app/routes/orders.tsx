@@ -17,6 +17,7 @@ import {
   TrendingUp,
   Truck,
 } from "lucide-react";
+import { getSupabaseServerClient } from "supabase";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
@@ -29,10 +30,9 @@ import {
   getTotalPreorderBySupabase,
 } from "~/shared/action";
 import { getThisMonthBySupabase } from "~/shared/action/get-this-month-by-supabase";
-import { getUserFromRequest } from "~/shared/action/get-user-from-request";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase } = await getUserFromRequest(request);
+  const { supabase } = await getSupabaseServerClient(request);
 
   const totalOrder = await getTotalOrderBySupabase(supabase);
   const totalPreorder = await getTotalPreorderBySupabase(supabase);

@@ -1,18 +1,11 @@
-import { LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { data, LoaderFunctionArgs } from "@remix-run/node";
 import { JSX } from "react";
 import { getSupabaseServerClient } from "supabase";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase, headers } = await getSupabaseServerClient(request);
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { headers } = await getSupabaseServerClient(request);
 
-  if (!user) {
-    return redirect("/auth/login", { headers });
-  }
-
-  return null;
+  return data({}, { headers });
 }
 
 export default function Profile(): JSX.Element {

@@ -8,12 +8,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { FigureCard } from "~/domains/orders/ui";
-import { getTotalBalanceBySupabase, getUserFromRequest } from "~/shared/action";
+import { getTotalBalanceBySupabase } from "~/shared/action";
 import { LoaderFunctionArgs } from "@remix-run/node";
+import { getSupabaseServerClient } from "supabase";
 // import { getRecentOrderBySupabase } from "~/domains/orders/action";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase } = await getUserFromRequest(request);
+  const { supabase } = await getSupabaseServerClient(request);
 
   // const recentOrders = await getRecentOrderBySupabase(supabase);
   const totalBalance = await getTotalBalanceBySupabase(supabase);

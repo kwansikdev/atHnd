@@ -1,12 +1,12 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { getSupabaseServerClient } from "supabase";
 import { getUserFigureListAction } from "~/domains/collection/action";
 import { FigureGrid } from "~/domains/collection/ui/figure-grid";
-import { getUserFromRequest } from "~/shared/action/get-user-from-request";
 
 // 피규어 데이터 가져오기
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase } = await getUserFromRequest(request);
+  const { supabase } = await getSupabaseServerClient(request);
 
   const url = new URL(request.url);
   const view = url.searchParams.get("view") ?? "all";
