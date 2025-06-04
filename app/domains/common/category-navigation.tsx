@@ -103,7 +103,7 @@ const categories: CategoryItem[] = [
     icon: <ShoppingCart className="h-6 w-6" />,
     name: "예약/구매",
     description: "내 예약 및 구매 관리",
-    href: "/reservations",
+    href: "/orders",
     color: "text-teal-500",
     gradient:
       "from-teal-500/20 to-teal-600/20 hover:from-teal-500/30 hover:to-teal-600/30",

@@ -33,7 +33,6 @@ export default function SectionAddDetails({
   goToNextStep: () => void;
 }) {
   const { scale } = useOutletContext<TArchiveAddContext>();
-  console.log("🚀 ~ scale:", scale);
   const form = useFormContext();
 
   return (
