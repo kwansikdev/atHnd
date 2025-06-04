@@ -56,8 +56,6 @@ export function FigureCard({
   // const [currentImageIndex, setCurrentImageIndex] = useState(0);
   // const [note, setNote] = useState("");
 
-  // const { toast } = useToast();
-
   // const allImages = images.length > 0 ? images : [image];
 
   // 가격 계산 함수

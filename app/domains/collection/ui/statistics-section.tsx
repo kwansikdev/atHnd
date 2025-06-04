@@ -2,7 +2,7 @@
 
 import { Card, CardContent } from "~/components/ui/card";
 import { Heart, Package, BookmarkCheck, Wallet2, Calendar } from "lucide-react";
-import { TStatisticsDto } from "../action/statistics-dto";
+import { TStatisticsDto } from "../model/statistics-dto";
 import { cn } from "~/utils";
 
 interface StatisticsSectionProps {

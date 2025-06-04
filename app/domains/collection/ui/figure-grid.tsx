@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import {
   AlertDialog,
@@ -10,11 +11,11 @@ import {
   AlertDialogAction,
 } from "~/components/ui/alert-dialog";
 import { FigureCard } from "./figure-card";
-import { useToast } from "~/hooks/use-toast";
+
 import { CollectionFigureDto } from "../model";
+import { toast } from "sonner";
 
 export function FigureGrid({ items }: { items: CollectionFigureDto[] }) {
-  const { toast } = useToast();
   const [deleteItemId, setDeleteItemId] = useState<string | null>(null);
   const [editItem, setEditItem] = useState<any>(null);
 
@@ -28,16 +29,13 @@ export function FigureGrid({ items }: { items: CollectionFigureDto[] }) {
       const updatedItems = items.filter((item) => item.id !== deleteItemId);
       // onItemsChange(updatedItems);
 
-      toast({
-        title: "삭제 완료",
+      toast("삭제 완료", {
         description: "컬렉션에서 아이템이 삭제되었습니다.",
       });
     } catch (error) {
       console.error("아이템 삭제 중 오류:", error);
-      toast({
-        title: "오류",
+      toast("오류", {
         description: "아이템 삭제 중 문제가 발생했습니다.",
-        variant: "destructive",
       });
     } finally {
       setDeleteItemId(null);
