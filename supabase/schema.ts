@@ -88,6 +88,13 @@ export type Database = {
         };
         Relationships: [
           {
+            foreignKeyName: "figure_character_id_fkey";
+            columns: ["character_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_character";
+            referencedColumns: ["id"];
+          },
+          {
             foreignKeyName: "figure_new_category_fkey";
             columns: ["category_id"];
             isOneToOne: false;
@@ -107,128 +114,12 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "figure_scale";
             referencedColumns: ["id"];
-          }
-        ];
-      };
-      figure_backup: {
-        Row: {
-          adult: boolean | null;
-          category_id: string | null;
-          character_id: string | null;
-          created_at: string | null;
-          description: string | null;
-          id: string;
-          limited: boolean | null;
-          manufacturer_id: string | null;
-          material: string | null;
-          name: string;
-          name_en: string | null;
-          name_jp: string | null;
-          paint_work: string[] | null;
-          price_cn: number | null;
-          price_jp: number | null;
-          price_kr: number | null;
-          release_month: number | null;
-          release_text: string | null;
-          release_year: number | null;
-          scale_id: string | null;
-          sculptors: string[] | null;
-          series_id: string | null;
-          size: string | null;
-          specifications: string | null;
-          status: Database["public"]["Enums"]["archive_figure_status"] | null;
-          updated_at: string | null;
-        };
-        Insert: {
-          adult?: boolean | null;
-          category_id?: string | null;
-          character_id?: string | null;
-          created_at?: string | null;
-          description?: string | null;
-          id?: string;
-          limited?: boolean | null;
-          manufacturer_id?: string | null;
-          material?: string | null;
-          name: string;
-          name_en?: string | null;
-          name_jp?: string | null;
-          paint_work?: string[] | null;
-          price_cn?: number | null;
-          price_jp?: number | null;
-          price_kr?: number | null;
-          release_month?: number | null;
-          release_text?: string | null;
-          release_year?: number | null;
-          scale_id?: string | null;
-          sculptors?: string[] | null;
-          series_id?: string | null;
-          size?: string | null;
-          specifications?: string | null;
-          status?: Database["public"]["Enums"]["archive_figure_status"] | null;
-          updated_at?: string | null;
-        };
-        Update: {
-          adult?: boolean | null;
-          category_id?: string | null;
-          character_id?: string | null;
-          created_at?: string | null;
-          description?: string | null;
-          id?: string;
-          limited?: boolean | null;
-          manufacturer_id?: string | null;
-          material?: string | null;
-          name?: string;
-          name_en?: string | null;
-          name_jp?: string | null;
-          paint_work?: string[] | null;
-          price_cn?: number | null;
-          price_jp?: number | null;
-          price_kr?: number | null;
-          release_month?: number | null;
-          release_text?: string | null;
-          release_year?: number | null;
-          scale_id?: string | null;
-          sculptors?: string[] | null;
-          series_id?: string | null;
-          size?: string | null;
-          specifications?: string | null;
-          status?: Database["public"]["Enums"]["archive_figure_status"] | null;
-          updated_at?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "figure_category_fkey";
-            columns: ["category_id"];
-            isOneToOne: false;
-            referencedRelation: "figure_category";
-            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "figure_category_id_fkey";
-            columns: ["category_id"];
+            foreignKeyName: "figure_series_id_fkey";
+            columns: ["series_id"];
             isOneToOne: false;
-            referencedRelation: "figure_category";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "figure_manufacturer_fkey";
-            columns: ["manufacturer_id"];
-            isOneToOne: false;
-            referencedRelation: "figure_manufacturer";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "figure_manufacturer_id_fkey";
-            columns: ["manufacturer_id"];
-            isOneToOne: false;
-            referencedRelation: "figure_manufacturer";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "figure_scale_id_fkey";
-            columns: ["scale_id"];
-            isOneToOne: false;
-            referencedRelation: "figure_scale";
+            referencedRelation: "figure_series";
             referencedColumns: ["id"];
           }
         ];
@@ -316,10 +207,10 @@ export type Database = {
         };
         Relationships: [
           {
-            foreignKeyName: "figure_images_figure_id_fkey";
+            foreignKeyName: "figure_image_figure_id_fkey";
             columns: ["figure_id"];
             isOneToOne: false;
-            referencedRelation: "figure_backup";
+            referencedRelation: "figure";
             referencedColumns: ["id"];
           }
         ];
@@ -431,7 +322,7 @@ export type Database = {
       };
       figure_shop_grade: {
         Row: {
-          benefits: string | null;
+          benefits: JSON | null;
           created_at: string | null;
           id: string;
           is_active: boolean | null;
@@ -441,7 +332,7 @@ export type Database = {
           shop_id: string;
         };
         Insert: {
-          benefits?: string | null;
+          benefits?: JSON | null;
           created_at?: string | null;
           id?: string;
           is_active?: boolean | null;
@@ -451,7 +342,7 @@ export type Database = {
           shop_id: string;
         };
         Update: {
-          benefits?: string | null;
+          benefits?: JSON | null;
           created_at?: string | null;
           id?: string;
           is_active?: boolean | null;
@@ -500,47 +391,53 @@ export type Database = {
       user_figure: {
         Row: {
           balance_paid_at: string | null;
-          balance_price: number | null;
-          created_at: string | null;
+          balance_price: number;
+          created_at: string;
           deposit_paid_at: string | null;
-          deposit_price: number | null;
+          deposit_price: number;
           figure_id: string;
           id: string;
           memo: string | null;
           paid_at: string | null;
+          rating: number | null;
+          shop_id: string;
           status: Database["public"]["Enums"]["user_figure_status"];
-          total_price: number | null;
-          updated_at: string | null;
+          total_price: number;
+          updated_at: string;
           user_id: string;
         };
         Insert: {
           balance_paid_at?: string | null;
-          balance_price?: number | null;
-          created_at?: string | null;
+          balance_price: number;
+          created_at?: string;
           deposit_paid_at?: string | null;
-          deposit_price?: number | null;
+          deposit_price: number;
           figure_id: string;
           id?: string;
           memo?: string | null;
           paid_at?: string | null;
+          rating?: number | null;
+          shop_id: string;
           status: Database["public"]["Enums"]["user_figure_status"];
-          total_price?: number | null;
-          updated_at?: string | null;
+          total_price: number;
+          updated_at?: string;
           user_id: string;
         };
         Update: {
           balance_paid_at?: string | null;
-          balance_price?: number | null;
-          created_at?: string | null;
+          balance_price?: number;
+          created_at?: string;
           deposit_paid_at?: string | null;
-          deposit_price?: number | null;
+          deposit_price?: number;
           figure_id?: string;
           id?: string;
           memo?: string | null;
           paid_at?: string | null;
+          rating?: number | null;
+          shop_id?: string;
           status?: Database["public"]["Enums"]["user_figure_status"];
-          total_price?: number | null;
-          updated_at?: string | null;
+          total_price?: number;
+          updated_at?: string;
           user_id?: string;
         };
         Relationships: [
@@ -549,6 +446,13 @@ export type Database = {
             columns: ["figure_id"];
             isOneToOne: false;
             referencedRelation: "figure";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_figure_purchase_id_fkey";
+            columns: ["shop_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_shop";
             referencedColumns: ["id"];
           }
         ];
