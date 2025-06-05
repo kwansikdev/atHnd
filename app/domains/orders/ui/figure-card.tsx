@@ -5,24 +5,23 @@ import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { cn } from "~/utils";
+import { RecentUserFigureDto } from "../model";
+import { getStatusLabel } from "~/shared/action";
 
-export function FigureCard({ ...props }) {
+export function FigureCard({ ...props }: RecentUserFigureDto) {
   const {
     id,
     status,
-    name,
-    manufacturer,
-    series,
-    releaseDate,
-    price,
-    remainingPayment,
-    paymentStatus,
-    shop,
+    total_price,
+    balance_price,
+    paid_at,
+    figure,
+    purchase_site,
   } = props;
 
-  const paymentProgress = Math.round(
-    ((price - remainingPayment) / price) * 100
-  );
+  const paymentProgress = paid_at
+    ? 100
+    : Math.round(((total_price - balance_price) / total_price) * 100);
 
   // 이미지 로드 상태 관리
   const [isImageLoaded, setIsImageLoaded] = useState(false);
@@ -41,13 +40,13 @@ export function FigureCard({ ...props }) {
       // className="overflow-hidden transition-all hover:shadow-lg hover:scale-100 duration-300 bg-white/80 backdrop-blur-sm border-0 shadow-xl"
       className="group overflow-hidden transition-all duration-300 shadow-xl backdrop-blur-sm border-0 animate-in fade-in-50 slide-in-from-bottom-5 hover:shadow-xl hover:shadow-primary/10"
     >
-      <div className="relative aspect-[3/2] overflow-hidden">
+      <div className="relative aspect-[5/4]  overflow-hidden">
         <img
           ref={imageRef}
-          src={"/placeholder.svg"}
-          alt={""}
+          src={figure.image[0].image_url}
+          alt={`${figure.name} Thumbnail`}
           className={cn(
-            "object-cover w-full h-full transition-transform hover:scale-110 duration-500",
+            "object-cover object-center w-full h-full transition-transform hover:scale-110 duration-500",
             isImageLoaded ? "opacity-100" : "opacity-0"
           )}
           onLoad={() => setIsImageLoaded(true)}
@@ -61,7 +60,7 @@ export function FigureCard({ ...props }) {
 
         <div className="absolute top-2 right-2">
           <Badge variant="secondary" className="bg-card backdrop-blur-sm">
-            {status}
+            {getStatusLabel(status)}
           </Badge>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
@@ -75,12 +74,14 @@ export function FigureCard({ ...props }) {
             "from-blue-600 to-purple-600"
           )}
         >
-          {name}
+          {figure.name}
         </h3>
 
-        <p className="text-sm text-muted-foreground line-clamp-1">{series}</p>
         <p className="text-sm text-muted-foreground line-clamp-1">
-          {manufacturer}
+          {figure.series.name_ko}
+        </p>
+        <p className="text-sm text-muted-foreground line-clamp-1">
+          {figure.manufacturer.name_ko}
         </p>
       </CardHeader>
 
@@ -89,12 +90,14 @@ export function FigureCard({ ...props }) {
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm">
-              {new Date(releaseDate).toLocaleDateString()}
+              {figure.release_text
+                ? new Date(figure.release_text).toLocaleDateString()
+                : "-"}
             </span>
           </div>
-          <Badge variant="outline" className="bg-white/50">
-            {paymentStatus}
-          </Badge>
+          {/* <Badge variant="outline" className="bg-white/50">
+            {getStatusLabel(status)}
+          </Badge> */}
         </div>
 
         <div className="space-y-2">
@@ -102,24 +105,31 @@ export function FigureCard({ ...props }) {
             <span>결제 진행률</span>
             <span className="font-medium">
               {paymentProgress}% (₩
-              {(price - remainingPayment).toLocaleString()})
+              {paid_at
+                ? total_price
+                : (total_price - balance_price).toLocaleString()}
+              )
             </span>
           </div>
           <Progress value={paymentProgress} className="h-2 bg-slate-200" />
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">{shop}</span>
-          <span className="font-medium text-lg">₩{price.toLocaleString()}</span>
+          <span className="text-sm text-muted-foreground">
+            {purchase_site?.name}
+          </span>
+          <span className="font-medium text-lg">
+            ₩{total_price.toLocaleString()}
+          </span>
         </div>
 
-        {remainingPayment > 0 && (
+        {!paid_at && balance_price && (
           <Button
             size="sm"
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 text-white"
           >
             <CreditCard className="h-4 w-4 mr-2" />
-            잔금 결제 (₩{remainingPayment.toLocaleString()})
+            잔금 결제 (₩{balance_price.toLocaleString()})
           </Button>
         )}
       </CardContent>

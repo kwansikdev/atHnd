@@ -8,35 +8,35 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
 import { FigureCard } from "~/domains/orders/ui";
-import { getTotalBalanceBySupabase } from "~/shared/action";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { getSupabaseServerClient } from "supabase";
-// import { getRecentOrderBySupabase } from "~/domains/orders/action";
+import {
+  getPaymentOverviewBySupabase,
+  getRecentOrderBySupabase,
+} from "~/domains/orders/action";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { supabase } = await getSupabaseServerClient(request);
 
-  // const recentOrders = await getRecentOrderBySupabase(supabase);
-  const totalBalance = await getTotalBalanceBySupabase(supabase);
-
-  const totalBalancePriceAmount = totalBalance.data?.reduce(
-    (acc, { balance_price }) => acc + (balance_price || 0),
-    0
-  );
+  const paymentOverview = await getPaymentOverviewBySupabase(supabase);
+  const recentOrders = await getRecentOrderBySupabase(supabase);
 
   return data({
-    totalPaid: 453000,
-    totalBalance: {
-      count: totalBalance.count,
-      amount: totalBalancePriceAmount,
+    paymentOverview: {
+      count: paymentOverview.count,
+      totalPrice: paymentOverview.totalPrice,
+      totalPaidPrice: paymentOverview.totalPaidPrice,
+      totalBalancePrice: paymentOverview.totalBalancePrice,
     },
-    totalBudget: 573000,
+    recentOrders: {
+      data: recentOrders.data,
+      count: recentOrders.count,
+    },
   });
 }
 
 export default function OrdersIndex() {
-  const { totalPaid, totalBalance, totalBudget } =
-    useLoaderData<typeof loader>();
+  const { paymentOverview, recentOrders } = useLoaderData<typeof loader>();
 
   return (
     <div className="space-y-10 mt-6 animate-in fade-in-50 duration-500">
@@ -53,13 +53,13 @@ export default function OrdersIndex() {
               <div className="text-center p-4 bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20 rounded-lg">
                 <div className="text-sm text-muted-foreground">결제 완료</div>
                 <div className="text-xl font-bold text-emerald-600">
-                  ₩{totalPaid.toLocaleString()}
+                  ₩{paymentOverview.totalPaidPrice.toLocaleString()}
                 </div>
               </div>
               <div className="text-center p-4 bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20 rounded-lg">
                 <div className="text-sm text-muted-foreground">남은 잔금</div>
                 <div className="text-xl font-bold text-red-600">
-                  ₩{Number(totalBalance.amount).toLocaleString()}
+                  ₩{paymentOverview.totalBalancePrice.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -67,11 +67,20 @@ export default function OrdersIndex() {
               <div className="flex justify-between text-sm">
                 <span>결제 진행률</span>
                 <span className="font-medium">
-                  {Math.round((totalPaid / totalBudget) * 100)}%
+                  {Math.round(
+                    (paymentOverview.totalPaidPrice /
+                      paymentOverview.totalPrice) *
+                      100
+                  )}
+                  %
                 </span>
               </div>
               <Progress
-                value={(totalPaid / totalBudget) * 100}
+                value={
+                  (paymentOverview.totalPaidPrice /
+                    paymentOverview.totalPrice) *
+                  100
+                }
                 className="h-3 transition-all duration-300"
               />
             </div>
@@ -123,67 +132,11 @@ export default function OrdersIndex() {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {initialOrders.slice(0, 6).map((order) => (
-            <FigureCard key={order.id} {...order} />
+          {recentOrders.data.slice(0, 6).map((recent) => (
+            <FigureCard key={recent.id} {...recent} />
           ))}
         </div>
       </div>
     </div>
   );
 }
-
-// 임시 데이터
-const initialOrders = [
-  {
-    id: "1",
-    name: "아스나 웨딩 드레스 Ver.",
-    manufacturer: "알터",
-    series: "소드 아트 온라인",
-    price: 198000,
-    releaseDate: "2023-12-15",
-    status: "예약완료",
-    paymentStatus: "예약금완납",
-    remainingPayment: 148500,
-    shop: "애니플렉스 플러스",
-    imageUrl: "/placeholder.svg?height=300&width=200",
-  },
-  {
-    id: "2",
-    name: "렘 바니 Ver.",
-    manufacturer: "프리잉",
-    series: "Re:제로부터 시작하는 이세계 생활",
-    price: 240000,
-    releaseDate: "2024-01-20",
-    status: "배송중",
-    paymentStatus: "완납",
-    remainingPayment: 0,
-    shop: "아미아미",
-    imageUrl: "/placeholder.svg?height=300&width=200",
-  },
-  {
-    id: "3",
-    name: "에밀리아 고양이 Ver.",
-    manufacturer: "굿스마일컴퍼니",
-    series: "Re:제로부터 시작하는 이세계 생활",
-    price: 168000,
-    releaseDate: "2024-03-10",
-    status: "예약중",
-    paymentStatus: "미결제",
-    remainingPayment: 168000,
-    shop: "굿스마일 글로벌",
-    imageUrl: "/placeholder.svg?height=300&width=200",
-  },
-  {
-    id: "4",
-    name: "호리 쿠키 유카타 Ver.",
-    manufacturer: "알터",
-    series: "호리씨와 미야무라군",
-    price: 178000,
-    releaseDate: "2024-02-15",
-    status: "예약완료",
-    paymentStatus: "부분결제",
-    remainingPayment: 89000,
-    shop: "애니플렉스 플러스",
-    imageUrl: "/placeholder.svg?height=300&width=200",
-  },
-];
