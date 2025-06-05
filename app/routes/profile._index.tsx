@@ -8,6 +8,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return data({}, { headers });
 }
 
-export default function Profile(): JSX.Element {
+export default function ProfileIndex(): JSX.Element {
   return <div>프로필</div>;
 }

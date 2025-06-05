@@ -17,22 +17,22 @@ import {
   TrendingUp,
   Truck,
 } from "lucide-react";
-import { getSupabaseServerClient } from "supabase";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "~/components/ui/tabs";
-import { AddToReservationButton } from "~/domains/orders/ui";
+import { AddToOrdersButton } from "~/domains/orders/ui";
 import { TOutletContext } from "~/root";
 import {
   getTotalBalanceBySupabase,
   getTotalOrderBySupabase,
   getTotalPaidBySupabase,
   getTotalPreorderBySupabase,
+  getUserFromRequest,
 } from "~/shared/action";
 import { getThisMonthBySupabase } from "~/shared/action/get-this-month-by-supabase";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase } = await getSupabaseServerClient(request);
+  const { supabase } = await getUserFromRequest(request);
 
   const totalOrder = await getTotalOrderBySupabase(supabase);
   const totalPreorder = await getTotalPreorderBySupabase(supabase);
@@ -83,14 +83,14 @@ export default function Orders() {
                   예약 현황과 구매 진행상황을 확인하세요
                 </p>
               </div>
-              <AddToReservationButton />
+              <AddToOrdersButton />
             </div>
           </div>
         </div>
 
         {/* 헤더 통계 */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-in fade-in-50 duration-500">
-          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="bg-card border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -106,7 +106,7 @@ export default function Orders() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="bg-card border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -122,7 +122,7 @@ export default function Orders() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="bg-card border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -138,7 +138,7 @@ export default function Orders() {
             </CardContent>
           </Card>
 
-          <Card className="bg-card border-gray-200 dark:border-gray-800 shadow-xl  backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
+          <Card className="bg-card border-gray-200 dark:border-gray-800 shadow-xl backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
