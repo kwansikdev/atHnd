@@ -10,7 +10,7 @@ import {
 } from "~/components/ui/dialog";
 import { FigureSearchCommand } from "~/domains/common/ui/figure-search-command";
 
-export function AddToReservationButton() {
+export function AddToOrdersButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
