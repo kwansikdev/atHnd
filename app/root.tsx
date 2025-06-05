@@ -10,13 +10,12 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
 import "./tailwind.css";
 
-import { SupabaseService } from "../supabase";
+import { getSupabaseServerClient, SupabaseService } from "../supabase";
 import { Toaster } from "./components/ui/sonner";
 import { Navbar } from "./shared/ui";
 import { useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { MobileNav } from "./shared/ui/mobile-nav";
-import { getUserFromRequest } from "./shared/action";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -32,7 +31,11 @@ export const links: LinksFunction = () => [
 ];
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { user, supabase } = await getUserFromRequest(request);
+  const { supabase } = await getSupabaseServerClient(request);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   let profile = null;
 
