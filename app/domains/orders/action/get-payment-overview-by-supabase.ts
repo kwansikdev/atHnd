@@ -18,8 +18,6 @@ export async function getPaymentOverviewBySupabase(
 
   if (error) throw error;
 
-  console.log(data);
-
   const totalPrice = data?.reduce(
     (acc, { total_price }) => acc + (total_price || 0),
     0
