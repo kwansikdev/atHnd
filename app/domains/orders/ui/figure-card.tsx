@@ -7,6 +7,11 @@ import { Progress } from "~/components/ui/progress";
 import { cn } from "~/utils";
 import { RecentUserFigureDto } from "../model";
 import { getStatusLabel } from "~/shared/action";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "~/components/ui/tooltip";
 
 export function FigureCard({ ...props }: RecentUserFigureDto) {
   const {
@@ -37,7 +42,6 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
   return (
     <Card
       key={id}
-      // className="overflow-hidden transition-all hover:shadow-lg hover:scale-100 duration-300 bg-white/80 backdrop-blur-sm border-0 shadow-xl"
       className="group overflow-hidden transition-all duration-300 shadow-xl backdrop-blur-sm border-0 animate-in fade-in-50 slide-in-from-bottom-5 hover:shadow-xl hover:shadow-primary/10"
     >
       <div className="relative aspect-[5/4]  overflow-hidden">
@@ -63,14 +67,13 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
             {getStatusLabel(status)}
           </Badge>
         </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
 
       <CardHeader className="p-4 pb-2">
         <h3
           className={cn(
             "font-bold text-lg line-clamp-1 bg-gradient-to-r bg-clip-text text-transparent",
-            // "from-slate-900 to-slate-700",
             "from-blue-600 to-purple-600"
           )}
         >
@@ -87,14 +90,19 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
 
       <CardContent className="p-4 pt-0 space-y-3">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">
-              {figure.release_text
-                ? new Date(figure.release_text).toLocaleDateString()
-                : "-"}
-            </span>
-          </div>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">
+                  {figure.release_text
+                    ? new Date(figure.release_text).toLocaleDateString()
+                    : "-"}
+                </span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">발매 예정일</TooltipContent>
+          </Tooltip>
           {/* <Badge variant="outline" className="bg-white/50">
             {getStatusLabel(status)}
           </Badge> */}
@@ -105,9 +113,10 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
             <span>결제 진행률</span>
             <span className="font-medium">
               {paymentProgress}% (₩
-              {paid_at
+              {(paid_at
                 ? total_price
-                : (total_price - balance_price).toLocaleString()}
+                : total_price - balance_price
+              ).toLocaleString()}
               )
             </span>
           </div>
