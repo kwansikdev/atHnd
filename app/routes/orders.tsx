@@ -192,13 +192,13 @@ export default function Orders() {
                   <Calendar className="h-4 w-4" />
                   캘린더
                 </TabsTrigger>
-                <TabsTrigger
+                {/* <TabsTrigger
                   value="budget"
                   className="data-[state=active]:bg-white dark:data-[state=active]:bg-slate-600"
                 >
                   <CreditCard className="h-4 w-4" />
                   예산
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
 
               <div className="flex gap-2">
