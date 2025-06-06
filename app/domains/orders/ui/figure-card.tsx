@@ -1,4 +1,4 @@
-import { Calendar, CreditCard, Sparkles } from "lucide-react";
+import { Calendar, CreditCard, ShoppingBag, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -18,6 +18,7 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
     id,
     status,
     total_price,
+    deposit_paid_at,
     balance_price,
     paid_at,
     figure,
@@ -89,23 +90,27 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
       </CardHeader>
 
       <CardContent className="p-4 pt-0 space-y-3">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm">
+                  {deposit_paid_at ?? paid_at ?? "-"}
+                </span>
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="right">구매일</TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">
-                  {figure.release_text
-                    ? new Date(figure.release_text).toLocaleDateString()
-                    : "-"}
-                </span>
+                <span className="text-sm">{figure.release_text ?? "-"}</span>
               </div>
             </TooltipTrigger>
             <TooltipContent side="right">발매 예정일</TooltipContent>
           </Tooltip>
-          {/* <Badge variant="outline" className="bg-white/50">
-            {getStatusLabel(status)}
-          </Badge> */}
         </div>
 
         <div className="space-y-2">
