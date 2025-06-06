@@ -6,19 +6,19 @@ export async function getThisMonthBySupabase(
 ) {
   const now = new Date();
   const year = now.getFullYear();
-  const month = now.getMonth(); // 0부터 시작 (6월은 5)
+  const month = now.getMonth(); // 6월이면 month = 5
 
-  const start = new Date(year, month, 1).toISOString();
-  const end = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
+  const start = new Date(Date.UTC(year, month, 1)).toISOString(); // 6월 1일 00:00:00 UTC
+  const end = new Date(Date.UTC(year, month + 1, 1)).toISOString();
 
   const { error, data, count } = await supabase
     .from("user_figure")
     .select(
       `
-      deposit_price,
-      balance_price,
-      total_price,
-      paid_at
+    deposit_price,
+    balance_price,
+    total_price,
+    paid_at
     `,
       {
         count: "exact",
@@ -26,7 +26,7 @@ export async function getThisMonthBySupabase(
     )
     .not("paid_at", "is", null)
     .gte("paid_at", start)
-    .lte("paid_at", end);
+    .lt("paid_at", end);
 
   if (error) throw error;
 
