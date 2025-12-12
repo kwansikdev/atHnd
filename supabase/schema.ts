@@ -1,4 +1,9 @@
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "12.2.12 (cd3cf9e)";
+  };
   public: {
     Tables: {
       figure: {
@@ -8,7 +13,9 @@ export type Database = {
           character_id: string | null;
           created_at: string | null;
           description: string | null;
+          final_release_date: string | null;
           id: string;
+          is_reissue: boolean | null;
           limited: boolean | null;
           manufacturer_id: string | null;
           material: string | null;
@@ -16,6 +23,7 @@ export type Database = {
           name_en: string | null;
           name_jp: string | null;
           paint_work: string[] | null;
+          parent_figure_id: string | null;
           price_cn: number | null;
           price_jp: number | null;
           price_kr: number | null;
@@ -36,7 +44,9 @@ export type Database = {
           character_id?: string | null;
           created_at?: string | null;
           description?: string | null;
+          final_release_date?: string | null;
           id?: string;
+          is_reissue?: boolean | null;
           limited?: boolean | null;
           manufacturer_id?: string | null;
           material?: string | null;
@@ -44,6 +54,7 @@ export type Database = {
           name_en?: string | null;
           name_jp?: string | null;
           paint_work?: string[] | null;
+          parent_figure_id?: string | null;
           price_cn?: number | null;
           price_jp?: number | null;
           price_kr?: number | null;
@@ -64,7 +75,9 @@ export type Database = {
           character_id?: string | null;
           created_at?: string | null;
           description?: string | null;
+          final_release_date?: string | null;
           id?: string;
+          is_reissue?: boolean | null;
           limited?: boolean | null;
           manufacturer_id?: string | null;
           material?: string | null;
@@ -72,6 +85,7 @@ export type Database = {
           name_en?: string | null;
           name_jp?: string | null;
           paint_work?: string[] | null;
+          parent_figure_id?: string | null;
           price_cn?: number | null;
           price_jp?: number | null;
           price_kr?: number | null;
@@ -113,6 +127,13 @@ export type Database = {
             columns: ["scale_id"];
             isOneToOne: false;
             referencedRelation: "figure_scale";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "figure_parent_figure_id_fkey";
+            columns: ["parent_figure_id"];
+            isOneToOne: false;
+            referencedRelation: "figure";
             referencedColumns: ["id"];
           },
           {
@@ -219,22 +240,110 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
-          name_en: string;
-          name_ko: string | null;
+          name_en: string | null;
+          name_ko: string;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
-          name_en: string;
-          name_ko?: string | null;
+          name_en?: string | null;
+          name_ko: string;
         };
         Update: {
           created_at?: string | null;
           id?: string;
-          name_en?: string;
-          name_ko?: string | null;
+          name_en?: string | null;
+          name_ko?: string;
         };
         Relationships: [];
+      };
+      figure_release: {
+        Row: {
+          created_at: string | null;
+          figure_id: string;
+          id: string;
+          is_reissue: boolean | null;
+          price_cn: number | null;
+          price_jp: number | null;
+          price_kr: number | null;
+          release_month: number | null;
+          release_no: number | null;
+          release_text: string | null;
+          release_year: number | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          figure_id: string;
+          id?: string;
+          is_reissue?: boolean | null;
+          price_cn?: number | null;
+          price_jp?: number | null;
+          price_kr?: number | null;
+          release_month?: number | null;
+          release_no?: number | null;
+          release_text?: string | null;
+          release_year?: number | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          figure_id?: string;
+          id?: string;
+          is_reissue?: boolean | null;
+          price_cn?: number | null;
+          price_jp?: number | null;
+          price_kr?: number | null;
+          release_month?: number | null;
+          release_no?: number | null;
+          release_text?: string | null;
+          release_year?: number | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "figure_release_figure_id_fkey";
+            columns: ["figure_id"];
+            isOneToOne: false;
+            referencedRelation: "figure";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
+      figure_release_delay: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          new_date: string;
+          previous_date: string;
+          reason: string | null;
+          release_id: string;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          new_date: string;
+          previous_date: string;
+          reason?: string | null;
+          release_id: string;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          new_date?: string;
+          previous_date?: string;
+          reason?: string | null;
+          release_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "figure_release_delay_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_release";
+            referencedColumns: ["id"];
+          }
+        ];
       };
       figure_scale: {
         Row: {
@@ -393,13 +502,15 @@ export type Database = {
           balance_paid_at: string | null;
           balance_price: number;
           created_at: string;
+          delivered_at: string | null;
           deposit_paid_at: string | null;
           deposit_price: number;
-          figure_id: string;
+          figure_id: string | null;
           id: string;
           memo: string | null;
           paid_at: string | null;
           rating: number | null;
+          release_id: string;
           shop_id: string;
           status: Database["public"]["Enums"]["user_figure_status"];
           total_price: number;
@@ -408,15 +519,17 @@ export type Database = {
         };
         Insert: {
           balance_paid_at?: string | null;
-          balance_price: number;
+          balance_price?: number;
           created_at?: string;
+          delivered_at?: string | null;
           deposit_paid_at?: string | null;
-          deposit_price: number;
-          figure_id: string;
+          deposit_price?: number;
+          figure_id?: string | null;
           id?: string;
           memo?: string | null;
           paid_at?: string | null;
           rating?: number | null;
+          release_id: string;
           shop_id: string;
           status: Database["public"]["Enums"]["user_figure_status"];
           total_price: number;
@@ -427,13 +540,15 @@ export type Database = {
           balance_paid_at?: string | null;
           balance_price?: number;
           created_at?: string;
+          delivered_at?: string | null;
           deposit_paid_at?: string | null;
           deposit_price?: number;
-          figure_id?: string;
+          figure_id?: string | null;
           id?: string;
           memo?: string | null;
           paid_at?: string | null;
           rating?: number | null;
+          release_id?: string;
           shop_id?: string;
           status?: Database["public"]["Enums"]["user_figure_status"];
           total_price?: number;
@@ -453,6 +568,13 @@ export type Database = {
             columns: ["shop_id"];
             isOneToOne: false;
             referencedRelation: "figure_shop";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_figure_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_release";
             referencedColumns: ["id"];
           }
         ];
@@ -615,7 +737,48 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      create_figure_with_release_and_images: {
+        Args: {
+          _category: string;
+          _images: string[];
+          _is_reissue: boolean;
+          _manufacturer: string;
+          _name: string;
+          _name_jp: string;
+          _price_cn: number;
+          _price_jp: number;
+          _price_kr: number;
+          _release_month: number;
+          _release_text: string;
+          _release_year: number;
+          _scale: string;
+          _series: string;
+        };
+        Returns: string;
+      };
+      register_figure: {
+        Args: {
+          p_category_id: string;
+          p_character_id: string;
+          p_images?: string[];
+          p_is_reissue?: boolean;
+          p_manufacturer_id: string;
+          p_material?: string;
+          p_name: string;
+          p_name_en?: string;
+          p_name_jp?: string;
+          p_price_cn?: number;
+          p_price_jp?: number;
+          p_price_kr: number;
+          p_release_month: number;
+          p_release_text: string;
+          p_release_year: number;
+          p_scale_id: string;
+          p_series_id: string;
+          p_size?: string;
+        };
+        Returns: string;
+      };
     };
     Enums: {
       archive_figure_status: "upcoming" | "released" | "delayed" | "canceled";
@@ -629,21 +792,28 @@ export type Database = {
   };
 };
 
-type DefaultSchema = Database[Extract<keyof Database, "public">];
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">;
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<
+  keyof Database,
+  "public"
+>];
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database;
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R;
     }
     ? R
@@ -661,14 +831,16 @@ export type Tables<
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database;
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Insert: infer I;
     }
     ? I
@@ -684,14 +856,16 @@ export type TablesInsert<
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
-    schema: keyof Database;
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
     : never = never
-> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
       Update: infer U;
     }
     ? U
@@ -707,14 +881,16 @@ export type TablesUpdate<
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
-    schema: keyof Database;
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
     : never = never
-> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
   ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
   : never;
@@ -722,14 +898,16 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof Database },
+    | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database;
+    schema: keyof DatabaseWithoutInternals;
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
     : never = never
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals;
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
   ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
   : never;
