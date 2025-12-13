@@ -39,7 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const name_en = body.get("name_en") as string;
   const paint_work = body.get("paint_work") as string;
   const sculptors = body.get("sculptors") as string;
-  const scale = body.get("scale") as string;
+  const scale_id = body.get("scale_id") as string;
   const size = body.get("size") as string;
   const material = body.get("material") as string;
   const adult = body.get("adult") as string;
@@ -67,9 +67,9 @@ export async function action({ request }: ActionFunctionArgs) {
 
       name_jp,
       name_en,
-      paint_work: paint_work?.split(",") || null,
-      sculptors: sculptors?.split(",") || null,
-      scale_id: scale,
+      paint_work: paint_work.length > 0 ? paint_work.split(",") : null,
+      sculptors: sculptors.length > 0 ? sculptors.split(",") : null,
+      scale_id,
       size,
       material,
       adult: adult === "on" ? true : false,

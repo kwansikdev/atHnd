@@ -148,22 +148,22 @@ export default function SectionAddReview({
                     </h3>
                     <p className="text-muted-foreground">
                       {character.find((c) => c.id === formData.character_id)
-                        ?.name_ko || "캐릭터 이름"}
+                        ?.name || "캐릭터 이름"}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <Badge variant="outline">
                       {manufacturer.find(
                         (m) => m.id === formData.manufacturer_id
-                      )?.name_ko || "제조사"}
+                      )?.name || "제조사"}
                     </Badge>
                     <Badge variant="outline">
-                      {series.find((s) => s.id === formData.series_id)
-                        ?.name_ko || "작품"}
+                      {series.find((s) => s.id === formData.series_id)?.name ||
+                        "작품"}
                     </Badge>
                     <Badge variant="outline">
                       {category.find((c) => c.id === formData.category_id)
-                        ?.name_ko || "카테고리"}
+                        ?.name || "카테고리"}
                     </Badge>
                     {scale.find((s) => s.id === formData.scale_id)?.name && (
                       <Badge variant="outline">
@@ -218,7 +218,7 @@ export default function SectionAddReview({
                     <p className="text-sm font-medium">캐릭터</p>
                     <p className="text-sm text-muted-foreground">
                       {character.find((c) => c.id === formData.character_id)
-                        ?.name_ko || "-"}
+                        ?.name || "-"}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -226,21 +226,21 @@ export default function SectionAddReview({
                     <p className="text-sm text-muted-foreground">
                       {manufacturer.find(
                         (m) => m.id === formData.manufacturer_id
-                      )?.name_ko || "-"}
+                      )?.name || "-"}
                     </p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-medium">작품</p>
                     <p className="text-sm text-muted-foreground">
-                      {series.find((s) => s.id === formData.series_id)
-                        ?.name_ko || "-"}
+                      {series.find((s) => s.id === formData.series_id)?.name ||
+                        "-"}
                     </p>
                   </div>
                   <div className="space-y-1">
                     <p className="text-sm font-medium">카테고리</p>
                     <p className="text-sm text-muted-foreground">
                       {category.find((c) => c.id === formData.category_id)
-                        ?.name_ko || "-"}
+                        ?.name || "-"}
                     </p>
                   </div>
                   <div className="space-y-1">
@@ -446,9 +446,8 @@ export default function SectionAddReview({
             </Button>
             <Button
               disabled={
-                isFormValid ||
-                isLoading ||
-                images.filter((img) => img.url).length === 0
+                isFormValid || isLoading
+                //  || images.filter((img) => img.url).length === 0
               }
               className="relative overflow-hidden group bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all"
               onClick={() => {
