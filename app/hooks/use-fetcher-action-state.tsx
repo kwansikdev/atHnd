@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
 } from "react";
 import { toast } from "sonner";
 
@@ -27,8 +28,9 @@ export type FetcherActionState<T = unknown> = {
   fetcher: ReturnType<typeof useFetcher>;
   isIdle: boolean;
   isLoading: boolean;
+  isSubmitting: boolean;
   isSuccess: boolean;
-  isError: boolean;
+  isError?: boolean;
   error?: string;
   data?: T;
 };
@@ -48,14 +50,16 @@ export function FetcherActionProvider<T = unknown>({
 }) {
   const fetcher = useFetcher<ActionResult<T>>();
   const navigate = useNavigate();
+  const toastShownRef = useRef(false);
 
   const result = fetcher.data;
   const isIdle = fetcher.state === "idle";
   const isLoading = fetcher.state !== "idle";
   const isSuccess = result?.success === true;
+  const isSubmitting = fetcher.state === "submitting";
   const isError = !!result?.error;
   const error = result?.error;
-  const data = result?.data;
+  const data = result;
 
   // 리디렉션
   useEffect(() => {
@@ -67,13 +71,21 @@ export function FetcherActionProvider<T = unknown>({
   // 토스트
   useEffect(() => {
     if (options.showToast === false) return;
-    if (fetcher.state === "idle") {
+    if (fetcher.state === "idle" && !toastShownRef.current) {
+      // 👈 수정
       if (isSuccess && options.successMessage) {
         toast.success(options.successMessage);
+        toastShownRef.current = true; // 👈 표시했음을 기록
       }
       if (isError && (options.errorMessage || error)) {
         toast.error(options.errorMessage ?? error);
+        toastShownRef.current = true; // 👈 표시했음을 기록
       }
+    }
+
+    // submitting 시작하면 리셋
+    if (fetcher.state === "submitting") {
+      toastShownRef.current = false;
     }
   }, [fetcher.state, isSuccess, isError, error, options]);
 
@@ -83,12 +95,13 @@ export function FetcherActionProvider<T = unknown>({
       fetcher,
       isIdle,
       isLoading,
+      isSubmitting,
       isSuccess,
       isError,
       error,
       data,
     }),
-    [fetcher, isIdle, isLoading, isSuccess, isError, error, data]
+    [fetcher, isIdle, isLoading, isSubmitting, isSuccess, isError, error, data]
   );
 
   return (
@@ -112,18 +125,20 @@ export function useFetcherActionContext<T = unknown>() {
 export function useFetcherActionState<T = unknown>(
   options: FetcherActionOptions = {}
 ): FetcherActionState<T> {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<T>();
   const navigate = useNavigate();
-
+  const toastShownRef = useRef(false); // ✅ 추가
+  const prevStateRef = useRef(fetcher.state); // ✅ 이전 상태 추적
   // ✅ 안전한 타입 단언
   const result = fetcher.data as ActionResult<T> | undefined;
 
   const isIdle = fetcher.state === "idle";
   const isLoading = fetcher.state !== "idle";
-  const isSuccess = result?.success === true;
+  const isSubmitting = fetcher.state === "submitting";
+  const isSuccess = fetcher.state === "idle" && !!fetcher.data;
   const isError = !!result?.error;
   const error = result?.error;
-  const data = result?.data;
+  const data = result;
 
   // ✅ 자동 리디렉션
   useEffect(() => {
@@ -132,30 +147,51 @@ export function useFetcherActionState<T = unknown>(
     }
   }, [result?.redirectTo, navigate]);
 
-  // ✅ 토스트 처리
+  // 토스트 처리 (수정됨)
   useEffect(() => {
     if (options.showToast === false) return;
-    if (fetcher.state === "idle") {
+
+    // submitting 시작하면 리셋
+    if (fetcher.state === "submitting") {
+      toastShownRef.current = false;
+      prevStateRef.current = fetcher.state;
+      return;
+    }
+
+    // submitting -> idle 전환 시에만 토스트 표시
+    const justFinished =
+      prevStateRef.current === "submitting" && fetcher.state === "idle";
+
+    if (justFinished && !toastShownRef.current) {
       if (isSuccess && options.successMessage) {
         toast.success(options.successMessage);
-      }
-      if (isError && (options.errorMessage || error)) {
+        toastShownRef.current = true;
+      } else if (isError && (options.errorMessage || error)) {
         toast.error(options.errorMessage ?? error);
+        toastShownRef.current = true;
       }
     }
-  }, [fetcher.state, isSuccess, isError, error, options]);
 
-  return useMemo(
-    () => ({
-      Form: fetcher.Form,
-      fetcher,
-      isIdle,
-      isLoading,
-      isSuccess,
-      isError,
-      error,
-      data,
-    }),
-    [fetcher, isIdle, isLoading, isSuccess, isError, error, data]
-  );
+    prevStateRef.current = fetcher.state;
+  }, [
+    fetcher.state,
+    isSuccess,
+    isError,
+    error,
+    options.successMessage,
+    options.errorMessage,
+    options.showToast,
+  ]);
+
+  return {
+    Form: fetcher.Form,
+    fetcher,
+    isIdle,
+    isLoading,
+    isSubmitting,
+    isSuccess,
+    isError,
+    error,
+    data: data as T | undefined,
+  };
 }
