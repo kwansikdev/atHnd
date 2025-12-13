@@ -82,10 +82,10 @@ export function FigureCard({ ...props }: RecentUserFigureDto) {
         </h3>
 
         <p className="text-sm text-muted-foreground line-clamp-1">
-          {figure.series.name_ko}
+          {figure.series.name}
         </p>
         <p className="text-sm text-muted-foreground line-clamp-1">
-          {figure.manufacturer.name_ko}
+          {figure.manufacturer.name}
         </p>
       </CardHeader>
 

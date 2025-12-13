@@ -19,11 +19,11 @@ export type RecentUserFigureDto = Pick<
   > & {
     manufacturer: Pick<
       Database["public"]["Tables"]["figure_manufacturer"]["Row"],
-      "id" | "name_ko"
+      "id" | "name"
     >;
     series: Pick<
       Database["public"]["Tables"]["figure_series"]["Row"],
-      "id" | "name_ko"
+      "id" | "name"
     >;
     image: Pick<
       Database["public"]["Tables"]["figure_image"]["Row"],

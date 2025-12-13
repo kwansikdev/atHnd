@@ -25,8 +25,8 @@ export async function getRecentOrderBySupabase(
       figure: figure_id(
         name,
         price_kr,
-        manufacturer: manufacturer_id(id, name_ko),
-        series: series_id(id, name_ko),
+        manufacturer: manufacturer_id(id, name),
+        series: series_id(id, name),
         release_text,
         image: figure_image(image_url, sort_order)
       )
