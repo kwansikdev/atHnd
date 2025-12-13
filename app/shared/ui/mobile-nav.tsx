@@ -2,9 +2,9 @@
 
 import type React from "react";
 
-import { BookMarked, Archive, Home, ShoppingCart, User } from "lucide-react";
+import { Home, User } from "lucide-react";
 import { cn } from "~/utils";
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { useRootLoaderData } from "~/hooks/use-root-loader-data";
@@ -33,24 +33,20 @@ function NavItem({ to, icon, label, active }: NavItemProps) {
 
 export function MobileNav() {
   const { isLoggedIn, profile } = useRootLoaderData();
+  const { pathname } = useLocation();
 
   const navItems = [
     { to: "/", icon: <Home className="h-5 w-5" />, label: "홈" },
-    {
-      to: "/orders",
-      icon: <ShoppingCart className="h-5 w-5" />,
-      label: "예약/구매",
-    },
-    {
-      to: "/collection",
-      icon: <BookMarked className="h-5 w-5" />,
-      label: "컬렉션",
-    },
-    {
-      to: "/archive",
-      icon: <Archive className="h-5 w-5" />,
-      label: "아카이브",
-    },
+    // {
+    //   to: "/orders",
+    //   icon: <ShoppingCart className="h-5 w-5" />,
+    //   label: "예약/구매",
+    // },
+    // {
+    //   to: "/collection",
+    //   icon: <BookMarked className="h-5 w-5" />,
+    //   label: "컬렉션",
+    // },
     {
       to: "/profile",
       icon: isLoggedIn ? (
@@ -68,6 +64,14 @@ export function MobileNav() {
     },
   ];
 
+  // if (profile?.is_admin) {
+  //   navItems.splice(-1, 0, {
+  //     to: "/archive",
+  //     icon: <Archive className="h-5 w-5" />,
+  //     label: "아카이브",
+  //   });
+  // }
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t md:hidden">
       <div className="flex items-center justify-around">
@@ -77,7 +81,10 @@ export function MobileNav() {
             to={item.to}
             icon={item.icon}
             label={item.label}
-            // active={pathname === item.to}
+            active={
+              pathname === item.to ||
+              (item.to !== "/" && pathname.includes(item.to))
+            }
           />
         ))}
       </div>
