@@ -175,7 +175,7 @@ export type Database = {
           id: string;
           name: string;
           name_en: string | null;
-          name_ja: string | null;
+          name_jp: string | null;
           series_id: string | null;
         };
         Insert: {
@@ -183,7 +183,7 @@ export type Database = {
           id?: string;
           name: string;
           name_en?: string | null;
-          name_ja?: string | null;
+          name_jp?: string | null;
           series_id?: string | null;
         };
         Update: {
@@ -191,7 +191,7 @@ export type Database = {
           id?: string;
           name?: string;
           name_en?: string | null;
-          name_ja?: string | null;
+          name_jp?: string | null;
           series_id?: string | null;
         };
         Relationships: [
