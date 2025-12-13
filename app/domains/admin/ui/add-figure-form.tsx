@@ -160,7 +160,7 @@ export function AddFigureForm({
                 <FormControl>
                   <Input
                     id={`name-${figure.id}`}
-                    value={figure.p_name}
+                    value={field.value}
                     onChange={field.onChange}
                     placeholder="Hatsune Miku: Birthday 2024 Ver."
                     required

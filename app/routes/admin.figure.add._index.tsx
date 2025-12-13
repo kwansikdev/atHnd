@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, data } from "@remix-run/node";
 import { Form as RemixForm } from "@remix-run/react";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -275,17 +275,18 @@ export default function AdminFigureAdd() {
                 Cancel
               </Button>
               <Button type="submit" disabled={false}>
-                {/* {isSubmitting ? (
+                {fetcher.state === "submitting" ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Registering...
+                    {/* Registering... */}
                   </>
                 ) : (
                   <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Register {fields.length} Figure
+                    {fields.length > 1 ? "s" : ""}
                   </>
-                  )} */}
-                <Plus className="h-4 w-4 mr-2" />
-                Register {fields.length} Figure{fields.length > 1 ? "s" : ""}
+                )}
               </Button>
             </div>
           </RemixForm>

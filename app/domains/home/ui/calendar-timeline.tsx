@@ -9,10 +9,10 @@ import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { CalendarTimelineGrid } from "./calendar-timeline-grid";
 import { CalendarTimelineList } from "./calendar-timeline-list";
-// import { useRootLoaderData } from "~/hooks/use-root-loader-data";
+
 import { useNavigate, useSearchParams } from "@remix-run/react";
 import { UserFigureDto } from "../model/user-figure-dto";
-import AddFigureForm from "./add-figure-form";
+
 import { FigureDetailSheet } from "./figure-detail-sheet";
 import { useFigureDetailStore } from "../store/use-figure-detail-store";
 
@@ -23,8 +23,6 @@ type CalendarTimelineProps = {
 export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
   // const { isLoggedIn } = useRootLoaderData();
   const navigate = useNavigate();
-  // const loaderData = useLoaderData<typeof loader>();
-  // console.log("🚀 ~ CalendarTimeline ~ loaderData:", loaderData);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -54,8 +52,6 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
     searchParams.set("y", newYear.toString());
     setSearchParams(searchParams);
   };
-
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleGeneralAddClick = () => {
     // setSelectedMonth(undefined);
@@ -179,16 +175,6 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
 
       {viewMode === "grid" && <CalendarTimelineGrid data={figures} />}
       {viewMode === "list" && <CalendarTimelineList data={figures} />}
-
-      {/* <AddFigureForm
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        onAddFigure={() => {
-          console.log("add figure");
-        }}
-        defaultMonth={parseInt(yearParam, 10)}
-        defaultYear={new Date().getFullYear()}
-      /> */}
 
       <FigureDetailSheet
         figure={selectedFigure}
