@@ -93,7 +93,7 @@ export function FeaturedFigures({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-0">
       <div className="flex justify-between items-end">
         <div>
           <div className="flex items-center gap-2">
@@ -190,7 +190,7 @@ export function FeaturedFigures({
         // 데이터가 있는 경우 표시할 UI
         <div className="relative overflow-hidden">
           <div
-            className="flex transition-transform duration-500 ease-out"
+            className="flex transition-transform duration-500 ease-out my-8"
             style={{
               width: `${(100 / visibleItems) * figures.length}%`,
               transform: `translateX(-${(startIndex * 100) / figures.length}%)`,
