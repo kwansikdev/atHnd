@@ -17,8 +17,8 @@ export interface CollectionFigureDto {
     price_kr: number;
     price_jp: number;
     price_cn: number;
-    manufacturer: { id: string; name_ko: string };
-    series: { id: string; name_ko: string };
+    manufacturer: { id: string; name: string };
+    series: { id: string; name: string };
     release_year: number;
     release_month: number;
     release_text: string;

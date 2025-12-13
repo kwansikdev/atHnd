@@ -344,7 +344,7 @@ export function FigureCard({
                 {figure.name}
               </h3>
               <p className="text-lg sm:text-xl font-bold text-primary">
-                ₩{figure.price_kr.toLocaleString()}
+                ₩{total_price.toLocaleString()}
               </p>
             </div>
 
@@ -355,7 +355,7 @@ export function FigureCard({
                   variant="outline"
                   className="text-xs transition-all duration-200 hover:bg-primary/10"
                 >
-                  {figure.manufacturer.name_ko}
+                  {figure.manufacturer.name}
                 </Badge>
               )}
               {figure.series && (
@@ -363,7 +363,7 @@ export function FigureCard({
                   variant="outline"
                   className="text-xs transition-all duration-200 hover:bg-primary/10"
                 >
-                  {figure.series.name_ko}
+                  {figure.series.name}
                 </Badge>
               )}
             </div>

@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { data, Outlet, useOutletContext } from "@remix-run/react";
 import {
   BarChart3,
@@ -39,6 +40,7 @@ import {
   StatisticsSection,
 } from "~/domains/collection/ui";
 import { TOutletContext } from "~/root";
+import { getUserFromRequest } from "~/shared/action";
 
 type ViewMode =
   | "grid"
@@ -48,7 +50,9 @@ type ViewMode =
   | "maintenance"
   | "value";
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  await getUserFromRequest(request);
+
   return data({});
 }
 
