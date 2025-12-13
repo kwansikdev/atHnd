@@ -149,22 +149,22 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
+          name: string;
           name_en: string;
-          name_ko: string;
           sort_order: number | null;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
+          name: string;
           name_en: string;
-          name_ko: string;
           sort_order?: number | null;
         };
         Update: {
           created_at?: string | null;
           id?: string;
+          name?: string;
           name_en?: string;
-          name_ko?: string;
           sort_order?: number | null;
         };
         Relationships: [];
@@ -173,25 +173,25 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
+          name: string;
           name_en: string | null;
           name_ja: string | null;
-          name_ko: string;
           series_id: string | null;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
+          name: string;
           name_en?: string | null;
           name_ja?: string | null;
-          name_ko: string;
           series_id?: string | null;
         };
         Update: {
           created_at?: string | null;
           id?: string;
+          name?: string;
           name_en?: string | null;
           name_ja?: string | null;
-          name_ko?: string;
           series_id?: string | null;
         };
         Relationships: [
@@ -240,20 +240,20 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
+          name: string;
           name_en: string | null;
-          name_ko: string;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
+          name: string;
           name_en?: string | null;
-          name_ko: string;
         };
         Update: {
           created_at?: string | null;
           id?: string;
+          name?: string;
           name_en?: string | null;
-          name_ko?: string;
         };
         Relationships: [];
       };
@@ -373,23 +373,23 @@ export type Database = {
         Row: {
           created_at: string | null;
           id: string;
+          name: string;
           name_en: string;
-          name_ja: string | null;
-          name_ko: string;
+          name_jp: string | null;
         };
         Insert: {
           created_at?: string | null;
           id?: string;
+          name: string;
           name_en: string;
-          name_ja?: string | null;
-          name_ko: string;
+          name_jp?: string | null;
         };
         Update: {
           created_at?: string | null;
           id?: string;
+          name?: string;
           name_en?: string;
-          name_ja?: string | null;
-          name_ko?: string;
+          name_jp?: string | null;
         };
         Relationships: [];
       };
