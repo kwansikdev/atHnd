@@ -16,6 +16,7 @@ import { TFiguresWithQuery } from "~/routes/api.search.figures";
 
 import { useCalendarAddFormStore } from "../store";
 import { cn } from "~/utils";
+import { getImageTransformation } from "~/shared/ui";
 
 export function AddStepSelect() {
   const {
@@ -114,7 +115,14 @@ export function AddStepSelect() {
                     <div className="relative size-12 rounded-md overflow-hidden bg-muted flex-shrink-0">
                       <img
                         src={
-                          item.detail.images[0].image_url || "/placeholder.svg"
+                          getImageTransformation(
+                            item.detail.images[0].image_url,
+                            {
+                              width: 48,
+                              height: 48,
+                              quality: 80,
+                            }
+                          ) || "/placeholder.svg"
                         }
                         alt={item.detail.name}
                         // fill
@@ -206,8 +214,14 @@ export function AddStepSelect() {
                       <div className="relative size-14 rounded-md overflow-hidden bg-muted flex-shrink-0">
                         <img
                           src={
-                            figure.detail.images[0].image_url ||
-                            "/placeholder.svg"
+                            getImageTransformation(
+                              figure.detail.images[0].image_url,
+                              {
+                                width: 48,
+                                height: 48,
+                                quality: 80,
+                              }
+                            ) || "/placeholder.svg"
                           }
                           alt={figure.detail.name}
                           className="object-cover"

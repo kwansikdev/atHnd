@@ -20,6 +20,7 @@ export type AddFigureFormType = TFiguresWithQuery & {
   total_price: number;
   deposit_price?: number;
   deposit_paid_at?: string | null;
+  balance_price?: number;
   paid_at?: string | null;
   payment_type?: string;
 };
@@ -78,6 +79,9 @@ export function AddStepDetail({
       shop_id: figure.shop_id,
       status: figure.status,
       total_price: figure.total_price,
+      balance_price: figure.deposit_price
+        ? figure.total_price - figure.deposit_price
+        : undefined,
       figure_id: figure.detail.id,
     })) as UserFigureInsertDto[];
 

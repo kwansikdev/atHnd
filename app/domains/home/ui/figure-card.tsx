@@ -5,6 +5,7 @@ import { UserFigureDto } from "../model/user-figure-dto";
 import { cn } from "~/utils";
 import { getStatusLabel } from "~/shared/action";
 import { getStatusColor } from "~/shared/util";
+import { getImageTransformation } from "~/shared/ui";
 
 interface FigureCardProps {
   data: UserFigureDto;
@@ -23,10 +24,18 @@ export function FigureCard({ data, onClick }: FigureCardProps) {
       <div className="flex gap-3">
         <div className="relative size-20 flex-shrink-0 rounded-md overflow-hidden bg-muted">
           <img
-            src={data.figure.detail.image[0]?.image_url || "/placeholder.svg"}
+            src={
+              getImageTransformation(
+                data.figure.detail.image[0]?.image_url as string,
+                {
+                  width: 96,
+                  height: 96,
+                  quality: 80,
+                }
+              ) || "/placeholder.svg"
+            }
             alt={data.figure.detail.name}
-            // fill
-            className="object-cover group-hover:scale-105 transition-transform"
+            className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform"
           />
         </div>
 
