@@ -45,7 +45,7 @@ export default function SectionAddBasic({
     return character
       .filter((c) => c.series_id === seriesIdFormValue)
       .map((c) => ({
-        label: c.name_ko,
+        label: c.name,
         value: c.id,
       }));
   }, [seriesIdFormValue, character]);
@@ -99,7 +99,7 @@ export default function SectionAddBasic({
                     <FormControl>
                       <SearchableSelect
                         options={series.map((s) => ({
-                          label: s.name_ko,
+                          label: s.name,
                           value: s.id,
                         }))}
                         value={field.value}
@@ -147,7 +147,7 @@ export default function SectionAddBasic({
                     <FormControl>
                       <SearchableSelect
                         options={manufacturer.map((m) => ({
-                          label: m.name_ko || "",
+                          label: m.name || "",
                           value: m.id,
                         }))}
                         value={field.value}
@@ -171,7 +171,7 @@ export default function SectionAddBasic({
                     <FormControl>
                       <SearchableSelect
                         options={category.map((c) => ({
-                          label: c.name_ko || "",
+                          label: c.name || "",
                           value: c.id,
                         }))}
                         value={field.value}

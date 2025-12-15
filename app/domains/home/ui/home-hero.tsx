@@ -11,6 +11,7 @@ import {
 import { cn } from "~/utils";
 import { Button } from "~/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMobile } from "~/hooks/use-mobile";
 
 interface HeroFigure {
   id: string;
@@ -53,6 +54,7 @@ export function HomeHero({
 }: {
   figures?: HeroFigure[];
 }) {
+  const isMobile = useMobile(768);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoplayEnabled, setAutoplayEnabled] = useState(true);
   const autoplayTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -283,23 +285,28 @@ export function HomeHero({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.5 }}
-            className="max-w-2xl ml-16"
+            className={cn(isMobile ? "h-full" : "max-w-2xl ml-16")}
           >
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
+              className={cn(
+                isMobile && "h-full flex flex-col justify-between py-5"
+              )}
             >
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
-                {figures[currentIndex].name}
-              </h1>
-              <p className="text-xl md:text-2xl text-white/80 mb-2">
-                {figures[currentIndex].series}
-              </p>
-              <p className="text-lg text-white/70 mb-6">
-                {figures[currentIndex].manufacturer} | 출시일:{" "}
-                {formatDate(figures[currentIndex].releaseDate)}
-              </p>
+              <div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
+                  {figures[currentIndex].name}
+                </h1>
+                <p className="text-xl md:text-2xl text-white/80 mb-2">
+                  {figures[currentIndex].series}
+                </p>
+                <p className="text-lg text-white/70 mb-6">
+                  {figures[currentIndex].manufacturer} | 출시일:{" "}
+                  {formatDate(figures[currentIndex].releaseDate)}
+                </p>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"

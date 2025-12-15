@@ -1,5 +1,10 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Link, redirect, useOutletContext } from "@remix-run/react";
+import {
+  Link,
+  redirect,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import {
@@ -32,8 +37,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Login() {
   const { supabase } = useOutletContext<TOutletContext>();
 
-  const urlParams = new URLSearchParams(location.search);
-  const redirectTo = urlParams.get("redirectTo") || "/";
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get("redirect_to") || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,7 +81,7 @@ export default function Login() {
     <>
       {/* <Navbar /> */}
       <div className="container mx-auto flex items-center justify-center min-h-[calc(100vh-73px)]">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">
               로그인
@@ -161,7 +166,6 @@ export default function Login() {
                     className="w-full"
                     // disabled={loading}
                   >
-                    {/* {loading ? "로그인 중..." : "이메일로 로그인"} */}
                     이메일로 로그인
                   </Button>
                 </form>
@@ -198,7 +202,6 @@ export default function Login() {
                     className="w-full"
                     //  disabled={loading}
                   >
-                    {/* {loading ? "가입 중..." : "회원가입"} */}
                     회원가입
                   </Button>
                 </form>

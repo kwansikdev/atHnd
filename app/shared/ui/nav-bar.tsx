@@ -1,10 +1,11 @@
 import {
   Archive,
-  BarChart3,
   Bell,
   BookMarked,
   ChevronDown,
+  LayoutDashboard,
   LogOut,
+  Package,
   ShoppingCart,
   User,
 } from "lucide-react";
@@ -51,13 +52,14 @@ export function Navbar() {
 
   const signOut = async () => {
     await supabase.client.auth.signOut();
-    navigate("/");
+    navigate("/auth/login");
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const mainNavItems = [
     // { to: "/", label: "홈", icon: <Home className="h-4 w-4" /> },
     {
-      to: "/reservations",
+      to: "/orders",
       label: "내 예약/구매",
       icon: <ShoppingCart className="h-4 w-4" />,
     },
@@ -105,12 +107,22 @@ export function Navbar() {
 
   const renderMobileHeader = () => (
     <div className="flex w-full h-12 items-center justify-between">
-      <Link to="/" className="flex items-center gap-2">
-        {/* <Package className="h-6 w-6" /> */}
-        <span className="text-lg font-bold">미피챈</span>
-      </Link>
+      {/* <div className="flex items-center gap-3">
+        <div className="size-10 rounded-lg bg-primary flex items-center justify-center">
+          <Package className="size-6 text-white" />
+        </div>
+        <div>
+          <h1 className="font-bold text-lg">Bishoujo Collection</h1>
+          <p className="text-xs text-muted-foreground">Figure Manager</p>
+        </div>
+      </div> */}
+      <div className="flex items-center gap-1 text-3xl">
+        <span className={`font-light text-logo-at text-[0.7em]`}>at</span>
+        <span className={`text-logo-dot text-[0.25em] mb-2`}>●</span>
+        <span className={`font-bold text-logo-hnd tracking-tight`}>Hnd</span>
+      </div>
 
-      <div className="flex items-center gap-1">
+      <div className="items-center gap-1 hidden">
         {isLoggedIn ? (
           <>
             {/* <Button
@@ -155,13 +167,14 @@ export function Navbar() {
             </Button> */}
           </>
         ) : (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/auth/login")}
-          >
-            로그인
-          </Button>
+          // <Button
+          //   variant="outline"
+          //   size="sm"
+          //   onClick={() => navigate("/auth/login")}
+          // >
+          //   로그인
+          // </Button>
+          <></>
         )}
       </div>
     </div>
@@ -172,22 +185,45 @@ export function Navbar() {
     <div className="flex h-10 w-full items-center justify-between">
       {/* 로고 및 데스크톱 네비게이션 */}
       <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
-        <Link to="/" className="flex items-center gap-2">
-          {/* <Package className="h-6 w-6" /> */}
+        {/* <Link to="/" className="flex items-center gap-2">
+          <Package className="h-6 w-6" />
           <span className="text-xl font-bold">미피챈</span>
+        </Link> */}
+        {/* <div className="flex items-center gap-3">
+          <div className="size-10 rounded-lg bg-black flex items-center justify-center">
+            <Package className="size-6 text-primary-foreground" />
+          </div>
+          <Link to="/">
+            <h1 className="font-bold text-lg">Bishoujo Collection</h1>
+            <p className="text-xs text-muted-foreground">Figure Manager</p>
+          </Link>
+        </div> */}
+        <Link to="/">
+          <div className="flex items-center gap-1 text-3xl">
+            <span className={`font-light text-logo-at text-[0.7em]`}>at</span>
+            <span className={`text-logo-dot text-[0.25em] mb-2`}>●</span>
+            <span className={`font-bold text-logo-hnd tracking-tight`}>
+              Hnd
+            </span>
+          </div>
         </Link>
 
         {/* 데스크톱 네비게이션 */}
         <nav className="flex items-center gap-1">
-          {mainNavItems.slice(0, 4).map((item) => (
-            <NavItem
-              key={item.to}
-              to={item.to}
-              label={item.label}
-              icon={item.icon}
-              // active={pathname === item.to}
-            />
-          ))}
+          {/* {mainNavItems.slice(0, 4).map((item) => {
+            if (item.to === "/archive" && !profile?.is_admin) return null;
+
+            return (
+              <NavItem
+                key={item.to}
+                to={item.to}
+                label={item.label}
+                icon={item.icon}
+                // active={pathname === item.to}
+                isAdmin={!!profile?.is_admin}
+              />
+            );
+          })} */}
 
           {/* 드롭다운 메뉴 - 피규어 DB */}
           {/* <DropdownMenu>
@@ -335,6 +371,20 @@ export function Navbar() {
                 </div>
               </div>
               <DropdownMenuSeparator />
+              {profile?.is_admin && (
+                <>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      to="/admin/figure/add"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      <span>피규어 추가</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
               <DropdownMenuItem asChild>
                 <Link
                   to="/profile"
@@ -344,9 +394,9 @@ export function Navbar() {
                   <span>프로필</span>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
+              {/* <DropdownMenuItem asChild>
                 <Link
-                  to="/reservations"
+                  to="/orders"
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <ShoppingCart className="mr-2 h-4 w-4" />
@@ -370,7 +420,7 @@ export function Navbar() {
                   <BarChart3 className="mr-2 h-4 w-4" />
                   <span>통계</span>
                 </Link>
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => signOut()}
@@ -397,8 +447,13 @@ export function Navbar() {
   );
 
   return (
-    <header className="fixed top-0 z-50 w-full h-15 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex items-center h-full mx-auto">
+    <header
+      className={cn(
+        "fixed top-0 z-50 w-full h-15 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        isMobile && "border-0"
+      )}
+    >
+      <div className="container flex items-center h-full mx-auto px-4">
         {/* {!isMobile && renderDesktopHeader()} */}
         {isMobile ? renderMobileHeader() : renderDesktopHeader()}
       </div>
@@ -406,26 +461,27 @@ export function Navbar() {
   );
 }
 
-interface NavItemProps {
-  to: string;
-  label: string;
-  icon?: React.ReactNode;
-  active?: boolean;
-  onClick?: () => void;
-}
+// interface NavItemProps {
+//   to: string;
+//   label: string;
+//   icon?: React.ReactNode;
+//   active?: boolean;
+//   isAdmin?: boolean;
+//   onClick?: () => void;
+// }
 
-function NavItem({ to, label, icon, active, onClick }: NavItemProps) {
-  return (
-    <Link
-      to={to}
-      className={cn(
-        "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
-        active ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
-      )}
-      onClick={onClick}
-    >
-      {icon}
-      {label}
-    </Link>
-  );
-}
+// function NavItem({ to, label, icon, active, onClick }: NavItemProps) {
+//   return (
+//     <Link
+//       to={to}
+//       className={cn(
+//         "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
+//         active ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
+//       )}
+//       onClick={onClick}
+//     >
+//       {icon}
+//       {label}
+//     </Link>
+//   );
+// }

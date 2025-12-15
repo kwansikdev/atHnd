@@ -72,7 +72,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         {children}
         <Toaster richColors position="bottom-center" />
-        <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function () {
+  try {
+    const theme = localStorage.getItem("theme");
+    if (theme === "light" || theme === "dark") {
+      document.documentElement.classList.add(theme);
+    } else {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.classList.add(prefersDark ? "dark" : "light");
+    }
+  } catch (e) {}
+})();
+            `.trim(),
+          }}
+        />
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -80,22 +96,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-function getThemeScript() {
-  return `
-  (function() {
-    try {
-      const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.classList.add(theme);
-      } catch (_) {}
-      })();
-      `;
-}
-
 export default function App() {
   const { isLoggedIn, user, profile, envs } = useLoaderData<typeof loader>();
   const [supabase] = useState(
     () => new SupabaseService(envs.SUPABASE_URL, envs.SUPABASE_ANON_KEY)
   );
+
+  // useEffect(() => {
+  //   const saved = localStorage.getItem("theme");
+  //   if (saved === "light" || saved === "dark") {
+  //     document.documentElement.classList.remove("light", "dark");
+  //     document.documentElement.classList.add(saved);
+  //   } else {
+  //     const prefersDark = window.matchMedia(
+  //       "(prefers-color-scheme: dark)"
+  //     ).matches;
+  //     document.documentElement.classList.add(prefersDark ? "dark" : "light");
+  //   }
+  // }, []);
 
   return (
     <>

@@ -22,18 +22,10 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { getSupabaseServerClient } from "supabase";
+import { getUserFromRequest } from "~/shared/action";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { supabase, headers } = await getSupabaseServerClient(request);
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
-
-  if (error || !user) {
-    return redirect("/login", { headers });
-  }
+  const { user, supabase, headers } = await getUserFromRequest(request);
 
   const profile = await supabase
     .from("profile")

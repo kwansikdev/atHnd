@@ -19,7 +19,7 @@ export async function getUserFromRequest(
       options?.redirectTo || redirectTo
     );
 
-    throw redirect(`/login?redirectTo=${encodedRedirectTo}`, { headers });
+    throw redirect(`/auth/login?redirect_to=${encodedRedirectTo}`, { headers });
   }
 
   return { user, supabase, headers };
