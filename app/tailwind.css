@@ -38,6 +38,10 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
+  --color-logo-at: #8b7355;
+  --color-logo-dot: #e63946;
+  --color-logo-hnd: #2b2d42;
+
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -108,6 +112,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.552 0.016 285.938);
+
+  --color-logo-at: #a78b71;
+  --color-logo-dot: #ff6b6b;
+  --color-logo-hnd: #ecf0f1;
 }
 
 @custom-variant dark (&:is(.dark *));

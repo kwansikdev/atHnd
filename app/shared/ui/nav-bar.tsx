@@ -107,7 +107,7 @@ export function Navbar() {
 
   const renderMobileHeader = () => (
     <div className="flex w-full h-12 items-center justify-between">
-      <div className="flex items-center gap-3">
+      {/* <div className="flex items-center gap-3">
         <div className="size-10 rounded-lg bg-primary flex items-center justify-center">
           <Package className="size-6 text-white" />
         </div>
@@ -115,6 +115,11 @@ export function Navbar() {
           <h1 className="font-bold text-lg">Bishoujo Collection</h1>
           <p className="text-xs text-muted-foreground">Figure Manager</p>
         </div>
+      </div> */}
+      <div className="flex items-center gap-1 text-3xl">
+        <span className={`font-light text-logo-at text-[0.7em]`}>at</span>
+        <span className={`text-logo-dot text-[0.25em] mb-2`}>●</span>
+        <span className={`font-bold text-logo-hnd tracking-tight`}>Hnd</span>
       </div>
 
       <div className="items-center gap-1 hidden">
@@ -184,15 +189,24 @@ export function Navbar() {
           <Package className="h-6 w-6" />
           <span className="text-xl font-bold">미피챈</span>
         </Link> */}
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <div className="size-10 rounded-lg bg-black flex items-center justify-center">
             <Package className="size-6 text-primary-foreground" />
           </div>
           <Link to="/">
             <h1 className="font-bold text-lg">Bishoujo Collection</h1>
-            {/* <p className="text-xs text-muted-foreground">Figure Manager</p> */}
+            <p className="text-xs text-muted-foreground">Figure Manager</p>
           </Link>
-        </div>
+        </div> */}
+        <Link to="/">
+          <div className="flex items-center gap-1 text-3xl">
+            <span className={`font-light text-logo-at text-[0.7em]`}>at</span>
+            <span className={`text-logo-dot text-[0.25em] mb-2`}>●</span>
+            <span className={`font-bold text-logo-hnd tracking-tight`}>
+              Hnd
+            </span>
+          </div>
+        </Link>
 
         {/* 데스크톱 네비게이션 */}
         <nav className="flex items-center gap-1">
