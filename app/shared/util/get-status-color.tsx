@@ -6,7 +6,7 @@ export function getStatusColor(
 ) {
   switch (status) {
     case "reserved":
-      return "bg-sky-500 hover:bg-sky-600";
+      return "bg-primary";
     case "ordered":
       return "bg-amber-400 hover:bg-amber-500";
     case "owned":
