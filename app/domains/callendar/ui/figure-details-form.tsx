@@ -26,6 +26,7 @@ import { ChevronDownIcon } from "lucide-react";
 import { Database } from "supabase/schema";
 import { useCalendarAddFormStore } from "../store";
 import { ko } from "date-fns/locale";
+import { getImageTransformation } from "~/shared/ui";
 
 type FigurePaymentType = "deposit" | "full";
 interface FigureDetailsFormProps {
@@ -96,7 +97,13 @@ export function FigureDetailsForm({ figure, index }: FigureDetailsFormProps) {
         {/* Figure Info */}
         <div className="relative size-20 rounded-md overflow-hidden bg-muted flex-shrink-0">
           <img
-            src={figure.detail.images[0].image_url || "/placeholder.svg"}
+            src={
+              getImageTransformation(figure.detail.images[0].image_url, {
+                width: 80,
+                height: 80,
+                quality: 80,
+              }) || "/placeholder.svg"
+            }
             alt={figure.detail.name}
             className="object-cover"
           />

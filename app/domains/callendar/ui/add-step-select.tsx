@@ -126,7 +126,7 @@ export function AddStepSelect() {
                         }
                         alt={item.detail.name}
                         // fill
-                        className="object-cover"
+                        className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform"
                       />
                     </div>
                     <div className="flex-1 min-w-0">

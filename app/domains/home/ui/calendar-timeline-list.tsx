@@ -2,6 +2,7 @@ import { Badge } from "~/components/ui/badge";
 import { cn } from "~/utils";
 import { getStatusColor, getStatusLabel } from "~/shared/util";
 import { UserFigureDto } from "../model/user-figure-dto";
+import { getImageTransformation } from "~/shared/ui";
 
 type CalendarTimelineListProps = {
   data: UserFigureDto[];
@@ -30,8 +31,14 @@ export function CalendarTimelineList(props: CalendarTimelineListProps) {
                   <div className="relative size-12 rounded-md overflow-hidden bg-muted flex-shrink-0">
                     <img
                       src={
-                        item.figure.detail.image[0].image_url ||
-                        "/placeholder.svg"
+                        getImageTransformation(
+                          item.figure.detail.image[0].image_url,
+                          {
+                            width: 48,
+                            height: 48,
+                            quality: 80,
+                          }
+                        ) || "/placeholder.svg"
                       }
                       alt={item.figure.detail.name}
                       // fill
