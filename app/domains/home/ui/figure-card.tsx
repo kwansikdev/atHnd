@@ -6,6 +6,7 @@ import { cn } from "~/utils";
 import { getStatusLabel } from "~/shared/action";
 import { getStatusColor } from "~/shared/util";
 import { getImageTransformation } from "~/shared/ui";
+import { useMemo } from "react";
 
 interface FigureCardProps {
   data: UserFigureDto;
@@ -13,6 +14,9 @@ interface FigureCardProps {
 }
 
 export function FigureCard({ data, onClick }: FigureCardProps) {
+  const updatedAt = useMemo(() => {
+    return data.deposit_paid_at ?? data.paid_at;
+  }, [data]);
   return (
     <div
       className="p-3 rounded-lg bg-background hover:bg-accent/50 transition-colors cursor-pointer group"
@@ -43,16 +47,38 @@ export function FigureCard({ data, onClick }: FigureCardProps) {
           <h4 className="font-semibold text-sm line-clamp-2 text-balance mb-1">
             {data.figure.detail.name}
           </h4>
-          <p className="text-xs text-muted-foreground mb-2">
-            {data.figure.detail.manufacturer?.name}
-          </p>
           <div className="flex items-center justify-between">
-            <Badge
-              variant="secondary"
-              className={cn("text-white text-xs", getStatusColor(data.status))}
-            >
-              {getStatusLabel(data.status)}
-            </Badge>
+            <p className="text-xs text-muted-foreground mb-2">
+              {data.figure.detail.manufacturer?.name}
+            </p>
+            <p className="text-xs text-muted-foreground mb-2">{updatedAt}</p>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "text-white text-xs",
+                  getStatusColor(data.status)
+                )}
+              >
+                {getStatusLabel(data.status)}
+              </Badge>
+              {data.status === "reserved" && (
+                <Badge
+                  className={cn(
+                    "text-white text-xs transition-all duration-200 hover:scale-105",
+                    "bg-accent text-accent-foreground"
+                  )}
+                >
+                  {data.balance_paid_at
+                    ? "결재 완료"
+                    : data.deposit_paid_at
+                    ? "예약금"
+                    : "결제 완료"}
+                </Badge>
+              )}
+            </div>
             <span className="text-xs font-semibold">
               ₩{data.total_price.toLocaleString()}
             </span>

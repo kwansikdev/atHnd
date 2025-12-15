@@ -10,11 +10,12 @@ import { Button } from "~/components/ui/button";
 import { CalendarTimelineGrid } from "./calendar-timeline-grid";
 import { CalendarTimelineList } from "./calendar-timeline-list";
 
-import { useNavigate, useSearchParams } from "@remix-run/react";
+import { useNavigate, useRevalidator, useSearchParams } from "@remix-run/react";
 import { UserFigureDto } from "../model/user-figure-dto";
 
 import { FigureDetailSheet } from "./figure-detail-sheet";
 import { useFigureDetailStore } from "../store/use-figure-detail-store";
+import { useFetcherActionState } from "~/hooks/use-fetcher-action-state";
 
 type CalendarTimelineProps = {
   figures: UserFigureDto[]; // Define the proper type based on your data structure
@@ -54,28 +55,23 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
   };
 
   const handleGeneralAddClick = () => {
-    // setSelectedMonth(undefined);
-    // setDialogOpen(true);
     navigate("/calendar/add");
   };
 
-  const { sheetOpen, setSheetOpen, selectedFigure } = useFigureDetailStore();
-  const [detailSheetOpen, setDetailSheetOpen] = useState(false);
+  const { sheetOpen, setSheetOpen, selectedFigure, reset } =
+    useFigureDetailStore();
 
-  const toggleDetailSheetOpen = (newOpen: boolean) => () => {
-    setDetailSheetOpen(newOpen);
-  };
-
-  const handleFigureUpdate = (updatedFigure: Figure) => {
-    // setFigures((prev) =>
-    //   prev.map((f) => (f.id === updatedFigure.id ? updatedFigure : f))
-    // );
-    // setSelectedFigure(updatedFigure);
-  };
-
+  // delete
+  const deleteFigure = useFetcherActionState();
   const handleFigureDelete = (figureId: string) => {
-    // setFigures((prev) => prev.filter((f) => f.id !== figureId));
+    deleteFigure.fetcher.submit(JSON.stringify({ id: figureId }), {
+      method: "DELETE",
+      encType: "application/json",
+      action: "/api/user/figure",
+    });
   };
+
+  const revalidator = useRevalidator();
 
   return (
     <div className="space-y-4">
@@ -179,8 +175,14 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
       <FigureDetailSheet
         figure={selectedFigure}
         open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        onUpdate={handleFigureUpdate}
+        onOpenChange={() => {
+          setSheetOpen(!sheetOpen);
+
+          if (sheetOpen) {
+            reset();
+          }
+        }}
+        onUpdate={revalidator.revalidate}
         onDelete={handleFigureDelete}
       />
     </div>
