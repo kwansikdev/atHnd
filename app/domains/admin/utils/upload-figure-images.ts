@@ -9,7 +9,8 @@ export async function uploadFigureImages<
 >(
   figures: TFigure[],
   bucket: string,
-  setUploadProgress: React.Dispatch<React.SetStateAction<UploadProgress>>
+  setUploadProgress: React.Dispatch<React.SetStateAction<UploadProgress>>,
+  supabaseUrl: string
 ): Promise<TFigure[]> {
   // 1. 업로드할 파일 수집
   const filesToUpload: Array<{
@@ -35,6 +36,7 @@ export async function uploadFigureImages<
   // 2. 일괄 업로드
   const result = await uploadBatch(
     filesToUpload.map(({ key, file }) => ({ key, file })),
+    supabaseUrl,
     bucket,
     (key, status) => {
       setUploadProgress((prev) => ({ ...prev, [key]: status }));

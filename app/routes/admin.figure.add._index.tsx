@@ -13,6 +13,7 @@ import { Form } from "~/components/ui/form";
 import { AddFigureForm } from "~/domains/admin/ui/add-figure-form";
 import { uploadFigureImages } from "~/domains/admin/utils/upload-figure-images";
 import { useFetcherActionState } from "~/hooks/use-fetcher-action-state";
+import { useRootLoaderData } from "~/hooks/use-root-loader-data";
 import { UploadProgress } from "~/utils/upload-batch";
 // import { ImageItem } from "~/shared/ui/image-uploader";
 
@@ -109,6 +110,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function AdminFigureAdd() {
+  const { envs } = useRootLoaderData();
   const options = useMemo(
     () => ({
       showToast: true,
@@ -139,7 +141,8 @@ export default function AdminFigureAdd() {
       const updatedFigures = await uploadFigureImages(
         figures,
         "figures",
-        setUploadProgress
+        setUploadProgress,
+        envs.SUPABASE_URL
       );
 
       toast.success("All images uploaded successfully!");
@@ -150,6 +153,7 @@ export default function AdminFigureAdd() {
         encType: "application/json",
       });
     } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
       // ❌ 업로드 실패 시 여기로 와서 fetcher.submit은 실행 안 됨
       // toast.error("Upload failed. Please try again.");
       toast.error("Upload failed. Please try again.");
