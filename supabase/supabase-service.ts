@@ -21,6 +21,10 @@ export class SupabaseService {
     return this.supabase;
   }
 
+  get url() {
+    return this.SUPABASE_URL;
+  }
+
   /**
    *
    * @param bucket 업로드할 파일의 경로를 입력합니다. (ex. "files", "images", "posts")
@@ -82,5 +86,22 @@ export async function getSupabaseServerClient(request: Request) {
     }
   }
 
-  return { supabase, headers: response.headers, uploadFile };
+  async function uploadSignedUploadUrl(bucket: BucketName, filePath: string) {
+    const origin = `${process.env.SUPABASE_URL}/storage/v1/object/public/${bucket}/`;
+    const { data } = await supabase.storage
+      .from(bucket)
+      .createSignedUploadUrl(filePath);
+    if (data) {
+      return origin + data.path;
+    } else {
+      return null;
+    }
+  }
+
+  return {
+    supabase,
+    headers: response.headers,
+    uploadFile,
+    uploadSignedUploadUrl,
+  };
 }
