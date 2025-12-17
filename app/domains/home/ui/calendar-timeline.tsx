@@ -75,7 +75,7 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between py-3 px-2 backdrop-blur z-10 sticky top-[60px] rounded-b-md">
         {/* <div className="flex flex-1 items-center gap-2">
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />

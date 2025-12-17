@@ -5,7 +5,6 @@ import {
   ChevronDown,
   LayoutDashboard,
   LogOut,
-  Package,
   ShoppingCart,
   User,
 } from "lucide-react";
