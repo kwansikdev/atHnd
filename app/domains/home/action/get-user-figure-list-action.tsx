@@ -53,7 +53,7 @@ export const getUserFigureListAction = async (
     .or(
       `paid_at.lte.${options.year}-12-31,deposit_paid_at.lte.${options.year}-12-31`
     )
-    .order("paid_at", { ascending: false, nullsFirst: false })
+    .order("paid_at", { ascending: true, nullsFirst: false })
     .limit(1, { foreignTable: "figure.detail.figure_image" });
   // .or(
   //   `paid_at.gte.${options.year}-01-01,deposit_paid_at.gte.${options.year}-01-01,delivered_at.gte.${options.year}-01-01`

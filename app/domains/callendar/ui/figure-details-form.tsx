@@ -27,6 +27,7 @@ import { Database } from "supabase/schema";
 import { useCalendarAddFormStore } from "../store";
 import { ko } from "date-fns/locale";
 import { getImageTransformation } from "~/shared/ui";
+import { format } from "date-fns";
 
 type FigurePaymentType = "deposit" | "full";
 interface FigureDetailsFormProps {
@@ -254,9 +255,7 @@ export function FigureDetailsForm({ figure, index }: FigureDetailsFormProps) {
                           id="date-picker"
                           className="w-full justify-between font-normal"
                         >
-                          {field.value
-                            ? field.value.toLocaleDateString()
-                            : "날짜를 선택해 주세요."}
+                          {field.value ? field.value : "날짜를 선택해 주세요."}
                           <ChevronDownIcon />
                         </Button>
                       </PopoverTrigger>
@@ -268,7 +267,13 @@ export function FigureDetailsForm({ figure, index }: FigureDetailsFormProps) {
                           mode="single"
                           selected={field.value}
                           onSelect={(selectedDate) => {
-                            field.onChange(selectedDate);
+                            if (selectedDate) {
+                              const dateString = format(
+                                selectedDate,
+                                "yyyy-MM-dd"
+                              );
+                              field.onChange(dateString);
+                            }
                           }}
                           locale={ko}
                           className="rounded-md border shadow-sm"

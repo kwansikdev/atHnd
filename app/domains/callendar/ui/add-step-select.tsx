@@ -224,7 +224,7 @@ export function AddStepSelect() {
                             ) || "/placeholder.svg"
                           }
                           alt={figure.detail.name}
-                          className="object-cover"
+                          className="absolute inset-0 w-full h-full object-cover object-center group-hover:scale-105 transition-transform"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
