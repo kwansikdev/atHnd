@@ -115,11 +115,16 @@ export function Navbar() {
           <p className="text-xs text-muted-foreground">Figure Manager</p>
         </div>
       </div> */}
-      <div className="flex items-center gap-1 text-3xl">
+
+      <div className="flex items-center gap-2">
+        <img src="/athnd-logo.svg" alt="at·hand logo" className="h-8" />
+        <h1 className="font-bold text-lg invisible">atHnd</h1>
+      </div>
+      {/* <div className="flex items-center gap-1 text-3xl">
         <span className={`font-light text-logo-at text-[0.7em]`}>at</span>
         <span className={`text-logo-dot text-[0.25em] mb-2`}>●</span>
         <span className={`font-bold text-logo-hnd tracking-tight`}>Hnd</span>
-      </div>
+      </div> */}
 
       <div className="items-center gap-1 hidden">
         {isLoggedIn ? (
@@ -197,14 +202,17 @@ export function Navbar() {
             <p className="text-xs text-muted-foreground">Figure Manager</p>
           </Link>
         </div> */}
-        <Link to="/">
-          <div className="flex items-center gap-1 text-3xl">
+        <Link to="/" className="">
+          <div className="flex items-center gap-2">
+            <img src="/athnd-logo.svg" alt="at·hand logo" className="h-10" />
+          </div>
+          {/* <div className="flex items-center gap-1 text-3xl">
             <span className={`font-light text-logo-at text-[0.7em]`}>at</span>
             <span className={`text-logo-dot text-[0.25em] mb-2`}>●</span>
             <span className={`font-bold text-logo-hnd tracking-tight`}>
               Hnd
             </span>
-          </div>
+          </div> */}
         </Link>
 
         {/* 데스크톱 네비게이션 */}
