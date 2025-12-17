@@ -7,8 +7,11 @@ import { TOutletContext } from "~/root";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "엣헨드 | Everything you keep, at hand!" },
+    {
+      name: "description",
+      content: "Your personal space for collecting, keeping, and sharing.",
+    },
   ];
 };
 
@@ -28,11 +31,11 @@ export default function Index() {
 
   return (
     <main className="container mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-balance">Figure Collection</h1>
           <p className="text-muted-foreground mt-1">
-            Manage your reservations and purchases
+            Your personal space for collecting, keeping, and sharing.
           </p>
         </div>
       </div>
