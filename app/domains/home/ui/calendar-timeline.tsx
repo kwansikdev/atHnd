@@ -16,6 +16,7 @@ import { UserFigureDto } from "../model/user-figure-dto";
 import { FigureDetailSheet } from "./figure-detail-sheet";
 import { useFigureDetailStore } from "../store/use-figure-detail-store";
 import { useFetcherActionState } from "~/hooks/use-fetcher-action-state";
+import { cn } from "~/utils";
 
 type CalendarTimelineProps = {
   figures: UserFigureDto[]; // Define the proper type based on your data structure
@@ -75,102 +76,71 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between py-3 px-2 backdrop-blur z-10 sticky top-[60px] rounded-b-md">
-        {/* <div className="flex flex-1 items-center gap-2">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input
-              placeholder="Search figures..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
-            />
+      <div className="sticky top-[60px] backdrop-blur rounded-b-md bg-background/80 z-10">
+        <div
+          className={cn(
+            "container mx-auto flex gap-4 items-center justify-between py-3 px-4"
+          )}
+        >
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handleYearChange(yearParam, "prev")}
+              >
+                <ChevronLeft className="size-4" />
+              </Button>
+              <span className="text-lg font-bold w-16 text-center">
+                {yearParam}
+              </span>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => handleYearChange(yearParam, "next")}
+              >
+                <ChevronRight className="size-4" />
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-1 border border-border rounded-lg p-1">
+              <Button
+                variant={viewMode === "grid" ? "secondary" : "ghost"}
+                size="icon"
+                className="size-8"
+                onClick={() => setViewMode("grid")}
+              >
+                <LayoutGrid className="size-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "secondary" : "ghost"}
+                size="icon"
+                className="size-8"
+                onClick={() => setViewMode("list")}
+              >
+                <List className="size-4" />
+              </Button>
+            </div>
           </div>
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[130px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="reserved">Reserved</SelectItem>
-              <SelectItem value="purchased">Purchased</SelectItem>
-              <SelectItem value="wishlist">Wishlist</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select
-            value={manufacturerFilter}
-            onValueChange={setManufacturerFilter}
+
+          <Button
+            className="gap-2 bg-sky-500 hover:bg-sky-600"
+            onClick={handleGeneralAddClick}
           >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Manufacturer" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Manufacturers</SelectItem>
-              {manufacturers.map((m) => (
-                <SelectItem key={m} value={m}>
-                  {m}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div> */}
+            <Plus className="size-4" />
+            {/* Add Figure */}
+          </Button>
+        </div>
+      </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleYearChange(yearParam, "prev")}
-            >
-              <ChevronLeft className="size-4" />
-            </Button>
-            <span className="text-lg font-bold w-16 text-center">
-              {yearParam}
-            </span>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => handleYearChange(yearParam, "next")}
-            >
-              <ChevronRight className="size-4" />
-            </Button>
-          </div>
-
-          <div className="flex items-center gap-1 border border-border rounded-lg p-1">
-            <Button
-              variant={viewMode === "grid" ? "secondary" : "ghost"}
-              size="icon"
-              className="size-8"
-              onClick={() => setViewMode("grid")}
-            >
-              <LayoutGrid className="size-4" />
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "secondary" : "ghost"}
-              size="icon"
-              className="size-8"
-              onClick={() => setViewMode("list")}
-            >
-              <List className="size-4" />
-            </Button>
-          </div>
+      <div className="container mx-auto px-4 py-6 space-y-4">
+        <div className="text-sm text-muted-foreground">
+          {figures.length} figures found ({yearParam})
         </div>
 
-        <Button
-          className="gap-2 bg-sky-500 hover:bg-sky-600"
-          onClick={handleGeneralAddClick}
-        >
-          <Plus className="size-4" />
-          {/* Add Figure */}
-        </Button>
+        {viewMode === "grid" && <CalendarTimelineGrid data={figures} />}
+        {viewMode === "list" && <CalendarTimelineList data={figures} />}
       </div>
-
-      <div className="text-sm text-muted-foreground">
-        {figures.length} figures found ({yearParam})
-      </div>
-
-      {viewMode === "grid" && <CalendarTimelineGrid data={figures} />}
-      {viewMode === "list" && <CalendarTimelineList data={figures} />}
 
       <FigureDetailSheet
         figure={selectedFigure}

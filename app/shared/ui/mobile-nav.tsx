@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { Home, User } from "lucide-react";
+import { CirclePlus, Home, User } from "lucide-react";
 import { cn } from "~/utils";
 import { Link, useLocation } from "@remix-run/react";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
@@ -26,7 +26,7 @@ function NavItem({ to, icon, label, active }: NavItemProps) {
       )}
     >
       {icon}
-      <span>{label}</span>
+      <span className="text-[8px]">{label}</span>
     </Link>
   );
 }
@@ -37,20 +37,10 @@ export function MobileNav() {
 
   const navItems = [
     { to: "/", icon: <Home className="h-5 w-5" />, label: "홈" },
-    // {
-    //   to: "/orders",
-    //   icon: <ShoppingCart className="h-5 w-5" />,
-    //   label: "예약/구매",
-    // },
-    // {
-    //   to: "/collection",
-    //   icon: <BookMarked className="h-5 w-5" />,
-    //   label: "컬렉션",
-    // },
     {
       to: "/profile",
       icon: isLoggedIn ? (
-        <Avatar className="h-7 w-7">
+        <Avatar className="h-5 w-5">
           <AvatarImage
             src={profile?.avatar_url || "/profile-placeholder.png"}
             alt={profile?.nickname || "사용자"}
@@ -60,20 +50,20 @@ export function MobileNav() {
       ) : (
         <User className="h-5 w-5" />
       ),
-      label: isLoggedIn ? "프로필" : "로그인",
+      label: isLoggedIn ? "마이페이지" : "로그인",
     },
   ];
 
-  // if (profile?.is_admin) {
-  //   navItems.splice(-1, 0, {
-  //     to: "/archive",
-  //     icon: <Archive className="h-5 w-5" />,
-  //     label: "아카이브",
-  //   });
-  // }
+  if (profile?.is_admin) {
+    navItems.splice(-1, 0, {
+      to: "/admin/figure/add",
+      icon: <CirclePlus className="h-5 w-5" />,
+      label: "피규어",
+    });
+  }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-background md:hidden">
       <div className="flex items-center justify-around">
         {navItems.map((item) => (
           <NavItem
