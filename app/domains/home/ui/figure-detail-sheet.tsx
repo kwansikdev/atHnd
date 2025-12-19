@@ -152,6 +152,8 @@ export function FigureDetailSheet({
 
     const data = { [field]: updataFieldValue ? updataFieldValue : null };
     if (field === "delivered_at") data["status"] = "owned";
+    if (field === "balance_paid_at") data["paid_at"] = updataFieldValue;
+
     handleSubmit(data);
   };
 
