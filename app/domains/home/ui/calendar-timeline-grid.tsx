@@ -3,6 +3,7 @@ import { UserFigureDto } from "../model/user-figure-dto";
 import { FigureCard } from "./figure-card";
 import { useSearchParams } from "@remix-run/react";
 import { useFigureDetailStore } from "../store/use-figure-detail-store";
+import { orderBy } from "es-toolkit";
 
 type CalendarTimelineGridProps = {
   data: UserFigureDto[];
@@ -21,16 +22,23 @@ export function CalendarTimelineGrid(props: CalendarTimelineGridProps) {
 
     data.forEach((figure) => {
       const date = new Date(figure.deposit_paid_at ?? figure.paid_at);
-      // figure.status === "reserved"
-      //   ?
-      //   : new Date(figure.paid_at);
-
       const month = date.getMonth();
+
       if (!grouped[month]) {
         grouped[month] = [];
       }
       if (date.getFullYear() === parseInt(yearParam))
         grouped[month].push(figure);
+    });
+
+    // 정렬
+    Object.keys(grouped).forEach((key) => {
+      const month = parseInt(key);
+      grouped[month] = orderBy(
+        grouped[month],
+        [(obj) => obj.deposit_paid_at || obj.paid_at, "created_at"],
+        ["desc"]
+      );
     });
 
     return grouped;

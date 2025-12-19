@@ -10,17 +10,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const q = url.searchParams.get("q") ?? "";
   const lId = url.searchParams.get("lId") ?? "";
+  const page = url.searchParams.get("page") ?? 0;
 
-  const figures = await getFiguresWithQuery(supabase, q, lId);
+  const figures = await getFiguresWithQuery(supabase, q, lId, Number(page));
   const lastId = figures.length > 0 ? figures[figures.length - 1].id : "";
 
-  return data({ data: figures, query: q, lastId });
+  return data({
+    data: figures,
+    query: q,
+    lastId,
+    next: lastId ? Number(page) + 1 : 0,
+  });
 }
 
 async function getFiguresWithQuery(
   supabase: SupabaseClient<Database>,
   query?: string,
-  lastId?: string
+  lastId?: string,
+  page: number = 0,
+  PAGE_SIZE: number = 30
 ) {
   let sb = supabase
     .from("figure_release")
@@ -28,11 +36,12 @@ async function getFiguresWithQuery(
       `
     id,release_text,release_no,price_kr,price_jp,is_reissue,figure: figure_id!inner(id,name,manufacturer: manufacturer_id!inner(id, name),images: figure_image!inner(image_url, sort_order))`
     )
-    .order("id", { ascending: false })
+    .order("created_at", { ascending: false })
     .limit(30)
-    .limit(1, { foreignTable: "figure.figure_image" });
+    .limit(1, { foreignTable: "figure.figure_image" })
+    .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
-  if (lastId) sb = sb.lt("id", lastId);
+  // if (lastId) sb = sb.lt("id", lastId);
   if (query) sb = sb.ilike("figure.name", `%${query}%`);
 
   const { data, error } = await sb;
@@ -44,7 +53,7 @@ async function getFiguresWithQuery(
   if (!data) return [];
 
   const result = data
-    .sort((a, b) => a.figure.name.localeCompare(b.figure.name))
+    // .sort((a, b) => a.figure.name.localeCompare(b.figure.name))
     .map((item) => ({
       id: item.id,
       release: {

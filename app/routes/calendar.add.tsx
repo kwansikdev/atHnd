@@ -73,8 +73,8 @@ export default function CalendarAdd() {
             <div
               className={`size-8 rounded-full flex items-center justify-center text-sm font-medium ${
                 step === "select"
-                  ? "bg-white text-primary-foreground"
-                  : "bg-muted text-muted-foreground"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted-foreground text-background"
               }`}
             >
               1
@@ -83,7 +83,7 @@ export default function CalendarAdd() {
             <div
               className={`size-8 rounded-full flex items-center justify-center text-sm font-medium ${
                 step === "details"
-                  ? "bg-white text-primary-foreground"
+                  ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground"
               }`}
             >

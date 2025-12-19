@@ -1,11 +1,14 @@
 import { data, LoaderFunctionArgs } from "@remix-run/node";
+import { useNavigate, useOutletContext } from "@remix-run/react";
 import { Camera, ChevronRight, Clock, Zap } from "lucide-react";
 import { JSX } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
+import { useMobile } from "~/hooks/use-mobile";
 import { useRootLoaderData } from "~/hooks/use-root-loader-data";
+import { TOutletContext } from "~/root";
 import { getUserFromRequest } from "~/shared/action";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -16,6 +19,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Profile(): JSX.Element {
   const { profile } = useRootLoaderData();
+  const { supabase } = useOutletContext<TOutletContext>();
+  const navigate = useNavigate();
+  const isMobile = useMobile();
+
+  const signOut = async () => {
+    await supabase.client.auth.signOut();
+    navigate("/auth/login");
+  };
 
   return (
     <main className="container mx-auto px-4 py-8 relative">
@@ -153,6 +164,17 @@ export default function Profile(): JSX.Element {
             </Button>
           </div>
         </div>
+        {isMobile && (
+          <div className="mt-6">
+            <Button
+              variant={"outline"}
+              className="bg-transparent w-full"
+              onClick={signOut}
+            >
+              LOGOUT
+            </Button>
+          </div>
+        )}
       </div>
     </main>
   );
