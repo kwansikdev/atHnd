@@ -28,10 +28,11 @@ export function AddStepSelect() {
     removeSelectedFigure,
   } = useCalendarAddFormStore();
 
-  const { fetcher, data, isSuccess } = useFetcherActionState<{
+  const { fetcher, data } = useFetcherActionState<{
     data: TFiguresWithQuery[];
     query?: string;
     lastId?: string;
+    next?: number;
   }>();
 
   const searchQuery = useRef<string>("");
@@ -39,7 +40,7 @@ export function AddStepSelect() {
 
   useEffect(() => {
     if (data?.data) {
-      if (data.query === searchQuery.current) {
+      if (data.query === searchQuery.current && data.next !== 0) {
         if (data.lastId) {
           // 추가 로드인 경우 기존 데이터에 추가
           addFigures(data.data);
@@ -56,16 +57,20 @@ export function AddStepSelect() {
   const handleLoadMore = () => {
     const query = data?.query || "";
     const lastId = data?.lastId || "";
+    const page = Number(data?.next || 0);
     fetcher.load(
-      `/api/search/figures?q=${encodeURIComponent(query)}&lId=${lastId}`
+      `/api/search/figures?q=${encodeURIComponent(
+        query
+      )}&lId=${lastId}&page=${page}`
     );
   };
 
   const handleSearchChange = debounce((value: string) => {
     if (!value) {
-      // setFigures([]);
+      setFigures([]);
       return;
     }
+
     fetcher.load(`/api/search/figures?q=${encodeURIComponent(value)}`);
   }, 1000);
 
@@ -77,12 +82,6 @@ export function AddStepSelect() {
     removeSelectedFigure(id);
   };
 
-  // useEffect(() => {
-  //   if (isSuccessFetch) {
-  //     setFigures([]);
-  //     searchQuery.current = "";
-  //   }
-  // }, [isSuccessFetch, setFigures]);
   useEffect(() => {
     return () => {
       setFigures([]);
@@ -100,7 +99,7 @@ export function AddStepSelect() {
             onValueChange={handleSearchChange}
           />
           <CommandList className={cn("max-h-[500px]")}>
-            {isSuccess && figures.length === 0 && (
+            {figures.length === 0 && (
               <CommandEmpty>No figures found.</CommandEmpty>
             )}
             {figures.length > 0 && (
