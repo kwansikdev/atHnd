@@ -7,13 +7,18 @@ import { orderBy } from "es-toolkit";
 
 type CalendarTimelineGridProps = {
   data: UserFigureDto[];
+  isExcluded: boolean;
 };
 
 export function CalendarTimelineGrid(props: CalendarTimelineGridProps) {
-  const { data } = props;
+  const { data, isExcluded = false } = props;
   const [searchParams] = useSearchParams();
   const yearParam = useMemo(
     () => searchParams.get("y") ?? new Date().getFullYear().toString(),
+    [searchParams]
+  );
+  const filterParam = useMemo(
+    () => searchParams.get("f") ?? "paid_at",
     [searchParams]
   );
 
@@ -21,7 +26,16 @@ export function CalendarTimelineGrid(props: CalendarTimelineGridProps) {
     const grouped: Record<number, UserFigureDto[]> = {};
 
     data.forEach((figure) => {
-      const date = new Date(figure.deposit_paid_at ?? figure.paid_at);
+      // 소장 제외 필터링
+      if (isExcluded && figure.status === "owned") {
+        return;
+      }
+
+      const date =
+        filterParam === "paid_at"
+          ? new Date(figure.deposit_paid_at ?? figure.paid_at)
+          : new Date(figure.figure.release_text);
+
       const month = date.getMonth();
 
       if (!grouped[month]) {
@@ -42,7 +56,7 @@ export function CalendarTimelineGrid(props: CalendarTimelineGridProps) {
     });
 
     return grouped;
-  }, [data, yearParam]);
+  }, [data, filterParam, isExcluded, yearParam]);
 
   const { setSheetOpen, setSelectedFigure } = useFigureDetailStore();
 
