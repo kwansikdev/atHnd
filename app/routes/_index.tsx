@@ -20,7 +20,11 @@ export async function loader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const year = new Date().getFullYear().toString();
   const y = url.searchParams.get("y") ?? year;
-  const figures = await getUserFigureListAction(supabase, { year: y });
+  const f = url.searchParams.get("f") ?? "paid_at";
+  const figures = await getUserFigureListAction(supabase, {
+    year: y,
+    filter: f as "paid_at" | "release_year",
+  });
 
   return Response.json({ figures });
 }

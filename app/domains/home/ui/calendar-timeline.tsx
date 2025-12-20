@@ -17,6 +17,9 @@ import { FigureDetailSheet } from "./figure-detail-sheet";
 import { useFigureDetailStore } from "../store/use-figure-detail-store";
 import { useFetcherActionState } from "~/hooks/use-fetcher-action-state";
 import { cn } from "~/utils";
+import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
+import { Label } from "~/components/ui/label";
+import { Checkbox } from "~/components/ui/checkbox";
 
 type CalendarTimelineProps = {
   figures: UserFigureDto[]; // Define the proper type based on your data structure
@@ -34,6 +37,12 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
     () => searchParams.get("y") ?? new Date().getFullYear().toString(),
     [searchParams]
   );
+  const filterParam = useMemo(
+    () => searchParams.get("f") ?? "paid_at",
+    [searchParams]
+  );
+
+  const [isExcluded, setIsExcluded] = useState(false);
 
   // const [searchQuery, setSearchQuery] = useState("");
   // const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -52,6 +61,11 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
     const newYear =
       direction === "prev" ? parseInt(year, 10) - 1 : parseInt(year, 10) + 1;
     searchParams.set("y", newYear.toString());
+    setSearchParams(searchParams);
+  };
+
+  const handleFilterChange = (filter: string) => {
+    searchParams.set("f", filter);
     setSearchParams(searchParams);
   };
 
@@ -121,6 +135,48 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
                 <List className="size-4" />
               </Button>
             </div>
+
+            <RadioGroup
+              value={filterParam}
+              defaultValue={"paid_at"}
+              onValueChange={handleFilterChange}
+              className="flex flex-wrap gap-2"
+            >
+              {[
+                { value: "paid_at", label: "구매일" },
+                { value: "release_year", label: "발매일" },
+              ].map((option) => (
+                <Label
+                  key={option.value}
+                  htmlFor={`filter-${option.value}`}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 rounded-full border cursor-pointer transition-colors",
+                    filterParam === option.value
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-background hover:bg-muted"
+                  )}
+                >
+                  <RadioGroupItem
+                    value={option.value}
+                    id={`filter-${option.value}`}
+                    className="sr-only"
+                  />
+                  <span className="font-medium text-sm">{option.label}</span>
+                </Label>
+              ))}
+            </RadioGroup>
+
+            <div className="flex items-center gap-2">
+              <Checkbox
+                checked={isExcluded}
+                onCheckedChange={(checked) => setIsExcluded(checked === true)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                id="exclude-owned"
+              />
+              <Label htmlFor="exclude-owned" className="cursor-pointer">
+                소장 제외하기
+              </Label>
+            </div>
           </div>
 
           <Button
@@ -138,7 +194,9 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
           {figures.length} figures found ({yearParam})
         </div>
 
-        {viewMode === "grid" && <CalendarTimelineGrid data={figures} />}
+        {viewMode === "grid" && (
+          <CalendarTimelineGrid data={figures} isExcluded={isExcluded} />
+        )}
         {viewMode === "list" && <CalendarTimelineList data={figures} />}
       </div>
 
