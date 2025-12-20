@@ -1,11 +1,13 @@
 import {
   ChevronLeft,
   ChevronRight,
+  ImageDown,
   LayoutGrid,
   List,
+  Loader2,
   Plus,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { CalendarTimelineGrid } from "./calendar-timeline-grid";
 import { CalendarTimelineList } from "./calendar-timeline-list";
@@ -20,6 +22,8 @@ import { cn } from "~/utils";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
+
+import { toJpeg } from "html-to-image";
 
 type CalendarTimelineProps = {
   figures: UserFigureDto[]; // Define the proper type based on your data structure
@@ -88,35 +92,39 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
 
   const revalidator = useRevalidator();
 
+  const ref = useRef<HTMLDivElement>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <div className="space-y-4">
       <div className="sticky top-[60px] backdrop-blur rounded-b-md bg-background/80 z-10">
         <div
           className={cn(
-            "container mx-auto flex gap-4 items-center justify-between py-3 px-4"
+            "relative container mx-auto flex flex-col md:flex-row gap-4 md:items-center py-3 px-4 "
           )}
         >
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => handleYearChange(yearParam, "prev")}
-              >
-                <ChevronLeft className="size-4" />
-              </Button>
-              <span className="text-lg font-bold w-16 text-center">
-                {yearParam}
-              </span>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => handleYearChange(yearParam, "next")}
-              >
-                <ChevronRight className="size-4" />
-              </Button>
-            </div>
+          {/* <div className="flex items-center gap-4"> */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => handleYearChange(yearParam, "prev")}
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+            <span className="text-lg font-bold w-16 text-center">
+              {yearParam}
+            </span>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => handleYearChange(yearParam, "next")}
+            >
+              <ChevronRight className="size-4" />
+            </Button>
+          </div>
 
+          <div className="flex items-center gap-4 flex-1">
             <div className="flex items-center gap-1 border border-border rounded-lg p-1">
               <Button
                 variant={viewMode === "grid" ? "secondary" : "ghost"}
@@ -178,26 +186,62 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
               </Label>
             </div>
           </div>
+          {/* </div> */}
 
-          <Button
-            className="gap-2 bg-sky-500 hover:bg-sky-600"
-            onClick={handleGeneralAddClick}
-          >
-            <Plus className="size-4" />
-            {/* Add Figure */}
-          </Button>
+          <div className="flex items-center gap-2 absolute top-3 right-4 md:top-1/2 md:-translate-y-1/2 ">
+            <Button
+              className="gap-2 bg-sky-500 hover:bg-sky-600"
+              onClick={handleGeneralAddClick}
+            >
+              <Plus className="size-4 text-white" />
+            </Button>
+            <Button
+              variant={"link"}
+              className="gap-2 bg-sky-500 hover:bg-sky-600"
+              onClick={() => {
+                if (ref.current === null) {
+                  return;
+                }
+                if (isLoading) {
+                  return;
+                }
+
+                setIsLoading(true);
+
+                toJpeg(ref.current, {
+                  cacheBust: true,
+                  backgroundColor: "var(--background)",
+                  quality: 1,
+                }).then((dataUrl) => {
+                  const link = document.createElement("a");
+                  link.download = `${yearParam}-calendar.png`;
+                  link.href = dataUrl;
+                  link.click();
+                  setIsLoading(false);
+                });
+              }}
+            >
+              {isLoading ? (
+                <Loader2 className="size-4 text-white animate-spin" />
+              ) : (
+                <ImageDown className="size-4 text-white" />
+              )}
+            </Button>
+          </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-6 space-y-4">
-        <div className="text-sm text-muted-foreground">
-          {figures.length} figures found ({yearParam})
-        </div>
+      <div className="container mx-auto ">
+        <div ref={ref} className="px-4 py-6 space-y-4">
+          <div className="text-sm text-muted-foreground">
+            {figures.length} figures found ({yearParam})
+          </div>
 
-        {viewMode === "grid" && (
-          <CalendarTimelineGrid data={figures} isExcluded={isExcluded} />
-        )}
-        {viewMode === "list" && <CalendarTimelineList data={figures} />}
+          {viewMode === "grid" && (
+            <CalendarTimelineGrid data={figures} isExcluded={isExcluded} />
+          )}
+          {viewMode === "list" && <CalendarTimelineList data={figures} />}
+        </div>
       </div>
 
       <FigureDetailSheet
