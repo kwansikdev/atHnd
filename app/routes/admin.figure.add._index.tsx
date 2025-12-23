@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, data } from "@remix-run/node";
 import { Form as RemixForm } from "@remix-run/react";
+import { format } from "date-fns";
 import { Loader2, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -28,6 +29,10 @@ export const figureSchema = z.object({
   p_scale_id: z.string().min(1, "Scale is required"),
   p_price_kr: z.number().min(0, "Price is required"),
   p_release_date: z.date().nullable(),
+  p_release_precision: z
+    .enum(["year", "quarter", "month", "day", "unknown"])
+    .default("unknown")
+    .optional(),
   p_is_reissue: z.boolean().optional(),
   images: z.array(
     z.object({
@@ -55,6 +60,7 @@ export const initialFormData: TInitialFormData = {
   p_scale_id: "",
   p_price_kr: 0,
   p_release_date: null,
+  p_release_precision: "unknown" as const,
   // optional
   images: [],
 };
@@ -68,8 +74,10 @@ export async function action({ request }: ActionFunctionArgs) {
     const results = await Promise.all(
       figures.map(async (figure) => {
         if (!figure.p_release_date) return;
-        const year = new Date(figure.p_release_date)?.getFullYear();
-        const month = new Date(figure.p_release_date)?.getMonth() + 1;
+        // const year = new Date(figure.p_release_date)?.getFullYear();
+        // const month = new Date(figure.p_release_date)?.getMonth() + 1;
+
+        const p_release_date = format(figure.p_release_date, "yyyy-MM-dd");
 
         const { data: figureId, error } = await supabase.rpc(
           "register_figure",
@@ -81,9 +89,9 @@ export async function action({ request }: ActionFunctionArgs) {
             p_category_id: figure.p_category_id,
             p_scale_id: figure.p_scale_id,
             p_price_kr: figure.p_price_kr,
-            p_release_year: year,
-            p_release_month: month,
-            p_release_text: `${year}-${month}`,
+            // p_release_year: year,
+            // p_release_month: month,
+            p_release_date,
             p_is_reissue: figure.p_is_reissue,
             p_images: figure.images
               .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
