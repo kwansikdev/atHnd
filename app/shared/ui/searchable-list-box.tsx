@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef } from "react";
-import { Search, Star, Plus, Check } from "lucide-react";
+import { Search, Star, Plus, Check, Loader2 } from "lucide-react";
 import { cn } from "~/utils";
 import { Input } from "~/components/ui/input";
 import { debounce } from "es-toolkit";
@@ -26,6 +26,7 @@ type SearchableListBoxProps = {
   className?: string;
   debounceMs?: number;
   isHiddenInput?: boolean;
+  isLoading?: boolean;
 };
 
 export function SearchableListBox({
@@ -41,6 +42,7 @@ export function SearchableListBox({
   className,
   debounceMs = 300,
   isHiddenInput = false,
+  isLoading = false,
 }: SearchableListBoxProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchRef = useRef<ReturnType<typeof debounce>>(null);
@@ -161,29 +163,39 @@ export function SearchableListBox({
             )}
 
             {/* All Options */}
-            {filteredOptions.length > 0
-              ? filteredOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    onClick={() => handleSelect(option.value)}
-                    className={cn(
-                      "w-full px-3 py-2 text-sm text-left flex items-center justify-between hover:bg-muted/50 transition-colors",
-                      selectedOption?.value === option.value &&
-                        "bg-primary/10 text-primary"
-                    )}
-                  >
-                    <span>{option.label}</span>
-                    {selectedOption?.value === option.value && (
-                      <Check className="h-4 w-4" />
-                    )}
-                  </button>
-                ))
-              : !showCreateOption && (
-                  <div className="p-4 text-center text-sm text-muted-foreground">
-                    No results found
-                  </div>
-                )}
+            {filteredOptions.length > 0 &&
+              filteredOptions.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => handleSelect(option.value)}
+                  className={cn(
+                    "w-full px-3 py-2 text-sm text-left flex items-center justify-between hover:bg-muted/50 transition-colors",
+                    selectedOption?.value === option.value &&
+                      "bg-primary/10 text-primary"
+                  )}
+                >
+                  <span>{option.label}</span>
+                  {selectedOption?.value === option.value && (
+                    <Check className="h-4 w-4" />
+                  )}
+                </button>
+              ))}
+
+            {isLoading ? (
+              <div className="flex items-center gap-4 justify-center p-4 text-center text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Searching...
+              </div>
+            ) : null}
+
+            {!isLoading &&
+              filteredOptions.length === 0 &&
+              !showCreateOption && (
+                <div className="p-4 text-center text-sm text-muted-foreground">
+                  No results found
+                </div>
+              )}
 
             {/* Create New Option */}
             {showCreateOption && (
