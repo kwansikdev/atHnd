@@ -34,7 +34,16 @@ async function getFiguresWithQuery(
     .from("figure_release")
     .select(
       `
-    id,release_text,release_no,price_kr,price_jp,is_reissue,figure: figure_id!inner(id,name,manufacturer: manufacturer_id!inner(id, name),images: figure_image!inner(image_url, sort_order))`
+      id,
+      release_date,
+      release_no,
+      price_kr,
+      price_jp,
+      is_reissue,
+      figure: figure_id!inner(id,name,
+      manufacturer: manufacturer_id!inner(id,name),
+      images: figure_image!inner(image_url, sort_order)
+    )`
     )
     .order("created_at", { ascending: false })
     .limit(30)
@@ -57,7 +66,7 @@ async function getFiguresWithQuery(
     .map((item) => ({
       id: item.id,
       release: {
-        text: item.release_text,
+        text: item.release_date,
         no: item.release_no,
       },
       price: {

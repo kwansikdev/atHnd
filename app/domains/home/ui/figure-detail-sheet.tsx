@@ -215,14 +215,7 @@ export function FigureDetailSheet({
             {localFigure && (
               <>
                 <p className="text-sm text-muted-foreground">
-                  {new Date(localFigure.figure.release_text).toLocaleDateString(
-                    "ko-KR",
-                    {
-                      year: "numeric",
-                      month: "long",
-                    }
-                  )}{" "}
-                  발매
+                  {localFigure.figure.release_notice}
                 </p>
               </>
             )}

@@ -34,7 +34,7 @@ export function CalendarTimelineGrid(props: CalendarTimelineGridProps) {
       const date =
         filterParam === "paid_at"
           ? new Date(figure.deposit_paid_at ?? figure.paid_at)
-          : new Date(figure.figure.release_text);
+          : new Date(figure.figure.release_date);
 
       const month = date.getMonth();
 
