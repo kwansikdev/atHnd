@@ -23,7 +23,6 @@ export type Database = {
           name_en: string | null;
           name_jp: string | null;
           paint_work: string[] | null;
-          parent_figure_id: string | null;
           price_cn: number | null;
           price_jp: number | null;
           price_kr: number | null;
@@ -54,7 +53,6 @@ export type Database = {
           name_en?: string | null;
           name_jp?: string | null;
           paint_work?: string[] | null;
-          parent_figure_id?: string | null;
           price_cn?: number | null;
           price_jp?: number | null;
           price_kr?: number | null;
@@ -85,7 +83,6 @@ export type Database = {
           name_en?: string | null;
           name_jp?: string | null;
           paint_work?: string[] | null;
-          parent_figure_id?: string | null;
           price_cn?: number | null;
           price_jp?: number | null;
           price_kr?: number | null;
@@ -127,13 +124,6 @@ export type Database = {
             columns: ["scale_id"];
             isOneToOne: false;
             referencedRelation: "figure_scale";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "figure_parent_figure_id_fkey";
-            columns: ["parent_figure_id"];
-            isOneToOne: false;
-            referencedRelation: "figure";
             referencedColumns: ["id"];
           },
           {
@@ -260,43 +250,52 @@ export type Database = {
       figure_release: {
         Row: {
           created_at: string | null;
+          delayed_dates: JSON | null;
           figure_id: string;
           id: string;
           is_reissue: boolean | null;
           price_cn: number | null;
           price_jp: number | null;
           price_kr: number | null;
+          release_date: string | null;
           release_month: number | null;
           release_no: number | null;
-          release_text: string | null;
+          release_notice: string | null;
+          release_precision: Database["public"]["Enums"]["release_precision_enum"];
           release_year: number | null;
           updated_at: string | null;
         };
         Insert: {
           created_at?: string | null;
+          delayed_dates?: JSON | null;
           figure_id: string;
           id?: string;
           is_reissue?: boolean | null;
           price_cn?: number | null;
           price_jp?: number | null;
           price_kr?: number | null;
+          release_date?: string | null;
           release_month?: number | null;
           release_no?: number | null;
-          release_text?: string | null;
+          release_notice?: string | null;
+          release_precision?: Database["public"]["Enums"]["release_precision_enum"];
           release_year?: number | null;
           updated_at?: string | null;
         };
         Update: {
           created_at?: string | null;
+          delayed_dates?: JSON | null;
           figure_id?: string;
           id?: string;
           is_reissue?: boolean | null;
           price_cn?: number | null;
           price_jp?: number | null;
           price_kr?: number | null;
+          release_date?: string | null;
           release_month?: number | null;
           release_no?: number | null;
-          release_text?: string | null;
+          release_notice?: string | null;
+          release_precision?: Database["public"]["Enums"]["release_precision_enum"];
           release_year?: number | null;
           updated_at?: string | null;
         };
@@ -341,6 +340,13 @@ export type Database = {
             columns: ["release_id"];
             isOneToOne: false;
             referencedRelation: "figure_release";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "figure_release_delay_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_release_ordered";
             referencedColumns: ["id"];
           }
         ];
@@ -576,6 +582,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: "figure_release";
             referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_figure_release_id_fkey";
+            columns: ["release_id"];
+            isOneToOne: false;
+            referencedRelation: "figure_release_ordered";
+            referencedColumns: ["id"];
           }
         ];
       };
@@ -734,28 +747,34 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      figure_release_ordered: {
+        Row: {
+          created_at: string | null;
+          figure_id: string | null;
+          figure_name: string | null;
+          id: string | null;
+          is_reissue: boolean | null;
+          price_cn: number | null;
+          price_jp: number | null;
+          price_kr: number | null;
+          release_month: number | null;
+          release_no: number | null;
+          release_text: string | null;
+          release_year: number | null;
+          updated_at: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "figure_release_figure_id_fkey";
+            columns: ["figure_id"];
+            isOneToOne: false;
+            referencedRelation: "figure";
+            referencedColumns: ["id"];
+          }
+        ];
+      };
     };
     Functions: {
-      create_figure_with_release_and_images: {
-        Args: {
-          _category: string;
-          _images: string[];
-          _is_reissue: boolean;
-          _manufacturer: string;
-          _name: string;
-          _name_jp: string;
-          _price_cn: number;
-          _price_jp: number;
-          _price_kr: number;
-          _release_month: number;
-          _release_text: string;
-          _release_year: number;
-          _scale: string;
-          _series: string;
-        };
-        Returns: string;
-      };
       register_figure: {
         Args: {
           p_category_id: string;
@@ -770,20 +789,28 @@ export type Database = {
           p_price_cn?: number;
           p_price_jp?: number;
           p_price_kr: number;
-          p_release_month: number;
-          p_release_text: string;
-          p_release_year: number;
+          p_release_date: string;
           p_scale_id: string;
           p_series_id: string;
           p_size?: string;
         };
         Returns: string;
       };
+      update_release_schedule: {
+        Args: {
+          p_id: string;
+          p_new_precision: string;
+          p_new_release_date: string;
+          p_notice?: string;
+        };
+        Returns: undefined;
+      };
     };
     Enums: {
       archive_figure_status: "upcoming" | "released" | "delayed" | "canceled";
       figure_status: "RESERVED" | "ORDERED" | "DELIVERED" | "IN_COLLECTION";
       payment_status: "PENDING" | "COMPLETED" | "CANCELLED";
+      release_precision_enum: "year" | "quarter" | "month" | "day" | "unknown";
       user_figure_status: "reserved" | "ordered" | "owned";
     };
     CompositeTypes: {
@@ -918,6 +945,7 @@ export const Constants = {
       archive_figure_status: ["upcoming", "released", "delayed", "canceled"],
       figure_status: ["RESERVED", "ORDERED", "DELIVERED", "IN_COLLECTION"],
       payment_status: ["PENDING", "COMPLETED", "CANCELLED"],
+      release_precision_enum: ["year", "quarter", "month", "day", "unknown"],
       user_figure_status: ["reserved", "ordered", "owned"],
     },
   },

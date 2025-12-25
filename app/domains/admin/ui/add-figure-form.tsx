@@ -42,6 +42,7 @@ import {
   TInitialFormData,
 } from "~/routes/admin.figure.add._index";
 import { SearchType } from "~/routes/api.search";
+import { format } from "date-fns";
 
 type AddFigureFormProps = {
   figure: FieldArrayWithId<TAdminFigureAddForm, "figures", "id">;
@@ -180,7 +181,7 @@ export function AddFigureForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor={`series-${figure.id}`}>
-                    Series *
+                    시리즈 *
                   </FormLabel>
                   <FormControl>
                     <SearchableListBox
@@ -206,6 +207,7 @@ export function AddFigureForm({
                       placeholder="Search series..."
                       recentValues={[]}
                       isHiddenInput
+                      isLoading={seriesFetcher.state === "loading"}
                     />
                   </FormControl>
                 </FormItem>
@@ -220,11 +222,15 @@ export function AddFigureForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor={`manufacturer-${figure.id}`}>
-                    Character *
+                    캐릭터 *
                   </FormLabel>
                   <FormControl>
                     <SearchableListBox
-                      options={characterFetcher.data?.results ?? []}
+                      options={
+                        characterFetcher.state === "loading"
+                          ? []
+                          : characterFetcher.data?.results ?? []
+                      }
                       value={field.value}
                       onSearch={handleSearch(
                         characterFetcher,
@@ -237,6 +243,7 @@ export function AddFigureForm({
                       }}
                       placeholder="Search character..."
                       recentValues={[]}
+                      isLoading={characterFetcher.state === "loading"}
                     />
                   </FormControl>
                 </FormItem>
@@ -252,7 +259,7 @@ export function AddFigureForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel htmlFor={`manufacturer-${figure.id}`}>
-                  Manufacturer *
+                  제조사 *
                 </FormLabel>
                 <FormControl>
                   <SearchableListBox
@@ -265,6 +272,7 @@ export function AddFigureForm({
                     placeholder="Search manufacturer..."
                     recentValues={[]}
                     isHiddenInput
+                    isLoading={manufacturerFetcher.state === "loading"}
                   />
                 </FormControl>
               </FormItem>
@@ -284,7 +292,7 @@ export function AddFigureForm({
               name={`figures.${index}.p_category_id`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category *</FormLabel>
+                  <FormLabel>카테고리 *</FormLabel>
                   <FormControl>
                     <RadioGroup
                       value={field.value}
@@ -328,7 +336,7 @@ export function AddFigureForm({
               name={`figures.${index}.p_scale_id`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Scale</FormLabel>
+                  <FormLabel>스케일</FormLabel>
                   <FormControl>
                     <RadioGroup
                       value={field.value}
@@ -368,16 +376,16 @@ export function AddFigureForm({
 
       <section className="space-y-4">
         <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-          Price & Dates
+          Price
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-1 gap-4">
           <div className="space-y-2">
             <FormField
               control={control}
               name={`figures.${index}.p_price_kr`}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price (KRW) *</FormLabel>
+                  <FormLabel>가격 (KRW) *</FormLabel>
                   <FormControl>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
@@ -401,6 +409,62 @@ export function AddFigureForm({
               )}
             />
           </div>
+        </div>
+      </section>
+
+      <section className="space-y-4">
+        <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+          Release
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <FormField
+              control={control}
+              name={`figures.${index}.p_release_precision`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>발매 일정 기준 *</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex flex-wrap gap-2"
+                    >
+                      {[
+                        { label: "년", value: "year" },
+                        { label: "분기", value: "quarter" },
+                        { label: "월", value: "month" },
+                        { label: "일", value: "day" },
+                        { label: "미정", value: "unknown" },
+                      ].map((s, idx) => (
+                        <Label
+                          key={`precision_${idx}`}
+                          htmlFor={`precision_-${figure.id}-${s.value}`}
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2.5 rounded-lg border cursor-pointer transition-colors",
+                            field.value === s.value
+                              ? "border-primary bg-primary/10 text-primary"
+                              : "border-border bg-background hover:bg-muted"
+                          )}
+                        >
+                          <RadioGroupItem
+                            value={s.value}
+                            id={`precision_-${figure.id}-${s.value}`}
+                            className="sr-only"
+                          />
+                          <div>
+                            <div className="font-medium text-sm">{s.label}</div>
+                          </div>
+                        </Label>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <div className="space-y-2">
             <FormField
@@ -409,7 +473,7 @@ export function AddFigureForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor={`releaseDate-${figure.id}`}>
-                    Release Date *
+                    발매일 *
                   </FormLabel>
                   <FormControl>
                     <Popover open={open} onOpenChange={setOpen}>
@@ -420,7 +484,7 @@ export function AddFigureForm({
                           className="w-full justify-between font-normal"
                         >
                           {field.value
-                            ? field.value.toLocaleDateString()
+                            ? format(field.value, "yyyy-MM-dd")
                             : "날짜를 선택해 주세요."}
                           <ChevronDownIcon />
                         </Button>
@@ -448,20 +512,18 @@ export function AddFigureForm({
             />
           </div>
         </div>
-      </section>
 
-      <section className="space-y-4">
         <FormField
           control={control}
           name={`figures.${index}.p_is_reissue`}
           render={({ field }) => (
             <FormItem className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <FormLabel htmlFor={`releaseNo-${figure.id}`}>
-                  Release No
+                <FormLabel htmlFor={`is_reissue-${figure.id}`}>
+                  재판 여부
                 </FormLabel>
                 <p className="text-xs text-muted-foreground">
-                  Enable if this figure has been released before
+                  이미 발매된 적이 있는 피규어면 눌러주세요.
                 </p>
               </div>
 

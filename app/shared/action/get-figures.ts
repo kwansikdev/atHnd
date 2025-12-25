@@ -11,7 +11,7 @@ export async function getFigures(
     .select(
       `
     id,
-    release_text,
+    release_date,
     release_no,
     price_kr,
     price_jp,
@@ -40,7 +40,7 @@ export async function getFigures(
   const result = data.map((item) => ({
     id: item.id,
     release: {
-      text: item.release_text,
+      text: item.release_date,
       no: item.release_no,
     },
     price: {

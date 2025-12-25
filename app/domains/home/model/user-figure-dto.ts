@@ -18,7 +18,8 @@ export interface UserFigureDto {
     id: string;
     release_year: string;
     release_month: string;
-    release_text: string;
+    release_date: string;
+    release_notice: string;
     release_no: number;
     is_reissue: boolean;
     price_kr: number;
