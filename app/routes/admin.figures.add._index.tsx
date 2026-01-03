@@ -92,10 +92,14 @@ export async function action({ request }: ActionFunctionArgs) {
             // p_release_year: year,
             // p_release_month: month,
             p_release_date,
+            p_release_precision: figure.p_release_precision ?? "unknown",
             p_is_reissue: figure.p_is_reissue,
             p_images: figure.images
               .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0))
-              .map((img) => img.url),
+              .map((img) => ({
+                url: img.url,
+                is_thumbnail: img.isThumbnail,
+              })) as unknown as JSON,
           }
         );
 
@@ -144,7 +148,9 @@ export default function AdminFigureAdd() {
 
   const onSubmit = async (data: TAdminFigureAddForm) => {
     const { figures } = data;
+    // console.log("🚀 ~ onSubmit ~ figures:", figures);
 
+    // return;
     try {
       const updatedFigures = await uploadFigureImages(
         figures,
