@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   LogOut,
   ShoppingCart,
+  Shredder,
   User,
 } from "lucide-react";
 import { useMobile } from "~/hooks/use-mobile";
@@ -186,7 +187,7 @@ export function Navbar() {
 
   // 데스크톱에서는 전체 헤더 표시
   const renderDesktopHeader = () => (
-    <div className="flex h-10 w-full items-center justify-between">
+    <div className="flex h-[calc(100svh-var(--header-height))] w-full items-center justify-between">
       {/* 로고 및 데스크톱 네비게이션 */}
       <div className="flex items-center gap-6 md:gap-8 lg:gap-10">
         {/* <Link to="/" className="flex items-center gap-2">
@@ -382,7 +383,17 @@ export function Navbar() {
                 <>
                   <DropdownMenuItem asChild>
                     <Link
-                      to="/admin/figure/add"
+                      to="/admin"
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <Shredder className="mr-2 h-4 w-4" />
+                      <span>데이터베이스</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link
+                      to="/admin/figures/add"
                       className="flex items-center gap-2 cursor-pointer"
                     >
                       <LayoutDashboard className="mr-2 h-4 w-4" />

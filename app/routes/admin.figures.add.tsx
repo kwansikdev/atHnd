@@ -37,7 +37,7 @@ export default function AdminFigureAdd() {
   const navigate = useNavigate();
 
   const goBack = () => {
-    navigate(-1);
+    navigate("/admin/figures");
   };
 
   return (

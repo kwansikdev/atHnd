@@ -782,7 +782,7 @@ export type Database = {
         Args: {
           p_category_id: string;
           p_character_id: string;
-          p_images?: string[];
+          p_images?: JSON;
           p_is_reissue?: boolean;
           p_manufacturer_id: string;
           p_material?: string;
@@ -793,6 +793,7 @@ export type Database = {
           p_price_jp?: number;
           p_price_kr: number;
           p_release_date: string;
+          p_release_precision: Database["public"]["Enums"]["release_precision_enum"];
           p_scale_id: string;
           p_series_id: string;
           p_size?: string;

@@ -59,7 +59,7 @@ function ImageUploader({ images, onChange }: ImageUploaderProps) {
     const newImage: ImageItem = {
       id: crypto.randomUUID(),
       url: urlInput.trim(),
-      isThumbnail: images.length === 0,
+      isThumbnail: false,
     };
 
     onChange([...images, newImage]);
@@ -72,9 +72,8 @@ function ImageUploader({ images, onChange }: ImageUploaderProps) {
 
     // If removed image was thumbnail, set first remaining as thumbnail
     if (removedImage?.isThumbnail && newImages.length > 0) {
-      newImages = newImages.map((img, index) => ({
+      newImages = newImages.map((img) => ({
         ...img,
-        isThumbnail: index === 0,
       }));
     }
 
