@@ -36,10 +36,16 @@ export function MobileNav() {
   const { pathname } = useLocation();
 
   const navItems = [
-    { to: "/", icon: <Home className="h-5 w-5" />, label: "홈" },
+    { to: "/", icon: <Home className="h-5 w-5" />, label: "홈", isShow: true },
+    {
+      to: "/auth/login",
+      icon: <User className="h-5 w-5" />,
+      label: "로그인",
+      isShow: !isLoggedIn,
+    },
     {
       to: "/profile",
-      icon: isLoggedIn ? (
+      icon: (
         <Avatar className="h-5 w-5">
           <AvatarImage
             src={profile?.avatar_url || "/profile-placeholder.png"}
@@ -47,10 +53,9 @@ export function MobileNav() {
           />
           <AvatarFallback>{profile?.nickname?.charAt(0) || "U"}</AvatarFallback>
         </Avatar>
-      ) : (
-        <User className="h-5 w-5" />
       ),
-      label: isLoggedIn ? "마이페이지" : "로그인",
+      label: "마이페이지",
+      isShow: isLoggedIn,
     },
   ];
 
@@ -59,24 +64,28 @@ export function MobileNav() {
       to: "/admin/figure/add",
       icon: <CirclePlus className="h-5 w-5" />,
       label: "피규어",
+      isShow: true,
     });
   }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background md:hidden">
       <div className="flex items-center justify-around">
-        {navItems.map((item) => (
-          <NavItem
-            key={item.to}
-            to={item.to}
-            icon={item.icon}
-            label={item.label}
-            active={
-              pathname === item.to ||
-              (item.to !== "/" && pathname.includes(item.to))
-            }
-          />
-        ))}
+        {navItems.map((item) => {
+          if (!item.isShow) return null;
+          return (
+            <NavItem
+              key={item.to}
+              to={item.to}
+              icon={item.icon}
+              label={item.label}
+              active={
+                pathname === item.to ||
+                (item.to !== "/" && pathname.includes(item.to))
+              }
+            />
+          );
+        })}
       </div>
     </div>
   );

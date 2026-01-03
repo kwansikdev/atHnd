@@ -200,6 +200,7 @@ export type Database = {
           figure_id: string | null;
           id: string;
           image_url: string;
+          is_thumbnail: boolean | null;
           sort_order: number | null;
         };
         Insert: {
@@ -207,6 +208,7 @@ export type Database = {
           figure_id?: string | null;
           id?: string;
           image_url: string;
+          is_thumbnail?: boolean | null;
           sort_order?: number | null;
         };
         Update: {
@@ -214,6 +216,7 @@ export type Database = {
           figure_id?: string | null;
           id?: string;
           image_url?: string;
+          is_thumbnail?: boolean | null;
           sort_order?: number | null;
         };
         Relationships: [

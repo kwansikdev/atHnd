@@ -30,7 +30,7 @@ import {
 } from "~/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { Switch } from "~/components/ui/switch";
-import { TAddFigureContext } from "~/routes/admin.figure.add";
+import { TAddFigureContext } from "~/routes/admin.figures.add";
 import ImageUploader from "~/shared/ui/image-uploader";
 import { SearchableListBox } from "~/shared/ui/searchable-list-box";
 import { cn } from "~/utils";
@@ -40,7 +40,7 @@ import {
   initialFormData,
   TAdminFigureAddForm,
   TInitialFormData,
-} from "~/routes/admin.figure.add._index";
+} from "~/routes/admin.figures.add._index";
 import { SearchType } from "~/routes/api.search";
 import { format } from "date-fns";
 
