@@ -96,7 +96,7 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className="space-y-4">
+    <div className="w-full space-y-4">
       <div className="sticky top-[60px] backdrop-blur rounded-b-md bg-background/80 z-10">
         <div
           className={cn(
