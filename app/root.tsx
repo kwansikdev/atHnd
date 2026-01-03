@@ -69,7 +69,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="flex flex-col min-h-dvh">
         {children}
         <Toaster richColors position="bottom-center" />
         <script
@@ -118,7 +118,7 @@ export default function App() {
   return (
     <>
       <Navbar />
-      <div className="pb-16 md:pb-0 pt-15">
+      <div className="flex flex-1 pb-16 md:pb-0 pt-15">
         <Outlet context={{ supabase, isLoggedIn, user, profile }} />
       </div>
       <MobileNav />
@@ -131,10 +131,11 @@ export type TOutletContext = {
   isLoggedIn: boolean;
   user: User | null;
   profile: {
-    id: string;
-    nickname: string | null;
     avatar_url: string | null;
-    updated_at: string | null;
+    id: string;
+    is_admin: boolean;
     is_updated: boolean;
+    nickname: string | null;
+    updated_at: string | null;
   } | null;
 };

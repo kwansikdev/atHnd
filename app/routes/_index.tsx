@@ -34,7 +34,7 @@ export default function Index() {
   const { figures } = useLoaderData<typeof loader>();
 
   return (
-    <main>
+    <main className="container mx-auto min-h-full flex flex-1">
       {/* <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-balance">Figure Collection</h1>
@@ -45,7 +45,7 @@ export default function Index() {
       </div> */}
 
       <CalendarTimeline figures={figures} />
-      <Outlet context={{ ...rootOutletContext }} />
+      {/* <Outlet context={{ ...rootOutletContext }} /> */}
     </main>
   );
 }
