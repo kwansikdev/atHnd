@@ -50,7 +50,7 @@ export default function CalendarAdd() {
   const [step, setStep] = useState<StepType>("select");
 
   return (
-    <main>
+    <main className="w-full">
       {/* header */}
       <div className="border-b border-border bg-card sticky top-0 z-10">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">

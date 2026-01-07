@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, data } from "@remix-run/node";
 import { Form as RemixForm } from "@remix-run/react";
-import { format } from "date-fns";
 import { Loader2, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -77,7 +76,9 @@ export async function action({ request }: ActionFunctionArgs) {
         // const year = new Date(figure.p_release_date)?.getFullYear();
         // const month = new Date(figure.p_release_date)?.getMonth() + 1;
 
-        const p_release_date = format(figure.p_release_date, "yyyy-MM-dd");
+        const p_release_date = new Date(
+          figure.p_release_date
+        ).toLocaleDateString("sv-SE");
 
         const { data: figureId, error } = await supabase.rpc(
           "register_figure",
@@ -148,9 +149,7 @@ export default function AdminFigureAdd() {
 
   const onSubmit = async (data: TAdminFigureAddForm) => {
     const { figures } = data;
-    // console.log("🚀 ~ onSubmit ~ figures:", figures);
 
-    // return;
     try {
       const updatedFigures = await uploadFigureImages(
         figures,
@@ -263,7 +262,10 @@ export default function AdminFigureAdd() {
           <RemixForm
             method="post"
             onSubmit={form.handleSubmit(
-              onSubmit
+              onSubmit,
+              (error) => {
+                console.log("🚀 ~ AdminFigureAdd ~ error:", error);
+              }
               //   fetcher.submit(jsonString, {
               //     method: "post",
               //     encType: "application/json", // 중요!
