@@ -35,6 +35,8 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userAgent = request.headers.get("user-agent") || "";
+  const isWebView = request.headers.get("x-app-webview") === "true";
+  const platform = request.headers.get("x-app-platform");
   const deviceInfo = detectDevice(userAgent);
 
   const { supabase } = await getSupabaseServerClient(request);
@@ -57,6 +59,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return {
     deviceInfo,
+    isWebView,
+    platform,
     isLoggedIn: !!user,
     user,
     profile,
@@ -109,9 +113,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const { deviceInfo, isLoggedIn, user, profile, envs } =
     useLoaderData<typeof loader>();
+  console.log("🚀 ~ App ~ deviceInfo:", deviceInfo);
   const revalidator = useRevalidator();
   const [supabase] = useState(
-    () => new SupabaseService(envs.SUPABASE_URL, envs.SUPABASE_ANON_KEY)
+    () => new SupabaseService(envs.SUPABASE_URL, envs.SUPABASE_ANON_KEY),
   );
   // READY 메시지를 이미 보냈는지 추적 (무한 호출 방지)
   const readySentRef = useRef(false);
@@ -126,7 +131,7 @@ export default function App() {
 
     async function syncSessionWithServer(
       access_token: string,
-      refresh_token: string
+      refresh_token: string,
     ) {
       try {
         const res = await fetch("/api/auth/webview-session", {
@@ -143,7 +148,7 @@ export default function App() {
         if (!res.ok) {
           console.error(
             "Failed to sync session with server",
-            await res.json().catch(() => ({}))
+            await res.json().catch(() => ({})),
           );
           return;
         }
@@ -152,7 +157,7 @@ export default function App() {
         window.ReactNativeWebView?.postMessage(
           JSON.stringify({
             type: "SESSION_SET_SUCCESS",
-          })
+          }),
         );
         // 세션 동기화 성공 후 loader를 다시 실행하여 로그인 상태 반영
         // 약간의 딜레이를 주어 쿠키가 확실히 설정되도록 함
@@ -205,14 +210,14 @@ export default function App() {
     window.addEventListener("message", handleMessage);
     document.addEventListener(
       "message",
-      handleDocumentMessage as EventListener
+      handleDocumentMessage as EventListener,
     );
 
     // WebView에 준비 완료 신호 보내기 (한 번만!)
     if (!readySentRef.current) {
       readySentRef.current = true;
       window.ReactNativeWebView?.postMessage?.(
-        JSON.stringify({ type: "READY" })
+        JSON.stringify({ type: "READY" }),
       );
     }
 
@@ -220,7 +225,7 @@ export default function App() {
       window.removeEventListener("message", handleMessage);
       document.removeEventListener(
         "message",
-        handleDocumentMessage as EventListener
+        handleDocumentMessage as EventListener,
       );
     };
   }, [supabase, revalidator, deviceInfo.isWebView]);
@@ -244,12 +249,12 @@ export default function App() {
       <div
         className={cn(
           "flex flex-1 pb-16 md:pb-0",
-          deviceInfo.isWebView ? "pt-0" : "pt-15"
+          deviceInfo.isWebView ? "pt-0" : "pt-15",
         )}
       >
         <Outlet context={{ supabase, isLoggedIn, user, profile }} />
       </div>
-      <MobileNav />
+      {!deviceInfo.isWebView && <MobileNav />}
     </>
   );
 }
