@@ -1,40 +1,155 @@
-# Welcome to Remix!
+# atHnd(앳헨드)
 
-- 📖 [Remix docs](https://remix.run/docs)
+피규어 **예약 · 구매 · 소장** 내역을 한눈에 관리하는 캘린더 기반 애플리케이션입니다.
 
-## Development
+> 발매일, 잔금 결제일, 입고 예정일을 흩어진 메모와 문자 대신
+> 하나의 캘린더와 타임라인으로 정리합니다.
 
-Run the dev server:
+---
 
-```shellscript
-npm run dev
-```
+## ✨ 핵심 컨셉
 
-## Deployment
+**"피규어 라이프의 일정 관리자"**
 
-First, build your app for production:
+- 언제 예약했는지
+- 언제 잔금을 내야 하는지
+- 언제 출시 / 입고되는지
+- 지금 이 피규어가 어떤 상태인지
 
-```sh
-npm run build
-```
+이 모든 걸 **날짜 중심(Calendar-first)** 으로 관리하는 것이 atHnd(엣헨드)의 핵심입니다.
 
-Then run the app in production mode:
+---
 
-```sh
-npm start
-```
+## 🧩 해결하려는 문제
 
-Now you'll need to pick a host to deploy it to.
+- 예약은 했는데 잔금 마감일을 놓침
+- 쇼핑몰마다 문자 형식이 달라서 정리 불가
+- 여러 사이트에서 예약 → 관리가 파편화됨
+- 재판 / 연기 / 부분결제 상태 추적이 어려움
 
-### DIY
+👉 atHnd(엣헨드)는 이 모든 흐름을 **구조화된 데이터**로 바꿉니다.
 
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
+---
 
-Make sure to deploy the output of `npm run build`
+## 🗓️ 주요 기능
 
-- `build/server`
-- `build/client`
+### 1. 피규어 예약 관리
 
-## Styling
+- 예약 / 구매 / 소장 상태 관리
+- 예약금 / 잔금 / 전액 결제 구분
+- 재판 여부 및 발매 회차 관리
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever css framework you prefer. See the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
+### 2. 캘린더 기반 일정
+
+- 발매 예정일
+- 잔금 결제 마감일
+- 입고 예정 주차
+
+> 달력에서 "이번 달에 돈 나갈 피규어"가 바로 보입니다.
+
+### 3. 타임라인 기록
+
+- 예약 → 결제 → 발매 → 입고 → 소장 흐름
+- 발매 연기 시 이력 누적
+
+### 4. 피규어 데이터베이스 (도감)
+
+- 관리자 등록 기반 피규어 DB
+- 제조사 / 시리즈 / 캐릭터 / 스케일 기준 검색
+- 한 피규어에 여러 발매(release) 관리
+
+### 5. 이미지 관리
+
+- 피규어별 다중 이미지 등록
+- 썸네일 지정 및 정렬
+
+---
+
+## 🔁 상태 모델
+
+### 피규어 소유 상태
+
+- `reserved` : 예약 완료
+- `ordered` : 결제 완료 (구매 확정)
+- `owned` : 실물 수령
+
+### 결제 상태 (reserved 내부)
+
+- 예약금만 결제
+- 전액 결제
+- 잔금 결제 대기
+
+---
+
+## 🏗️ 기술 스택
+
+### Frontend
+
+- **Remix**
+- **React**
+- **TypeScript**
+- **Zod** (폼 검증)
+
+### Backend / Infra
+
+- **Supabase**
+  - Auth (OAuth)
+  - Postgres
+  - Storage (이미지)
+  - RPC (비즈니스 로직)
+
+### 기타
+
+- Calendar UI (월/리스트 뷰)
+- PWA 적용
+
+---
+
+## 🗂️ 데이터 설계 개요
+
+- `figure` : 피규어 기본 정보
+- `figure_release` : 발매 회차 / 가격 / 발매 일정
+- `figure_image` : 피규어 이미지
+- `user_figure` : 유저별 예약/구매 상태
+
+> **Figure 1 : N Release** 구조로 재판 및 연기 대응
+
+---
+
+## 🧑‍💻 관리자 기능
+
+- 피규어 등록 (멀티 등록 지원)
+- 시리즈 / 캐릭터 / 제조사 / 스케일 관리
+- 발매 정보 수정 및 연기 이력 관리
+
+---
+
+## 🚧 개발 중 / 예정 기능
+
+- 잔금 결제 알림
+- 문자 복붙 기반 자동 일정 추출
+- 통계 (월별 지출, 제조사별 비중)
+- 모바일 앱(PWA → Native)
+
+---
+
+<!-- ## 🧠 철학
+
+> 피규어는 단순한 소비가 아니라 **기록할 가치가 있는 취미**다.
+
+atHnd(엣헨드)는
+
+- 흩어진 정보를 모으고
+- 불안을 줄이고
+- 수집의 즐거움을 더하는
+
+**오타쿠 친화적 라이프 로그**를 목표로 합니다.
+
+--- -->
+
+## 📌 프로젝트 상태
+
+- 개인 프로젝트
+- 웹 버전 우선 개발
+- 점진적 기능 확장 중
+- 앱 버전 추후 고려 예정
