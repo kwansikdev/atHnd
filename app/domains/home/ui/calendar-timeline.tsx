@@ -24,13 +24,14 @@ import { Label } from "~/components/ui/label";
 import { Checkbox } from "~/components/ui/checkbox";
 
 import { toJpeg } from "html-to-image";
+import { useRootLoaderData } from "~/hooks/use-root-loader-data";
 
 type CalendarTimelineProps = {
   figures: UserFigureDto[]; // Define the proper type based on your data structure
 };
 
 export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
-  // const { isLoggedIn } = useRootLoaderData();
+  const { isLoggedIn } = useRootLoaderData();
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,11 +40,11 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
 
   const yearParam = useMemo(
     () => searchParams.get("y") ?? new Date().getFullYear().toString(),
-    [searchParams]
+    [searchParams],
   );
   const filterParam = useMemo(
     () => searchParams.get("f") ?? "paid_at",
-    [searchParams]
+    [searchParams],
   );
 
   const [isExcluded, setIsExcluded] = useState(false);
@@ -74,6 +75,11 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
   };
 
   const handleGeneralAddClick = () => {
+    if (!isLoggedIn) {
+      navigate("/auth/login?redirect_to=/calendar/add");
+      return;
+    }
+
     navigate("/calendar/add");
   };
 
@@ -100,10 +106,9 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
       <div className="sticky top-[60px] backdrop-blur rounded-b-md bg-background/80 z-10">
         <div
           className={cn(
-            "relative container mx-auto flex flex-col md:flex-row gap-4 md:items-center py-3 px-4 "
+            "relative container mx-auto flex flex-col md:flex-row gap-4 md:items-center py-3 px-4 ",
           )}
         >
-          {/* <div className="flex items-center gap-4"> */}
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
@@ -161,7 +166,7 @@ export default function CalendarTimeline({ figures }: CalendarTimelineProps) {
                     "flex items-center gap-2 px-3 py-2 rounded-full border cursor-pointer transition-colors",
                     filterParam === option.value
                       ? "border-primary bg-primary/10 text-primary"
-                      : "border-border bg-background hover:bg-muted"
+                      : "border-border bg-background hover:bg-muted",
                   )}
                 >
                   <RadioGroupItem
