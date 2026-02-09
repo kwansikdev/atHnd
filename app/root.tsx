@@ -113,7 +113,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const { deviceInfo, isLoggedIn, user, profile, envs } =
     useLoaderData<typeof loader>();
-  console.log("🚀 ~ App ~ deviceInfo:", deviceInfo);
   const revalidator = useRevalidator();
   const [supabase] = useState(
     () => new SupabaseService(envs.SUPABASE_URL, envs.SUPABASE_ANON_KEY),

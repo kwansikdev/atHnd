@@ -2,14 +2,13 @@ import {
   Archive,
   Bell,
   BookMarked,
-  ChevronDown,
   LayoutDashboard,
   LogOut,
   ShoppingCart,
   Shredder,
   User,
 } from "lucide-react";
-import { useMobile } from "~/hooks/use-mobile";
+
 import { Button } from "../../components/ui/button";
 import { Link, useLoaderData, useNavigate } from "@remix-run/react";
 import {
@@ -18,7 +17,7 @@ import {
   AvatarImage,
 } from "../../components/ui/avatar";
 
-import { cn } from "~/utils";
+import { cn, isWebView } from "~/utils";
 import { useRootLoaderData } from "~/hooks/use-root-loader-data";
 import { SupabaseService } from "supabase";
 import {
@@ -39,15 +38,18 @@ export function loader() {
 }
 
 export function Navbar() {
-  const { isLoggedIn, user, profile } = useRootLoaderData();
+  const { deviceInfo, isLoggedIn, user, profile } = useRootLoaderData();
   const { envs } = useLoaderData<typeof loader>();
+
+  // const [notifications] = useState(0);
 
   const supabase = new SupabaseService(
     envs.SUPABASE_URL,
-    envs.SUPABASE_ANON_KEY
+    envs.SUPABASE_ANON_KEY,
   );
 
-  const isMobile = useMobile(768);
+  // const { isWebView } = useIsWebView();
+  // const isMobile = useMobile(768);
   const navigate = useNavigate();
 
   const signOut = async () => {
@@ -353,102 +355,142 @@ export function Navbar() {
 
         {/* 사용자 메뉴 */}
         {isLoggedIn ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="relative h-10 rounded-full">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={profile?.avatar_url || undefined}
-                    alt={profile?.nickname || "사용자"}
-                  />
-                  <AvatarFallback>
-                    {profile?.nickname?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-                <span className="ml-2 hidden md:inline-block">
+          <>
+            {/* <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                  <Bell className="h-5 w-5" />
+                  {notifications > 0 && (
+                    <Badge
+                      variant="destructive"
+                      className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                    >
+                      {notifications}
+                    </Badge>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-80">
+                <div className="flex items-center justify-between p-2">
+                  <span className="font-medium">알림</span>
+                  <Button variant="ghost" size="sm" className="h-8 px-2">
+                    모두 읽음 표시
+                  </Button>
+                </div>
+                <DropdownMenuSeparator />
+                <div className="max-h-80 overflow-y-auto">
+                  <div className="p-3 hover:bg-muted rounded-md cursor-pointer">
+                    <div className="font-medium">새 피규어 출시 알림</div>
+                    <p className="text-sm text-muted-foreground">
+                      아스나 웨딩 드레스 Ver. 피규어가 출시되었습니다.
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      2시간 전
+                    </p>
+                  </div>
+                  <div className="p-3 hover:bg-muted rounded-md cursor-pointer">
+                    <div className="font-medium">배송 상태 업데이트</div>
+                    <p className="text-sm text-muted-foreground">
+                      렘 바니 Ver. 피규어가 배송 중입니다.
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">어제</p>
+                  </div>
+                  <div className="p-3 hover:bg-muted rounded-md cursor-pointer">
+                    <div className="font-medium">위시리스트 할인 알림</div>
+                    <p className="text-sm text-muted-foreground">
+                      위시리스트에 있는 피규어의 가격이 10% 할인되었습니다.
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">3일 전</p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <div className="p-2 text-center">
+                  <Link
+                    to="/notifications"
+                    className="text-sm text-primary hover:underline"
+                  >
+                    모든 알림 보기
+                  </Link>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu> */}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative rounded-full"
+                >
+                  <Avatar className="h-7 w-7">
+                    <AvatarImage
+                      src={profile?.avatar_url || undefined}
+                      alt={profile?.nickname || "사용자"}
+                    />
+                    <AvatarFallback>
+                      {profile?.nickname?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  {/* <span className="ml-2 hidden md:inline-block">
                   {profile?.nickname}
                 </span>
-                <ChevronDown className="ml-1 h-4 w-4 hidden md:inline-block" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <div className="flex items-center justify-start gap-2 p-2">
-                <div className="flex flex-col space-y-1 leading-none">
-                  <p className="font-medium">{profile?.nickname}</p>
-                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                <ChevronDown className="ml-1 h-4 w-4 hidden md:inline-block" /> */}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center justify-start gap-2 p-2">
+                  <div className="flex flex-col space-y-1 leading-none">
+                    <p className="font-medium">{profile?.nickname}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <DropdownMenuSeparator />
-              {profile?.is_admin && (
-                <>
-                  <DropdownMenuItem asChild>
-                    <Link
-                      to="/admin"
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-                      <Shredder className="mr-2 h-4 w-4" />
-                      <span>데이터베이스</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link
-                      to="/admin/figures/add"
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      <span>피규어 추가</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              <DropdownMenuItem asChild>
-                <Link
-                  to="/profile"
-                  className="flex items-center gap-2 cursor-pointer"
+                <DropdownMenuSeparator />
+                {profile?.is_admin && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to="/admin"
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <Shredder className="mr-2 h-4 w-4" />
+                        <span>데이터베이스</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link
+                        to="/admin/figures/add"
+                        className="flex items-center gap-2 cursor-pointer"
+                      >
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        <span>피규어 추가</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    <span>프로필</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => signOut()}
+                  className="text-destructive focus:text-destructive"
                 >
-                  <User className="mr-2 h-4 w-4" />
-                  <span>프로필</span>
-                </Link>
-              </DropdownMenuItem>
-              {/* <DropdownMenuItem asChild>
-                <Link
-                  to="/orders"
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  <span>내 예약/구매</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  to="/collection"
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <BookMarked className="mr-2 h-4 w-4" />
-                  <span>마이 컬렉션</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  to="/statistics"
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <BarChart3 className="mr-2 h-4 w-4" />
-                  <span>통계</span>
-                </Link>
-              </DropdownMenuItem> */}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => signOut()}
-                className="text-destructive focus:text-destructive"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>로그아웃</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>로그아웃</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
         ) : (
           <Button
             variant="outline"
@@ -467,39 +509,14 @@ export function Navbar() {
   return (
     <header
       className={cn(
+        isWebView() && "hidden",
         "fixed top-0 z-50 w-full h-15 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        isMobile && "border-0"
+        deviceInfo.isMobile && "border-0",
       )}
     >
       <div className="container flex items-center h-full mx-auto px-4">
-        {/* {!isMobile && renderDesktopHeader()} */}
-        {isMobile ? renderMobileHeader() : renderDesktopHeader()}
+        {deviceInfo.isMobile ? renderMobileHeader() : renderDesktopHeader()}
       </div>
     </header>
   );
 }
-
-// interface NavItemProps {
-//   to: string;
-//   label: string;
-//   icon?: React.ReactNode;
-//   active?: boolean;
-//   isAdmin?: boolean;
-//   onClick?: () => void;
-// }
-
-// function NavItem({ to, label, icon, active, onClick }: NavItemProps) {
-//   return (
-//     <Link
-//       to={to}
-//       className={cn(
-//         "flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors",
-//         active ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted"
-//       )}
-//       onClick={onClick}
-//     >
-//       {icon}
-//       {label}
-//     </Link>
-//   );
-// }
