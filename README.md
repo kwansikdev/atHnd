@@ -57,7 +57,7 @@ A web application for managing bishoujo figure reservations and purchases with a
 
 ## Project Structure
 
-```
+\`\`\`
 app/
   page.tsx                       # Home - 12-month calendar timeline
   search/
@@ -91,7 +91,7 @@ lib/
   supabase.ts                    # Supabase browser client
   supabase-server.ts             # Supabase server client
   utils.ts                       # Utility functions (cn)
-```
+\`\`\`
 
 ---
 
@@ -140,7 +140,7 @@ Pass `?platform=app` query parameter when loading the URL in React Native WebVie
 
 ## Getting Started
 
-```bash
+\`\`\`bash
 # Install dependencies
 npx shadcn@latest init
 
@@ -149,7 +149,7 @@ npx shadcn@latest init
 
 # Run development server
 npm run dev
-```
+\`\`\`
 
 ---
 

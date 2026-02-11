@@ -2,7 +2,10 @@
 
 import { useState, useMemo } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, ArrowRight, Check, X, Package } from "lucide-react"
+import { ArrowLeft, ArrowRight, Check, X, Package, MessageSquarePlus } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Badge } from "@/components/ui/badge"
@@ -62,6 +65,13 @@ export default function AddFigurePage() {
       }
     >
   >({})
+  const [showRequestForm, setShowRequestForm] = useState(false)
+  const [requestForm, setRequestForm] = useState({
+    name: "",
+    manufacturer: "",
+    url: "",
+    memo: "",
+  })
 
   const allFilteredFigures = useMemo(() => {
     if (!searchQuery.trim()) return []
@@ -191,7 +201,23 @@ export default function AddFigurePage() {
                 />
                 <CommandList>
                   {searchQuery.trim() && allFilteredFigures.length === 0 && (
-                    <CommandEmpty>No figures found.</CommandEmpty>
+                    <CommandEmpty>
+                      <div className="flex flex-col items-center gap-3 py-4">
+                        <Package className="size-8 text-muted-foreground" />
+                        <p className="text-muted-foreground">No figures found for "{searchQuery}"</p>
+                        <Button
+                          variant="outline"
+                          className="gap-2 bg-transparent"
+                          onClick={() => {
+                            setShowRequestForm(true)
+                            setRequestForm((prev) => ({ ...prev, name: searchQuery }))
+                          }}
+                        >
+                          <MessageSquarePlus className="size-4" />
+                          Request this figure
+                        </Button>
+                      </div>
+                    </CommandEmpty>
                   )}
                   {displayedFigures.length > 0 && (
                     <CommandGroup heading={`Search Results (${allFilteredFigures.length} found)`}>
@@ -239,11 +265,101 @@ export default function AddFigurePage() {
                           </Button>
                         </div>
                       )}
+                      <div className="border-t border-border p-3">
+                        <button
+                          type="button"
+                          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-full"
+                          onClick={() => {
+                            setShowRequestForm(true)
+                            setRequestForm((prev) => ({ ...prev, name: searchQuery }))
+                          }}
+                        >
+                          <MessageSquarePlus className="size-4" />
+                          Can't find what you're looking for? Request a figure
+                        </button>
+                      </div>
                     </CommandGroup>
                   )}
                 </CommandList>
               </Command>
             </div>
+
+            {/* Figure Request Form */}
+            {showRequestForm && (
+              <div className="rounded-lg border border-border bg-card p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <MessageSquarePlus className="size-5 text-primary" />
+                    <h3 className="font-semibold">Request a Figure</h3>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-8"
+                    onClick={() => setShowRequestForm(false)}
+                  >
+                    <X className="size-4" />
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Fill in the details below and we'll add it to the database.
+                </p>
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
+                    <Label htmlFor="req-name">Figure Name *</Label>
+                    <Input
+                      id="req-name"
+                      placeholder="e.g. Hatsune Miku 1/7 Scale"
+                      value={requestForm.name}
+                      onChange={(e) => setRequestForm((prev) => ({ ...prev, name: e.target.value }))}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="req-manufacturer">Manufacturer</Label>
+                    <Input
+                      id="req-manufacturer"
+                      placeholder="e.g. Good Smile Company"
+                      value={requestForm.manufacturer}
+                      onChange={(e) => setRequestForm((prev) => ({ ...prev, manufacturer: e.target.value }))}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="req-url">Reference URL</Label>
+                    <Input
+                      id="req-url"
+                      placeholder="e.g. https://www.goodsmile.info/..."
+                      value={requestForm.url}
+                      onChange={(e) => setRequestForm((prev) => ({ ...prev, url: e.target.value }))}
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="req-memo">Memo</Label>
+                    <Textarea
+                      id="req-memo"
+                      placeholder="Any additional details..."
+                      rows={3}
+                      value={requestForm.memo}
+                      onChange={(e) => setRequestForm((prev) => ({ ...prev, memo: e.target.value }))}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <Button variant="outline" onClick={() => setShowRequestForm(false)}>
+                    Cancel
+                  </Button>
+                  <Button
+                    disabled={!requestForm.name.trim()}
+                    onClick={() => {
+                      console.log("Figure request submitted:", requestForm)
+                      setShowRequestForm(false)
+                      setRequestForm({ name: "", manufacturer: "", url: "", memo: "" })
+                    }}
+                  >
+                    Submit Request
+                  </Button>
+                </div>
+              </div>
+            )}
 
             {/* Selected Figures List */}
             <div className="space-y-3">
