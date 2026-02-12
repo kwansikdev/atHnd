@@ -47,6 +47,7 @@ function formatReleaseInfo(figure: SearchableFigure) {
 
 type Step = "select" | "details"
 
+// Figure add page with search, select, and detail steps
 export default function AddFigurePage() {
   const router = useRouter()
   const [step, setStep] = useState<Step>("select")
