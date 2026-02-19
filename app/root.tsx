@@ -13,12 +13,22 @@ import "./tailwind.css";
 
 import { getSupabaseServerClient, SupabaseService } from "../supabase";
 import { Toaster } from "./components/ui/sonner";
-import { Navbar } from "./shared/ui";
 import { useEffect, useRef, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { MobileNav } from "./shared/ui/mobile-nav";
 import { detectDevice } from "./utils";
-import { cn } from "./lib/utils";
+import { AppSidebar } from "./shared/ui/sidebar/app-sidebar";
+import { Header } from "./shared/ui/header";
+import { ScrollArea } from "./components/ui/scroll-area";
+import { SupabaseProvider } from "./shared/contexts";
+import { TooltipProvider } from "./components/ui/tooltip";
+import { themeSessionResolver } from "./sessions.server";
+import {
+  PreventFlashOnWrongTheme,
+  ThemeProvider,
+  useTheme,
+} from "remix-themes";
+import clsx from "clsx";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -38,6 +48,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const isWebView = request.headers.get("x-app-webview") === "true";
   const platform = request.headers.get("x-app-platform");
   const deviceInfo = detectDevice(userAgent);
+
+  const { getTheme } = await themeSessionResolver(request);
 
   const { supabase } = await getSupabaseServerClient(request);
 
@@ -68,12 +80,37 @@ export async function loader({ request }: LoaderFunctionArgs) {
       SUPABASE_URL: process.env.SUPABASE_URL!,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
     },
+    theme: getTheme(),
   };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { theme } = useLoaderData<typeof loader>();
+  // const data = useRouteLoaderData<typeof loader>('root');
+
   return (
-    <html lang="ko">
+    <ThemeProvider
+      specifiedTheme={theme}
+      themeAction="/api/set-theme"
+      disableTransitionOnThemeChange={true}
+    >
+      <InnerLayout ssrTheme={Boolean(theme)}>{children}</InnerLayout>
+    </ThemeProvider>
+  );
+}
+
+function InnerLayout({
+  ssrTheme,
+  children,
+}: {
+  ssrTheme: boolean;
+  children: React.ReactNode;
+}) {
+  const [theme] = useTheme();
+
+  return (
+    // <html lang="ko" className={clsx(theme ?? "light")}>
+    <html lang="ko" className={clsx("light")}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -81,29 +118,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="flex flex-col min-h-dvh">
-        {children}
-        <Toaster richColors position="bottom-center" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-(function () {
-  try {
-    // WebView 환경 여부를 전역에 저장 (한 번만 체크)
-    window.__IS_WEBVIEW__ = typeof window.ReactNativeWebView !== "undefined";
-    
-    const theme = localStorage.getItem("theme");
-    if (theme === "light" || theme === "dark") {
-      document.documentElement.classList.add(theme);
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.classList.add(prefersDark ? "dark" : "light");
-    }
-  } catch (e) {}
-})();
-            `.trim(),
-          }}
-        />
+        <TooltipProvider>
+          {children}
+          <Toaster richColors position="bottom-center" />
+        </TooltipProvider>
         <ScrollRestoration />
+        <PreventFlashOnWrongTheme ssrTheme={ssrTheme} />
         <Scripts />
       </body>
     </html>
@@ -125,8 +145,6 @@ export default function App() {
     if (!deviceInfo.isWebView) {
       return;
     }
-
-    console.log("123");
 
     async function syncSessionWithServer(
       access_token: string,
@@ -229,32 +247,24 @@ export default function App() {
     };
   }, [supabase, revalidator, deviceInfo.isWebView]);
 
-  // useEffect(() => {
-  //   const saved = localStorage.getItem("theme");
-  //   if (saved === "light" || saved === "dark") {
-  //     document.documentElement.classList.remove("light", "dark");
-  //     document.documentElement.classList.add(saved);
-  //   } else {
-  //     const prefersDark = window.matchMedia(
-  //       "(prefers-color-scheme: dark)"
-  //     ).matches;
-  //     document.documentElement.classList.add(prefersDark ? "dark" : "light");
-  //   }
-  // }, []);
-
   return (
-    <>
-      <Navbar />
-      <div
-        className={cn(
-          "flex flex-1 pb-16 md:pb-0",
-          deviceInfo.isWebView ? "pt-0" : "pt-15",
-        )}
-      >
-        <Outlet context={{ supabase, isLoggedIn, user, profile }} />
+    <SupabaseProvider supabase={supabase}>
+      <div className="relative w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(14))]">
+        <Header />
+        <div className="relative flex flex-1">
+          <div className="absolute top-0 left-0 w-full h-full flex">
+            <AppSidebar />
+            {/* main contents */}
+            <div className="relative flex-1 bg-black/30 rounded-tl-3xl">
+              <ScrollArea className="absolute inset-0 w-full h-full p-4 flex justify-center items-start">
+                <Outlet context={{ supabase, isLoggedIn, user, profile }} />
+              </ScrollArea>
+            </div>
+          </div>
+        </div>
+        {!deviceInfo.isWebView && <MobileNav />}
       </div>
-      {!deviceInfo.isWebView && <MobileNav />}
-    </>
+    </SupabaseProvider>
   );
 }
 
