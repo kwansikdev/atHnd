@@ -6,6 +6,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useRevalidator,
+  useRouteLoaderData,
 } from "@remix-run/react";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 
@@ -30,18 +31,9 @@ import {
 } from "remix-themes";
 import clsx from "clsx";
 
-export const links: LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-];
+import "./font.css";
+
+export const links: LinksFunction = () => [];
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userAgent = request.headers.get("user-agent") || "";
@@ -85,16 +77,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { theme } = useLoaderData<typeof loader>();
-  // const data = useRouteLoaderData<typeof loader>('root');
+  const data = useRouteLoaderData<typeof loader>("root");
 
   return (
     <ThemeProvider
-      specifiedTheme={theme}
+      specifiedTheme={data?.theme || null}
       themeAction="/api/set-theme"
       disableTransitionOnThemeChange={true}
     >
-      <InnerLayout ssrTheme={Boolean(theme)}>{children}</InnerLayout>
+      <InnerLayout ssrTheme={Boolean(data?.theme)}>{children}</InnerLayout>
     </ThemeProvider>
   );
 }
@@ -110,7 +101,7 @@ function InnerLayout({
 
   return (
     // <html lang="ko" className={clsx(theme ?? "light")}>
-    <html lang="ko" className={clsx("light")}>
+    <html lang="ko" className={clsx(theme ?? "light", "font-a2z")}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -249,7 +240,7 @@ export default function App() {
 
   return (
     <SupabaseProvider supabase={supabase}>
-      <div className="relative w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(14))]">
+      <div className="relative w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(17))]">
         <Header />
         <div className="relative flex flex-1">
           <div className="absolute top-0 left-0 w-full h-full flex">

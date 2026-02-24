@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 
 @theme {
+  --font-a2z: "A2z", sans-serif;
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -76,6 +78,161 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.705 0.015 286.067);
+
+  /* text */
+  --color-widget-color-text-opacity-secondary: oklch(0.19 0 0 / 0.6);
+  --color-widget-color-text-opacity-highlight: oklch(0.19 0 0);
+  --color-widget-color-text-opacity-primary: oklch(0.77 0.13 198.7);
+  --color-widget-color-text-opacity-primary-highlight: oklch(0.66 0.11 206.84);
+  --color-widget-color-text_opacity_tertiary: oklch(0.19 0 0 / 0.35);
+
+  /* fill */
+  --color-widget-color-fill-opacity-10: oklch(0.19 0 0 / 0.08);
+  --widget-color-fill-opacity-10: oklch(0.19 0 0 / 0.08);
+
+  --color-widget-color-fill-opacity-8: oklch(0.19 0 0 / 0.06);
+  --widget-color-fill-opacity-8: oklch(0.19 0 0 / 0.06);
+
+  --color-widget-color-fill-opacity-5: oklch(0.19 0 0 / 0.04);
+  --widget-color-fill-opacity-5: oklch(0.19 0 0 / 0.04);
+
+  --color-widget-color-fill-opacity-3: oklch(0.19 0 0 / 0.03);
+  --widget-color-fill-opacity-3: oklch(0.19 0 0 / 0.03);
+
+  --widget-color-fill-icon: oklch(0.1901 0.0016 197.02 / 60%);
+  --widget-color-fill-icon-hover: oklch(0.19 0 0);
+
+  --color-widget-color-fill-primary-normal: oklch(0.77 0.13 198.7);
+  --color-widget-color-fill-primary-highlight: oklch(0.77 0.13 198.7 / 0.15);
+
+  --color-widget-color-fill-opacity-3: var(--widget-color-fill-opacity-3);
+
+  --color-dropdown-icon: var(--widget-color-fill-icon);
+  --color-dropdown-icon-hover: var(--widget-color-fill-icon-hover);
+  --color-dropdown-trigger-background: var(--widget-color-fill-opacity-8);
+  --color-dropdown-trigger-background-hover: var(--widget-color-fill-opacity-8);
+  --color-dropdown-menu-item-background: var(--widget-color-fill-opacity-3);
+  --color-dropdown-menu-item-background-hover: var(
+    --widget-color-fill-opacity-8
+  );
+
+  --color-widget-color-fill-primary: oklch(0.77 0.13 198.7);
+  --color-widget-color-fill-yellow-normal: oklch(0.73 0.17 54.35);
+
+  --color-widget-color-fill-secondary: var(--widget-color-fill-opacity-8);
+  --color-widget-color-fill-secondary-hover: var(--widget-color-fill-opacity-5);
+
+  /*  */
+  --color-widget-color-text_opacity_highlight: rgba(19, 20, 20, 1);
+  --color-widget-color-text_opacity_default: rgba(19, 20, 20, 0.95);
+  --color-widget-color-text_opacity_secondary: rgba(19, 20, 20, 0.6);
+  --color-widget-color-text_opacity_tertiary: rgba(19, 20, 20, 0.35);
+  --color-widget-color-text_opacity_disabled: rgba(19, 20, 20, 0.2);
+  --color-widget-color-text_primary_highlight: rgba(26, 163, 178, 1);
+  --color-widget-color-text_primary_default: rgba(25, 203, 209, 1);
+  --color-widget-color-text_primary_secondary: rgba(91, 226, 226, 1);
+  --color-widget-color-text_primary_tertiary: rgba(25, 203, 209, 0.5);
+  --color-widget-color-text_brand_highlight: rgba(91, 226, 226, 1);
+  --color-widget-color-text_brand_default: rgba(25, 203, 209, 1);
+  --color-widget-color-text_brand_secondary: rgba(26, 163, 178, 1);
+  --color-widget-color-text_brand_tertiary: rgba(22, 125, 142, 1);
+  --color-widget-color-text_warning_warning1: rgba(242, 68, 112, 1);
+  --color-widget-color-text_warning_warning2: rgba(247, 99, 136, 1);
+  --color-widget-color-text_warning_warning3: rgba(249, 129, 159, 1);
+  --color-widget-color-text_warning_warning4: rgba(251, 161, 183, 1);
+  --color-widget-color-text_link_highlight: rgba(91, 226, 226, 1);
+  --color-widget-color-text_link_default: rgba(25, 203, 209, 1);
+  --color-widget-color-text_link_clicked: rgba(26, 163, 178, 1);
+  --color-widget-color-text_link_disabled: rgba(19, 20, 20, 0.25);
+
+  --color-widget-color-bg_color_popover: rgba(255, 255, 255, 1);
+  --color-widget-color-bg_color_toast: rgba(255, 255, 255, 1);
+  --color-widget-color-bg_color_page0: rgba(245, 247, 247, 1);
+  --color-widget-color-bg_color_page1: rgba(255, 255, 255, 1);
+  --color-widget-color-bg_color_page2: rgba(255, 255, 255, 1);
+  --color-widget-color-bg_color_page3: rgba(255, 255, 255, 1);
+  --color-widget-color-bg_opacity_page0: rgba(19, 20, 20, 0.02);
+  --color-widget-color-bg_opacity_page1: rgba(19, 20, 20, 0.03);
+  --color-widget-color-bg_opacity_page2: rgba(19, 20, 20, 0.04);
+  --color-widget-color-bg_opacity_page3: rgba(19, 20, 20, 0.06);
+  --color-widget-color-bg_opacity_page4: rgba(19, 20, 20, 0.08);
+
+  --color-widget-color-border_color_primary: rgba(25, 203, 209, 1);
+  --color-widget-color-border_color_primaryHighlight: rgba(25, 203, 209, 0.15);
+  --color-widget-color-border_color_red: rgba(242, 68, 112, 1);
+  --color-widget-color-border_opacity_weak: rgba(19, 20, 20, 0.05);
+  --color-widget-color-border_opacity_default: rgba(19, 20, 20, 0.1);
+  --color-widget-color-border_opacity_enhance: rgba(19, 20, 20, 0.15);
+  --color-widget-color-border_opacity_highlight: rgba(19, 20, 20, 1);
+
+  --color-widget-color-fill_btn_hover: rgba(27, 221, 228, 1);
+  --color-widget-color-fill_btn_default: rgba(48, 246, 239, 1);
+  --color-widget-color-fill_btn_pressed: rgba(27, 221, 228, 1);
+  --color-widget-color-fill_btn_disabled: rgba(48, 246, 239, 0.3);
+  --color-widget-color-fill_btn_redHover: rgba(209, 37, 80, 1);
+  --color-widget-color-fill_btn_redDefault: rgba(242, 68, 112, 1);
+  --color-widget-color-fill_btn_redPressed: rgba(174, 26, 63, 1);
+  --color-widget-color-fill_btn_redDisabled: rgba(253, 197, 211, 1);
+  --color-widget-color-fill_opacity_65: rgba(19, 20, 20, 0.6);
+  --color-widget-color-fill_opacity_40: rgba(19, 20, 20, 0.35);
+  --color-widget-color-fill_opacity_25: rgba(19, 20, 20, 0.2);
+  --color-widget-color-fill_opacity_15: rgba(19, 20, 20, 0.12);
+  --color-widget-color-fill_opacity_10: rgba(19, 20, 20, 0.08);
+  --color-widget-color-fill_opacity_8: rgba(19, 20, 20, 0.06);
+  --color-widget-color-fill_opacity_5: rgba(19, 20, 20, 0.04);
+  --color-widget-color-fill_opacity_3: rgba(19, 20, 20, 0.03);
+  --color-widget-color-fill_color_yellowNormal: rgba(250, 133, 30, 1);
+  --color-widget-color-fill_color_yellowHighlight: rgba(250, 133, 30, 0.15);
+  --color-widget-color-fill_color_primaryNormal: rgba(25, 203, 209, 1);
+  --color-widget-color-fill_color_primaryHighlight: rgba(25, 203, 209, 0.15);
+  --color-widget-color-fill_color_blueNormal: rgba(59, 132, 241, 1);
+  --color-widget-color-fill_color_blueHighlight: rgba(59, 132, 241, 0.15);
+  --color-widget-color-fill_color_redNormal: rgba(242, 68, 112, 1);
+  --color-widget-color-fill_color_redHighlight: rgba(247, 99, 136, 0.15);
+  --color-widget-color-fill_color_greenNormal: rgba(34, 189, 75, 1);
+  --color-widget-color-fill_color_greenHighlight: rgba(65, 202, 98, 0.15);
+
+  --color-widget-color-ghost_black_95: rgba(0, 0, 0, 0.95);
+  --color-widget-color-ghost_black_65: rgba(0, 0, 0, 0.65);
+  --color-widget-color-ghost_black_55: rgba(0, 0, 0, 0.55);
+  --color-widget-color-ghost_black_45: rgba(0, 0, 0, 0.45);
+  --color-widget-color-ghost_black_40: rgba(0, 0, 0, 0.4);
+  --color-widget-color-ghost_black_35: rgba(0, 0, 0, 0.35);
+  --color-widget-color-ghost_black_25: rgba(0, 0, 0, 0.25);
+  --color-widget-color-ghost_black_15: rgba(0, 0, 0, 0.15);
+  --color-widget-color-ghost_black_8: rgba(0, 0, 0, 0.08);
+  --color-widget-color-ghost_black_5: rgba(0, 0, 0, 0.05);
+  --color-widget-color-ghost_black_0: rgba(0, 0, 0, 0);
+  --color-widget-color-ghost_white_8: rgba(255, 255, 255, 0.08);
+  --color-widget-color-ghost_white_15: rgba(255, 255, 255, 0.15);
+  --color-widget-color-ghost_white_25: rgba(255, 255, 255, 0.25);
+  --color-widget-color-ghost_white_35: rgba(255, 255, 255, 0.35);
+  --color-widget-color-ghost_white_40: rgba(255, 255, 255, 0.4);
+  --color-widget-color-ghost_white_55: rgba(255, 255, 255, 0.55);
+  --color-widget-color-ghost_white_65: rgba(255, 255, 255, 0.65);
+  --color-widget-color-ghost_white_95: rgba(255, 255, 255, 0.95);
+
+  --color-widget-color-special_moderator: rgba(7, 201, 142, 1);
+  --color-widget-color-special_male: rgba(7, 201, 142, 1);
+  --color-widget-color-special_female: rgba(253, 114, 245, 1);
+  --color-widget-color-special_anti_black: rgba(255, 255, 255, 0.95);
+  --color-widget-color-special_TopicIcon: rgba(224, 43, 115, 1);
+  --color-widget-color-special_PicDarker: rgba(0, 0, 0, 0);
+  --color-widget-color-special_QRCodeBg: rgba(255, 255, 255, 1);
+  --color-widget-color-special_QRCodeFill: rgba(19, 20, 20, 0.45);
+  --color-widget-color-special_ScrollBar: rgba(183, 191, 189, 1);
+  --color-widget-color-special_PrimaryAtUser: rgba(26, 163, 178, 1);
+  --color-widget-color-special_BtnTextAndIconDisabled: rgba(0, 0, 0, 0.35);
+  --color-widget-color-special_SwitchOff: rgba(255, 255, 255, 0.65);
+  --color-widget-color-special_SwitchOn: rgba(255, 255, 255, 0.95);
+  --color-widget-color-special_SwitchBg: rgba(27, 224, 218, 1);
+
+  --color-widget-color-avatar_bg_lineGradient: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 38.94%,
+    rgba(255, 255, 255, 1) 100%
+  );
 }
 
 .dark {
@@ -116,6 +273,117 @@
   --color-logo-at: #a78b71;
   --color-logo-dot: #ff6b6b;
   --color-logo-hnd: #ecf0f1;
+
+  --color-widget-color-text_opacity_highlight: rgba(252, 255, 255, 1);
+  --color-widget-color-text_opacity_default: rgba(252, 255, 255, 0.95);
+  --color-widget-color-text_opacity_secondary: rgba(252, 255, 255, 0.65);
+  --color-widget-color-text_opacity_tertiary: rgba(252, 255, 255, 0.4);
+  --color-widget-color-text_opacity_disabled: rgba(252, 255, 255, 0.2);
+  --color-widget-color-text_primary_highlight: rgba(62, 224, 224, 1);
+  --color-widget-color-text_primary_default: rgba(25, 203, 209, 1);
+  --color-widget-color-text_primary_secondary: rgba(26, 169, 178, 1);
+  --color-widget-color-text_primary_tertiary: rgba(25, 203, 209, 0.5);
+  --color-widget-color-text_brand_highlight: rgba(26, 169, 178, 1);
+  --color-widget-color-text_brand_default: rgba(25, 203, 209, 1);
+  --color-widget-color-text_brand_secondary: rgba(62, 224, 224, 1);
+  --color-widget-color-text_brand_tertiary: rgba(132, 235, 232, 1);
+  --color-widget-color-text_warning_warning1: rgba(223, 89, 112, 1);
+  --color-widget-color-text_warning_warning2: rgba(196, 71, 91, 1);
+  --color-widget-color-text_warning_warning3: rgba(169, 64, 82, 1);
+  --color-widget-color-text_warning_warning4: rgba(142, 57, 71, 1);
+  --color-widget-color-text_link_highlight: rgba(62, 224, 224, 1);
+  --color-widget-color-text_link_default: rgba(25, 203, 209, 1);
+  --color-widget-color-text_link_clicked: rgba(26, 169, 178, 1);
+  --color-widget-color-text_link_disabled: rgba(252, 255, 255, 0.25);
+
+  --color-widget-color-bg_color_popover: rgba(21, 23, 23, 1);
+  --color-widget-color-bg_color_toast: rgba(59, 61, 61, 1);
+  --color-widget-color-bg_color_page0: rgba(29, 31, 31, 1);
+  --color-widget-color-bg_color_page1: rgba(36, 38, 38, 1);
+  --color-widget-color-bg_color_page2: rgba(41, 43, 43, 1);
+  --color-widget-color-bg_color_page3: rgba(49, 51, 51, 1);
+  --color-widget-color-bg_opacity_page0: rgba(252, 255, 255, 0.02);
+  --color-widget-color-bg_opacity_page1: rgba(252, 255, 255, 0.03);
+  --color-widget-color-bg_opacity_page2: rgba(252, 255, 255, 0.05);
+  --color-widget-color-bg_opacity_page3: rgba(252, 255, 255, 0.08);
+  --color-widget-color-bg_opacity_page4: rgba(252, 255, 255, 0.1);
+
+  --color-widget-color-border_color_primary: rgba(25, 203, 209, 1);
+  --color-widget-color-border_color_primaryHighlight: rgba(25, 203, 209, 0.2);
+  --color-widget-color-border_color_red: rgba(223, 89, 112, 1);
+  --color-widget-color-border_opacity_weak: rgba(252, 255, 255, 0.03);
+  --color-widget-color-border_opacity_default: rgba(252, 255, 255, 0.08);
+  --color-widget-color-border_opacity_enhance: rgba(252, 255, 255, 0.1);
+  --color-widget-color-border_opacity_highlight: rgba(252, 255, 255, 1);
+
+  --color-widget-color-fill_btn_hover: rgba(76, 240, 232, 1);
+  --color-widget-color-fill_btn_default: rgba(27, 224, 218, 1);
+  --color-widget-color-fill_btn_pressed: rgba(26, 183, 188, 1);
+  --color-widget-color-fill_btn_disabled: rgba(27, 224, 218, 0.3);
+  --color-widget-color-fill_btn_redHover: rgba(233, 117, 136, 1);
+  --color-widget-color-fill_btn_redDefault: rgba(223, 89, 112, 1);
+  --color-widget-color-fill_btn_redPressed: rgba(196, 71, 91, 1);
+  --color-widget-color-fill_btn_redDisabled: rgba(142, 57, 71, 1);
+  --color-widget-color-fill_opacity_65: rgba(252, 255, 255, 0.65);
+  --color-widget-color-fill_opacity_40: rgba(252, 255, 255, 0.4);
+  --color-widget-color-fill_opacity_25: rgba(252, 255, 255, 0.25);
+  --color-widget-color-fill_opacity_15: rgba(252, 255, 255, 0.15);
+  --color-widget-color-fill_opacity_10: rgba(252, 255, 255, 0.1);
+  --color-widget-color-fill_opacity_8: rgba(252, 255, 255, 0.08);
+  --color-widget-color-fill_opacity_5: rgba(252, 255, 255, 0.05);
+  --color-widget-color-fill_opacity_3: rgba(252, 255, 255, 0.03);
+  --color-widget-color-fill_color_yellowNormal: rgba(219, 112, 18, 1);
+  --color-widget-color-fill_color_yellowHighlight: rgba(219, 112, 18, 0.15);
+  --color-widget-color-fill_color_primaryNormal: rgba(25, 203, 209, 1);
+  --color-widget-color-fill_color_primaryHighlight: rgba(25, 203, 209, 0.15);
+  --color-widget-color-fill_color_blueNormal: rgba(50, 130, 250, 1);
+  --color-widget-color-fill_color_blueHighlight: rgba(94, 157, 249, 0.15);
+  --color-widget-color-fill_color_redNormal: rgba(223, 89, 112, 1);
+  --color-widget-color-fill_color_redHighlight: rgba(233, 117, 136, 0.15);
+  --color-widget-color-fill_color_greenNormal: rgba(50, 167, 87, 1);
+  --color-widget-color-fill_color_greenHighlight: rgba(96, 183, 118, 0.15);
+
+  --color-widget-color-ghost_black_95: rgba(0, 0, 0, 0.95);
+  --color-widget-color-ghost_black_65: rgba(0, 0, 0, 0.65);
+  --color-widget-color-ghost_black_55: rgba(0, 0, 0, 0.55);
+  --color-widget-color-ghost_black_45: rgba(0, 0, 0, 0.45);
+  --color-widget-color-ghost_black_40: rgba(0, 0, 0, 0.4);
+  --color-widget-color-ghost_black_35: rgba(0, 0, 0, 0.35);
+  --color-widget-color-ghost_black_25: rgba(0, 0, 0, 0.25);
+  --color-widget-color-ghost_black_15: rgba(0, 0, 0, 0.15);
+  --color-widget-color-ghost_black_8: rgba(0, 0, 0, 0.08);
+  --color-widget-color-ghost_black_5: rgba(0, 0, 0, 0.05);
+  --color-widget-color-ghost_black_0: rgba(0, 0, 0, 0);
+  --color-widget-color-ghost_white_8: rgba(255, 255, 255, 0.08);
+  --color-widget-color-ghost_white_15: rgba(255, 255, 255, 0.15);
+  --color-widget-color-ghost_white_25: rgba(255, 255, 255, 0.25);
+  --color-widget-color-ghost_white_35: rgba(255, 255, 255, 0.35);
+  --color-widget-color-ghost_white_40: rgba(255, 255, 255, 0.4);
+  --color-widget-color-ghost_white_55: rgba(255, 255, 255, 0.55);
+  --color-widget-color-ghost_white_65: rgba(255, 255, 255, 0.65);
+  --color-widget-color-ghost_white_95: rgba(255, 255, 255, 0.95);
+
+  --color-widget-color-special_moderator: rgba(8, 189, 134, 1);
+  --color-widget-color-special_male: rgba(120, 232, 255, 1);
+  --color-widget-color-special_female: rgba(255, 139, 248, 1);
+  --color-widget-color-special_anti_black: rgba(14, 15, 15, 0.95);
+  --color-widget-color-special_TopicIcon: rgba(224, 43, 115, 1);
+  --color-widget-color-special_PicDarker: rgba(0, 0, 0, 0.05);
+  --color-widget-color-special_QRCodeBg: rgba(252, 255, 254, 0.4);
+  --color-widget-color-special_QRCodeFill: rgba(19, 20, 20, 0.8);
+  --color-widget-color-special_ScrollBar: rgba(143, 145, 145, 1);
+  --color-widget-color-special_PrimaryAtUser: rgba(26, 169, 178, 1);
+  --color-widget-color-special_BtnTextAndIconDisabled: rgba(0, 0, 0, 0.45);
+  --color-widget-color-special_SwitchOff: rgba(255, 255, 255, 0.4);
+  --color-widget-color-special_SwitchOn: rgba(27, 224, 218, 1);
+  --color-widget-color-special_SwitchBg: rgba(27, 224, 218, 0.3);
+
+  --color-widget-color-avatar_bg_lineGradient: linear-gradient(
+    90deg,
+    rgba(41, 43, 43, 0) 0%,
+    rgba(41, 43, 43, 0.8) 38.94%,
+    rgba(41, 43, 43, 1) 100%
+  );
 }
 
 @custom-variant dark (&:is(.dark *));
