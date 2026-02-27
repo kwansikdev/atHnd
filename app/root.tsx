@@ -17,7 +17,7 @@ import { Toaster } from "./components/ui/sonner";
 import { useEffect, useRef, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { MobileNav } from "./shared/ui/mobile-nav";
-import { detectDevice } from "./utils";
+import { cn, detectDevice } from "./utils";
 import { AppSidebar } from "./shared/ui/sidebar/app-sidebar";
 import { Header } from "./shared/ui/header";
 import { ScrollArea } from "./components/ui/scroll-area";
@@ -246,7 +246,12 @@ export default function App() {
           <div className="absolute top-0 left-0 w-full h-full flex">
             <AppSidebar />
             {/* main contents */}
-            <div className="relative flex-1 bg-black/30 rounded-tl-3xl">
+            <div
+              className={cn(
+                "relative flex-1 rounded-tl-3xl",
+                "bg-[url(/dot-grid.png)] bg-center bg-cover bg-no-repeat",
+              )}
+            >
               <ScrollArea className="absolute inset-0 w-full h-full p-4 flex justify-center items-start">
                 <Outlet context={{ supabase, isLoggedIn, user, profile }} />
               </ScrollArea>
