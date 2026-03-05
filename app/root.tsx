@@ -26,14 +26,39 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { themeSessionResolver } from "./sessions.server";
 import {
   PreventFlashOnWrongTheme,
+  Theme,
   ThemeProvider,
   useTheme,
 } from "remix-themes";
 import clsx from "clsx";
 
-import "./font.css";
+import fontStyles from "./font.css?url";
 
-export const links: LinksFunction = () => [];
+export const links: LinksFunction = () => [
+  // 가장 많이 쓰는 weight만 preload (모두 하면 오히려 느려짐)
+  {
+    rel: "preload",
+    href: "/fonts/A2z-4Regular.woff2",
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preload",
+    href: "/fonts/A2z-7Bold.woff2",
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "preload",
+    href: "/fonts/A2z-6SemiBold.woff2",
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  },
+  { rel: "stylesheet", href: fontStyles },
+];
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userAgent = request.headers.get("user-agent") || "";
@@ -100,8 +125,10 @@ function InnerLayout({
   const [theme] = useTheme();
 
   return (
-    // <html lang="ko" className={clsx(theme ?? "light")}>
-    <html lang="ko" className={clsx(theme ?? "light", "font-a2z")}>
+    <html
+      lang="ko"
+      className={clsx(theme ?? "light", "bg-widget-color-bg_color_page1")}
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -128,6 +155,8 @@ export default function App() {
   const [supabase] = useState(
     () => new SupabaseService(envs.SUPABASE_URL, envs.SUPABASE_ANON_KEY),
   );
+  const [theme] = useTheme();
+
   // READY 메시지를 이미 보냈는지 추적 (무한 호출 방지)
   const readySentRef = useRef(false);
 
@@ -240,7 +269,7 @@ export default function App() {
 
   return (
     <SupabaseProvider supabase={supabase}>
-      <div className="relative w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(17))]">
+      <div className="relative bg-widget-color-bg_color_page1 w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(17))]">
         <Header />
         <div className="relative flex flex-1">
           <div className="absolute top-0 left-0 w-full h-full flex">
@@ -248,11 +277,15 @@ export default function App() {
             {/* main contents */}
             <div
               className={cn(
-                "relative flex-1 rounded-tl-3xl",
-                "bg-[url(/dot-grid.png)] bg-center bg-cover bg-no-repeat",
+                "relative bg-widget-color-bg_color_page1 flex-1 rounded-tl-3xl",
+                "bg-center bg-cover bg-no-repeat",
+
+                theme && theme === Theme.DARK
+                  ? "bg-[url(/dot-grid-dark.png)]"
+                  : "bg-[url(/dot-grid-light.png)]",
               )}
             >
-              <ScrollArea className="absolute inset-0 w-full h-full p-4 flex justify-center items-start">
+              <ScrollArea className="absolute inset-0 bg-transparent w-full h-full p-4 flex justify-center items-start">
                 <Outlet context={{ supabase, isLoggedIn, user, profile }} />
               </ScrollArea>
             </div>
