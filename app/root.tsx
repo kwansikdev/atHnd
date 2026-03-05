@@ -97,7 +97,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       SUPABASE_URL: process.env.SUPABASE_URL!,
       SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
     },
-    theme: getTheme(),
+    theme: process.env.NODE_ENV === "development" ? Theme.LIGHT : getTheme(),
   };
 }
 
@@ -125,10 +125,7 @@ function InnerLayout({
   const [theme] = useTheme();
 
   return (
-    <html
-      lang="ko"
-      className={clsx(theme ?? "light", "bg-widget-color-bg_color_page1")}
-    >
+    <html lang="ko" className={clsx(theme, "bg-widget-color-bg-color-page1")}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -269,7 +266,7 @@ export default function App() {
 
   return (
     <SupabaseProvider supabase={supabase}>
-      <div className="relative bg-widget-color-bg_color_page1 w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(17))]">
+      <div className="relative bg-widget-color-bg-color-page1 w-full h-screen box-border flex flex-col [--header-height:calc(--spacing(17))]">
         <Header />
         <div className="relative flex flex-1">
           <div className="absolute top-0 left-0 w-full h-full flex">
@@ -277,7 +274,7 @@ export default function App() {
             {/* main contents */}
             <div
               className={cn(
-                "relative bg-widget-color-bg_color_page1 flex-1 rounded-tl-3xl",
+                "relative flex-1 rounded-tl-3xl",
                 "bg-center bg-cover bg-no-repeat",
 
                 theme && theme === Theme.DARK
