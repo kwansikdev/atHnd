@@ -26,6 +26,13 @@ export class SupabaseService {
   }
 
   /**
+   * 브라우저에서 로그아웃합니다. 클라이언트 컴포넌트에서 사용하세요.
+   */
+  async signOut() {
+    await this.supabase.auth.signOut();
+  }
+
+  /**
    *
    * @param bucket 업로드할 파일의 경로를 입력합니다. (ex. "files", "images", "posts")
    * @param filePath bucket 내부 파일의 경로를 입력합니다.(= 파일명)
@@ -104,4 +111,13 @@ export async function getSupabaseServerClient(request: Request) {
     uploadFile,
     uploadSignedUploadUrl,
   };
+}
+
+/**
+ * 브라우저 클라이언트로 로그아웃합니다.
+ * header 등 클라이언트 컴포넌트에서 env만 있으면 signOut만 쓰고 싶을 때 사용하세요.
+ */
+export async function signOutWithSupabase(url: string, anonKey: string) {
+  const client = createBrowserClient<Database>(url, anonKey);
+  await client.auth.signOut();
 }
