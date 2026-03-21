@@ -39,18 +39,21 @@ export async function loader({ request }: { request: Request }) {
     PAGE_SIZE: 30,
   });
 
-  return Response.json({ figures: result, count });
+  const lastId = result.length > 0 ? result[result.length - 1].id : "";
+  const next = lastId ? page + 1 : 0;
+
+  return Response.json({ figures: result, count, next });
 }
 
 export default function Index() {
-  const { figures } = useLoaderData<typeof loader>();
+  const { figures, ...rest } = useLoaderData<typeof loader>();
 
   const [allFigures, setAllFigures] = useState<MyFigureDto[]>(figures);
 
   return (
     <main className="container mx-auto w-full min-h-full flex flex-1 justify-center">
       <div className="flex-2 max-w-[692px] min-w-[332px] h-full">
-        <TimeLine figures={allFigures} setFigures={setAllFigures} />
+        <TimeLine figures={allFigures} setFigures={setAllFigures} {...rest} />
       </div>
       <div
         className={cn(

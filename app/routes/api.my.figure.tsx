@@ -1,4 +1,5 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import { data } from "@remix-run/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "supabase/schema";
 import { getSupabaseServerClient } from "supabase/supabase-service";
@@ -7,10 +8,6 @@ import { getSupabaseServerClient } from "supabase/supabase-service";
 export async function loader({ request }: LoaderFunctionArgs) {
   const { supabase } = await getSupabaseServerClient(request);
 
-  const url = new URL(request.url);
-  const pageParam = url.searchParams.get("p");
-  const page = pageParam ? parseInt(pageParam, 10) : 0;
-
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -18,13 +15,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Error("Unauthorized");
   }
 
+  const url = new URL(request.url);
+  const pageParam = url.searchParams.get("p");
+  const page = pageParam ? parseInt(pageParam, 10) : 1;
+
   const { data: result, count } = await getMyFigure(supabase, {
     userId: user.id,
     page,
     PAGE_SIZE: 30,
   });
 
-  return Response.json({ figures: result, count });
+  const lastId = result.length > 0 ? result[result.length - 1].id : "";
+  const next = result.length === 30 ? page + 1 : 0;
+
+  return data({ figures: result, count, lastId, next });
 }
 
 export async function getMyFigure(
@@ -53,7 +57,7 @@ export async function getMyFigure(
       created_at,
       updated_at,
       delivered_at,
-      latest_paid_at,
+      earliest_paid_at,
       figure: release_id!inner(
         id,
         release_year,
@@ -80,14 +84,14 @@ export async function getMyFigure(
     .or("sort_order.eq.0,is_thumbnail.eq.true", {
       foreignTable: "figure.detail.figure_image",
     })
-    .order("latest_paid_at", { ascending: false })
+    .order("earliest_paid_at", { ascending: false })
     .limit(1, { foreignTable: "figure.detail.figure_image" });
 
   if (userId) {
     sb.eq("user_id", userId);
   }
 
-  sb.range((page - 1) * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
+  sb.range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
 
   const { data, error, count } = await sb;
 
