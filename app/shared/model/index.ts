@@ -6,3 +6,5 @@ export * from "./figure-manufacturer-dto";
 export * from "./figure-scale-dto";
 export * from "./figure-series-dto";
 export * from "./user-figure-dto";
+
+export * from "./my-figure-dto";
