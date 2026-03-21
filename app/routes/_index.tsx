@@ -1,9 +1,12 @@
 import { type MetaFunction } from "@remix-run/node";
-import { Outlet, useLoaderData, useOutletContext } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { getSupabaseServerClient } from "supabase/supabase-service";
-import { getUserFigureListAction } from "~/domains/home/action/get-user-figure-list-action";
-import CalendarTimeline from "~/domains/home/ui/calendar-timeline";
-import { TOutletContext } from "~/root";
+
+import { cn } from "~/utils";
+import { TimeLine } from "~/domains/callendar/ui/time-line";
+import { getMyFigure } from "./api.my.figure";
+import { useState } from "react";
+import { MyFigureDto } from "~/shared/model";
 
 export const meta: MetaFunction = () => {
   return [
@@ -17,35 +20,46 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: { request: Request }) {
   const { supabase } = await getSupabaseServerClient(request);
+
   const url = new URL(request.url);
-  const year = new Date().getFullYear().toString();
-  const y = url.searchParams.get("y") ?? year;
-  const f = url.searchParams.get("f") ?? "paid_at";
-  const figures = await getUserFigureListAction(supabase, {
-    year: y,
-    filter: f as "paid_at" | "release_year",
+  const pageParam = url.searchParams.get("p");
+  const page = pageParam ? parseInt(pageParam, 10) : 0;
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return Response.json({ figures: [], error: "Unauthorized", count: 0 });
+  }
+
+  const { data: result, count } = await getMyFigure(supabase, {
+    userId: user.id,
+    page,
+    PAGE_SIZE: 30,
   });
 
-  return Response.json({ figures });
+  return Response.json({ figures: result, count });
 }
 
 export default function Index() {
-  const rootOutletContext = useOutletContext<TOutletContext>();
   const { figures } = useLoaderData<typeof loader>();
 
-  return (
-    <main className="container mx-auto min-h-full flex flex-1">
-      {/* <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-balance">Figure Collection</h1>
-          <p className="text-muted-foreground mt-1">
-            Your personal space for collecting, keeping, and sharing.
-          </p>
-        </div>
-      </div> */}
+  const [allFigures, setAllFigures] = useState<MyFigureDto[]>(figures);
 
-      <CalendarTimeline figures={figures} />
-      {/* <Outlet context={{ ...rootOutletContext }} /> */}
+  return (
+    <main className="container mx-auto w-full min-h-full flex flex-1 justify-center">
+      <div className="flex-2 max-w-[692px] min-w-[332px] h-full">
+        <TimeLine figures={allFigures} setFigures={setAllFigures} />
+      </div>
+      <div
+        className={cn(
+          "max-w-[340px] min-w-[296px] w-full h-full ml-3",
+          "sticky top-0",
+        )}
+      >
+        <div className="w-full h-44 bg-widget-color-bg-color-page1 rounded-2xl"></div>
+      </div>
     </main>
   );
 }
