@@ -17,7 +17,7 @@ import { Toaster } from "./components/ui/sonner";
 import { useEffect, useRef, useState } from "react";
 import { User } from "@supabase/supabase-js";
 import { MobileNav } from "./shared/ui/mobile-nav";
-import { cn, detectDevice } from "./utils";
+import { cn, detectDevice, TDeviceInfo } from "./utils";
 import { AppSidebar } from "./shared/ui/sidebar/app-sidebar";
 import { Header } from "./shared/ui/header";
 import { ScrollArea } from "./components/ui/scroll-area";
@@ -283,7 +283,9 @@ export default function App() {
               )}
             >
               <ScrollArea className="absolute inset-0 bg-transparent w-full h-full p-4 flex justify-center items-start">
-                <Outlet context={{ supabase, isLoggedIn, user, profile }} />
+                <Outlet
+                  context={{ supabase, isLoggedIn, user, profile, deviceInfo }}
+                />
               </ScrollArea>
             </div>
           </div>
@@ -306,4 +308,5 @@ export type TOutletContext = {
     nickname: string | null;
     updated_at: string | null;
   } | null;
+  deviceInfo: TDeviceInfo;
 };
