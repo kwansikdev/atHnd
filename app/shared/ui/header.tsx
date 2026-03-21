@@ -11,7 +11,6 @@ import {
   Moon,
   Bell,
   Plus,
-  PencilLine,
   MessageSquareDot,
   DollarSign,
   SquarePen,
