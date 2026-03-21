@@ -1,15 +1,14 @@
 // app/utils/device.ts
 
-export interface DeviceInfo {
+export interface TDeviceInfo {
   isMobile: boolean;
   isWebView: boolean;
   platform: "ios" | "android" | "desktop" | null;
   webViewType: "wkwebview" | "uiwebview" | "android-webview" | null;
 }
 
-export function detectDevice(userAgent: string): DeviceInfo {
+export function detectDevice(userAgent: string): TDeviceInfo {
   const ua = userAgent.toLowerCase();
-  console.log("🚀 ~ detectDevice ~ userAgent:", userAgent);
 
   // iOS 웹뷰 감지
   const isIOSWebView =
