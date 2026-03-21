@@ -4,6 +4,7 @@ export type MyFigureDto = Omit<
   Database["public"]["Tables"]["user_figure"]["Row"],
   "figure_id" | "user_id" | "rating"
 > & {
+  earliest_paid_at: string;
   purchase_site: { id: string; name: string; url: string };
   figure: Omit<
     Database["public"]["Tables"]["figure_release"]["Row"],

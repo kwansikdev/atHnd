@@ -798,9 +798,9 @@ export type Database = {
           delivered_at: string | null;
           deposit_paid_at: string | null;
           deposit_price: number | null;
+          earliest_paid_at: string | null;
           figure_id: string | null;
           id: string | null;
-          latest_paid_at: string | null;
           memo: string | null;
           paid_at: string | null;
           rating: number | null;
@@ -818,9 +818,9 @@ export type Database = {
           delivered_at?: string | null;
           deposit_paid_at?: string | null;
           deposit_price?: number | null;
+          earliest_paid_at?: never;
           figure_id?: string | null;
           id?: string | null;
-          latest_paid_at?: never;
           memo?: string | null;
           paid_at?: string | null;
           rating?: number | null;
@@ -838,9 +838,9 @@ export type Database = {
           delivered_at?: string | null;
           deposit_paid_at?: string | null;
           deposit_price?: number | null;
+          earliest_paid_at?: never;
           figure_id?: string | null;
           id?: string | null;
-          latest_paid_at?: never;
           memo?: string | null;
           paid_at?: string | null;
           rating?: number | null;
