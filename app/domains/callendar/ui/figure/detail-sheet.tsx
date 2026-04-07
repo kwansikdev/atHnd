@@ -148,9 +148,6 @@ export function FigureDetailSheet({
 
   const { fetcher: actionFetcher } = useFetcherActionState();
   const handleSubmit = async (updated: TFormValues) => {
-    console.log("🚀 ~ handleSubmit ~ updated:", updated);
-
-    return;
     if (!userFigureId) return;
 
     await actionFetcher.submit(JSON.stringify(updated), {
@@ -159,7 +156,6 @@ export function FigureDetailSheet({
       action: `/api/my/figure/${userFigureId}`,
     });
 
-    // onUpdate?.(updated);
     setSelectedFigure({ ...selectedFigure, ...updated } as MyFigureDto);
     onUpdate?.(updated);
   };
@@ -488,7 +484,7 @@ function EditableDate({ name, isDone, isCurrent }: EditableType) {
       name={name}
       render={({ field }) => {
         return (
-          <Popover open={open} onOpenChange={setOpen}>
+          <Popover open={open} onOpenChange={setOpen} modal>
             <div className="relative flex items-center gap-4">
               <PopoverTrigger asChild>
                 <button
@@ -549,24 +545,6 @@ function EditableDate({ name, isDone, isCurrent }: EditableType) {
       }}
     />
   );
-  // }
-  // return (
-  //   <button
-  //     title={"클릭하여 날짜 수정"}
-  //     className={cn(
-  //       "text-[10px] shrink-0 text-widget-color-text-opacity-secondary border-b border-transparent",
-  //     )}
-  //     onClick={() => setEditing(true)}
-  //     disabled={!isCurrent}
-  //   >
-  //     {isDone
-  //       ? formDate
-  //       : isCurrent
-  //         ? formDate ||
-  //           `📅 날짜를 설정하지 않으면 오늘(${format(new Date(), "yyyy-MM-dd")})로 자동 저장돼요.`
-  //         : "-"}
-  //   </button>
-  // );
 }
 
 const formatKRW = (num: number) => "₩" + Number(num).toLocaleString("ko-KR");
@@ -577,15 +555,12 @@ function EditableAmount({ name, isDone, isCurrent }: EditableType) {
   const amount = useWatch({ control, name: name });
 
   const [editing, setEditing] = useState(false);
-  // const [raw, setRaw] = useState(String(amount));
   const inputRef = useRef<HTMLInputElement>(null);
 
   const commit = (onChange: void, price: number) => {
     setEditing(false);
     onChange;
 
-    // const parsed = parseKRW(raw);
-    // setRaw(String(parsed));
     if (name === "deposit_price" || name === "balance_price") {
       calculateTotalPrice(price);
     }
