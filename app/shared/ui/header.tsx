@@ -31,7 +31,7 @@ import {
 } from "~/components/ui/input-group";
 
 import { cn } from "~/utils";
-import { useSupabase } from "~/shared/contexts";
+import { useSupabase, useUIScope } from "~/shared/contexts";
 import {
   Tooltip,
   TooltipContent,
@@ -47,24 +47,7 @@ import { Database } from "supabase/schema";
 
 export function Header() {
   const { isLoggedIn, profile } = useRootLoaderData();
-  // const { deviceInfo } = useRootLoaderData();
-
-  // const [position, setPosition] = useState(window?.pageYOffset);
-  const [visible, setVisible] = useState(true);
-
-  // useEffect(() => {
-  //   // if (!deviceInfo.isMobile || deviceInfo.isWebView) return;
-  //   const handleScroll = () => {
-  //     const moving = window.pageYOffset;
-
-  //     setVisible(position > moving);
-  //     setPosition(moving);
-  //   };
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [position]);
+  const [visible] = useState(true);
 
   return (
     <header
@@ -75,14 +58,16 @@ export function Header() {
       )}
     >
       <div className="min-w-[248px]">logo</div>
-      {/* {false ? (
-        <Button></Button>
-      ) : ( */}
       <div className="relative flex flex-1 h-full">
         <div className="flex-1 flex items-center w-full h-full">
           <div className="absolute px-4 w-full flex justify-center items-center">
             <div className="flex-2 basis-[604px] max-w-[692px] min-w-[332px] w-[692px]">
-              <InputGroup className="bg-muted h-[41px] rounded-2xl border-none">
+              <InputGroup
+                className={cn(
+                  "bg-muted h-[41px] rounded-2xl border-none",
+                  "has-[[data-slot=input-group-control]:focus-visible]:ring-2 has-[[data-slot=input-group-control]:focus-visible]:ring-widget-color-border-color-primary",
+                )}
+              >
                 <InputGroupInput placeholder="검색할 내용을 입력하세요." />
                 <InputGroupAddon>
                   <Search className={cn("size-5", "focus-visible:ring-1")} />
@@ -188,6 +173,8 @@ function AlarmDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
 
 function AddDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
   const navigate = useNavigate();
+  const { toggle } = useUIScope();
+
   return (
     <DropdownMenu
       open={isLoggedIn ? undefined : false}
@@ -214,16 +201,16 @@ function AddDropdown({ isLoggedIn }: { isLoggedIn: boolean }) {
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
         <DropdownMenuItem className="h-10" asChild>
-          <Link
-            to="/calendar/add"
+          <button
             className={cn(
-              "flex items-center cursor-pointer gap-2! font-semibold",
+              "flex items-center cursor-pointer gap-2! w-full font-semibold",
               "bg-widget-color-fill-opacity-3 hover:bg-widget-color-fill-opacity-8 text-widget-color-text-opacity-default [&>svg]:text-widget-color-fill-color-primaryNormal!",
             )}
+            onClick={toggle}
           >
             <SquarePen className="size-6" />
             <span className="text-[16px]">추가하기</span>
-          </Link>
+          </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

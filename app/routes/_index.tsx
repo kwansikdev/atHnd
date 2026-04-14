@@ -5,8 +5,9 @@ import { getSupabaseServerClient } from "supabase/supabase-service";
 import { cn } from "~/utils";
 import { TimeLine } from "~/domains/callendar/ui/time-line";
 import { getMyFigure } from "./api.my.figure";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MyFigureDto } from "~/shared/model";
+import { SheetSearchAdd } from "~/domains/callendar/ui";
 
 export const meta: MetaFunction = () => {
   return [
@@ -50,9 +51,23 @@ export default function Index() {
 
   const [allFigures, setAllFigures] = useState<MyFigureDto[]>(figures);
 
+  // loader 데이터가 바뀌면 (revalidate 후) state 초기화
+  useEffect(() => {
+    setAllFigures(figures);
+  }, [figures]);
+
   return (
     <main className="container mx-auto w-full min-h-full flex flex-1 justify-center">
       <div className="flex-2 max-w-[692px] min-w-[332px] h-full">
+        <div className="bg-widget-color-bg-color-page1 rounded-2xl py-3 px-4 mb-4">
+          <div className="">
+            <p className="text-sm text-widget-color-text-opacity-tertiary">
+              기록하고 싶은 무언가가 있으신가요?
+            </p>
+          </div>
+          <div></div>
+        </div>
+
         <TimeLine figures={allFigures} setFigures={setAllFigures} {...rest} />
       </div>
       <div
@@ -63,6 +78,7 @@ export default function Index() {
       >
         <div className="w-full h-44 bg-widget-color-bg-color-page1 rounded-2xl"></div>
       </div>
+      <SheetSearchAdd />
     </main>
   );
 }

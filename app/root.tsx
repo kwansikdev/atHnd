@@ -21,7 +21,7 @@ import { cn, detectDevice, TDeviceInfo } from "./utils";
 import { AppSidebar } from "./shared/ui/sidebar/app-sidebar";
 import { Header } from "./shared/ui/header";
 import { ScrollArea } from "./components/ui/scroll-area";
-import { SupabaseProvider } from "./shared/contexts";
+import { SupabaseProvider, UIScopeProvider } from "./shared/contexts";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { themeSessionResolver } from "./sessions.server";
 import {
@@ -133,10 +133,12 @@ function InnerLayout({
         <Links />
       </head>
       <body className="flex flex-col min-h-dvh">
-        <TooltipProvider>
-          {children}
-          <Toaster richColors position="bottom-center" />
-        </TooltipProvider>
+        <UIScopeProvider scopeId="search-add-figure">
+          <TooltipProvider>
+            {children}
+            <Toaster richColors position="bottom-center" />
+          </TooltipProvider>
+        </UIScopeProvider>
         <ScrollRestoration />
         <PreventFlashOnWrongTheme ssrTheme={ssrTheme} />
         <Scripts />

@@ -103,16 +103,50 @@ export async function getMyFigure(
 // action
 export async function action({ request }: ActionFunctionArgs) {
   const method = request.method;
-  const body = await request.text();
 
   switch (method) {
-    case "PATCH":
-      return patchFn(request, body);
-    case "DELETE":
-      return deleteFn(request, body);
+    case "PATCH": {
+      const body = await request.text();
+      return await patchFn(request, body);
+    }
+    case "DELETE": {
+      const body = await request.text();
+      return await deleteFn(request, body);
+    }
     default:
-      return Response.json({});
+      return await postFn(request);
   }
+}
+
+async function postFn(request: Request) {
+  const body = await request.formData();
+
+  const figures = body.get("figures");
+  const parsed = JSON.parse(figures as string);
+
+  const { supabase } = await getSupabaseServerClient(request);
+
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return data({ error: authError?.message }, { status: authError?.status });
+  }
+
+  const _parsed = parsed.map((data: any) => ({
+    ...data,
+    user_id: user.id,
+  }));
+
+  const response = await supabase.from("user_figure").insert(_parsed).select();
+
+  if (response.error) {
+    return Response.json({ success: false, error: response.error.message });
+  }
+
+  return data({ success: true });
 }
 
 async function patchFn(request: Request, body: string) {

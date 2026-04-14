@@ -80,6 +80,8 @@
   --sidebar-ring: oklch(0.705 0.015 286.067);
 
   /* =================================================================== */
+  --color-primary: rgba(25, 203, 209, 1);
+
   --color-widget-color-text-opacity-highlight: rgba(19, 20, 20, 1);
   --color-widget-color-text-opacity-default: rgba(19, 20, 20, 0.95);
   --color-widget-color-text-opacity-secondary: rgba(19, 20, 20, 0.6);
