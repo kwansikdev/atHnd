@@ -1,13 +1,11 @@
 import { type MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { getSupabaseServerClient } from "supabase/supabase-service";
-
 import { cn } from "~/utils";
-import { TimeLine } from "~/domains/callendar/ui/time-line";
 import { getMyFigure } from "./api.my.figure";
 import { useEffect, useState } from "react";
 import { MyFigureDto } from "~/shared/model";
-import { SheetSearchAdd } from "~/domains/callendar/ui";
+import { TimeLine, SheetSearchAdd } from "~/domains/callendar/ui";
 
 export const meta: MetaFunction = () => {
   return [
