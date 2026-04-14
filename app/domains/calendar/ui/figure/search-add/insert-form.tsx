@@ -6,7 +6,7 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-import { SearchFigureDto } from "~/domains/callendar/model";
+import { SearchFigureDto } from "~/domains/calendar/model";
 import { getImageTransformation } from "~/shared/ui";
 import { AddFormType } from "./sheet";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
@@ -25,7 +25,7 @@ import { ko } from "date-fns/locale";
 import { Input } from "~/components/ui/input";
 import { Database } from "supabase/schema";
 import { useMemo, useState } from "react";
-import { useMyFigureAddFormStore } from "~/domains/callendar/store";
+import { useMyFigureAddFormStore } from "~/domains/calendar/store";
 
 type InsertFormProps = {
   figure: SearchFigureDto;

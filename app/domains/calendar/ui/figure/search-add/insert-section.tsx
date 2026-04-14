@@ -2,7 +2,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { AddFormType } from "./sheet";
 import { useFetcher } from "@remix-run/react";
 import { useEffect } from "react";
-import { useMyFigureAddFormStore } from "~/domains/callendar/store";
+import { useMyFigureAddFormStore } from "~/domains/calendar/store";
 import { InsertForm } from "./insert-form";
 
 // type InsertSectionProp = {

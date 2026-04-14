@@ -8,7 +8,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "~/components/ui/input-group";
-import { SearchFigureDto } from "~/domains/callendar/model";
+import { SearchFigureDto } from "~/domains/calendar/model";
 import { useFetcherActionState } from "~/hooks/use-fetcher-action-state";
 import { getImageTransformation } from "~/shared/ui";
 import { cn } from "~/utils";

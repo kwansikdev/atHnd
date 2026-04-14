@@ -10,10 +10,7 @@ import { useUIScope } from "~/shared/contexts";
 import { Form as FormProvider } from "~/components/ui/form";
 import { useForm, useWatch } from "react-hook-form";
 import { SearchSection } from "./search-section";
-import {
-  SearchFigureDto,
-  UserFigureInsertDto,
-} from "~/domains/callendar/model";
+import { SearchFigureDto, UserFigureInsertDto } from "~/domains/calendar/model";
 import { useEffect, useState } from "react";
 import { InsertSection } from "./insert-section";
 import { useRevalidator } from "@remix-run/react";

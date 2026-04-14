@@ -5,7 +5,7 @@ import { cn } from "~/utils";
 import { getMyFigure } from "./api.my.figure";
 import { useEffect, useState } from "react";
 import { MyFigureDto } from "~/shared/model";
-import { TimeLine, SheetSearchAdd } from "~/domains/callendar/ui";
+import { TimeLine, SheetSearchAdd } from "~/domains/calendar/ui";
 
 export const meta: MetaFunction = () => {
   return [
