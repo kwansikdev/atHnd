@@ -10,7 +10,6 @@ import { useFigureStore } from "../store";
 import { Button } from "~/components/ui/button";
 
 import { useFetcherActionState } from "~/hooks/use-fetcher-action-state";
-import { Sparkles } from "lucide-react";
 
 type TimeLineProps = {
   figures: MyFigureDto[];
@@ -53,7 +52,7 @@ export function TimeLine({ figures, setFigures, next }: TimeLineProps) {
           key,
           orderBy(
             items,
-            [(item) => item.deposit_paid_at || item.paid_at],
+            [(item) => item.deposit_paid_at ?? item.paid_at],
             ["desc"],
           ),
         ]),
@@ -96,16 +95,7 @@ export function TimeLine({ figures, setFigures, next }: TimeLineProps) {
   }, [data, setFigures]);
 
   return (
-    <div className="space-y-3">
-      <div className="bg-widget-color-bg-color-page1 rounded-2xl py-3 px-4">
-        <div className="mb-3">
-          <p className="text-sm text-widget-color-text-opacity-tertiary">
-            나누고 싶은 얘기가 있으신가요?
-          </p>
-        </div>
-        <div></div>
-      </div>
-
+    <div className="space-y-4">
       {Object.entries(figuresByYearMonth).map(([yearMonth, figures]) => (
         <section key={yearMonth}>
           <MonthHeader label={yearMonth} count={figures.length} />
@@ -134,7 +124,7 @@ export function TimeLine({ figures, setFigures, next }: TimeLineProps) {
             onClick={handleLoadMore}
           >
             {isLoading ? (
-              <Sparkles className="h-8 w-8 animate-spin" />
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-widget-color-border-color-primary" />
             ) : (
               "더보기"
             )}
@@ -177,7 +167,7 @@ function MonthHeader({ label, count }: { label: string; count: number }) {
   };
 
   return (
-    <div className="flex items-baseline gap-2 mt-7 mb-1">
+    <div className="flex items-baseline gap-2 mb-1">
       <span className="text-sm font-semibold tracking-tight text-widget-color-text-opacity-secondary">
         {formatMonthHeader(label)}
       </span>

@@ -50,10 +50,10 @@ export function FigureItemCard({ idx, data, onTap }: FigureItemCardProps) {
           )}
         >
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] text-widget-color-text-opacity-tertiary">
+            <p className="text-[10px] text-widget-color-text-opacity-tertiary">
               {data.figure.detail.series?.name}
-            </span>
-            <p className="text-sm font-semibold line-clamp-1">
+            </p>
+            <p className="text-sm font-semibold text-widget-color-text-opacity-default line-clamp-1">
               {data.figure.detail.name}
             </p>
           </div>
@@ -70,7 +70,7 @@ export function FigureItemCard({ idx, data, onTap }: FigureItemCardProps) {
 
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <span className="text-[14px] font-semibold">
+              <span className="text-sm font-semibold">
                 ₩{formatPrice(data.total_price)}
               </span>
               <span className="text-[10px] text-widget-color-text-opacity-tertiary">
