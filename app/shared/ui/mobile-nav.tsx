@@ -1,8 +1,8 @@
 import { Home, Plus, User } from "lucide-react";
 import { cn } from "~/utils";
 import { Link, useLocation } from "@remix-run/react";
-import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+
 import { useRootLoaderData } from "~/hooks/use-root-loader-data";
 
 export function MobileNav() {

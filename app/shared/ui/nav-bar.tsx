@@ -510,13 +510,11 @@ export function Navbar() {
     <header
       className={cn(
         isWebView() && "hidden",
-        "fixed top-0 z-50 w-full h-15 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         deviceInfo.isMobile && "border-0",
+        "w-full",
       )}
     >
-      <div className="container flex items-center h-full mx-auto px-4">
-        {deviceInfo.isMobile ? renderMobileHeader() : renderDesktopHeader()}
-      </div>
+      {deviceInfo.isMobile ? renderMobileHeader() : renderDesktopHeader()}
     </header>
   );
 }
