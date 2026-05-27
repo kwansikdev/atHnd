@@ -67,9 +67,10 @@ export function SheetSearchAdd() {
         deposit_paid_at: data.deposit_paid_at,
         deposit_price: data.deposit_price,
         total_price: data.total_price,
+        figure_id: data.figure_id,
       } as Omit<
         Database["public"]["Tables"]["user_figure"]["Insert"],
-        "figure_id" | "user_id"
+        "user_id"
       >;
 
       return result;
